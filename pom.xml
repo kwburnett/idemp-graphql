@@ -12,62 +12,32 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.jaxrs/jackson-jaxrs-json-provider -->
 		<dependency>
-			<groupId>com.fasterxml.jackson.jaxrs</groupId>
-			<artifactId>jackson-jaxrs-json-provider</artifactId>
-			<version>2.10.0.pr3</version>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.8.3</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.10.0.pr3</version>
+	        <groupId>com.graphql-java</groupId>
+	        <artifactId>graphql-java</artifactId>
+	        <version>15.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.10.0.pr3</version>
+		    <groupId>com.graphql-java-kickstart</groupId>
+		    <artifactId>graphql-java-tools</artifactId>
+		    <version>6.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.10.0.pr3</version>
+			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-java-servlet</artifactId>
+			<version>9.1.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.xml.soap/javax.xml.soap-api -->
 		<dependency>
-			<groupId>javax.xml.soap</groupId>
-			<artifactId>javax.xml.soap-api</artifactId>
-			<version>1.4.0</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.axis/axis -->
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.4</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
-		<dependency>
-			<groupId>javax.xml.ws</groupId>
-			<artifactId>jaxws-api</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/javax.xml.soap/javax.xml.soap-api -->
-		<dependency>
-			<groupId>javax.xml.soap</groupId>
-			<artifactId>javax.xml.soap-api</artifactId>
-			<version>1.4.0</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api -->
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -88,6 +58,26 @@
 									<groupId>com.auth0</groupId>
 									<artifactId>java-jwt</artifactId>
 									<version>3.8.3</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.graphql-java</groupId>
+									<artifactId>graphql-java</artifactId>
+									<version>15.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.graphql-java-kickstart</groupId>
+									<artifactId>graphql-java-tools</artifactId>
+									<version>6.2.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.graphql-java-kickstart</groupId>
+									<artifactId>graphql-java-servlet</artifactId>
+									<version>9.1.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>javax.servlet</groupId>
+									<artifactId>javax.servlet-api</artifactId>
+									<version>3.0.1</version>
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>WEB-INF/lib</outputDirectory>

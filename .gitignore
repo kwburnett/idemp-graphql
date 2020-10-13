@@ -10,5 +10,5 @@ target
 org.bandahealth.idempiere.rest.eml
 org.bandahealth.idempiere.rest.iml
 
-WEB-INF/lib/java-jwt.jar
+WEB-INF/lib
 

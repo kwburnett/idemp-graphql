@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Custom REST Webservices
+Bundle-Name: Custom GraphQL Webservices
 Bundle-SymbolicName: org.bandahealth.idempiere.graphql;singleton:=true
 Bundle-Version: 7.1.0.qualifier
 Automatic-Module-Name: org.bandahealth.idempiere.graphql

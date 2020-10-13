@@ -8,7 +8,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath:/META-INF/cxf/rest_context.xml
+			classpath:/META-INF/cxf/graphql_context.xml
 		</param-value>
 	</context-param>
 
