@@ -67,11 +67,12 @@ Require-Bundle: org.adempiere.base;bundle-version="0.0.0",
  com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.9.7",
  org.apache.commons.codec;bundle-version="1.6.0",
  org.bandahealth.idempiere.base;bundle-version="1.0.0",
- org.eclipse.osgi,
- org.eclipse.osgi,
- org.eclipse.osgi
+ javax.servlet
 Bundle-ClassPath: .,
- WEB-INF/lib/java-jwt.jar
+ lib/graphql-java.jar,
+ lib/graphql-java-servlet.jar,
+ lib/graphql-java-tools.jar,
+ lib/java-jwt.jar
 Web-ContextPath: BHGO
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bandahealth.idempiere.graphql,

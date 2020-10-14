@@ -7,7 +7,6 @@ import graphql.schema.GraphQLSchema;
 
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "HelloServlet", urlPatterns = {"graphql/*"}, loadOnStartup = 1)
 public class GraphQLEndpoint extends GraphQLHttpServlet {
 
 	@Override
