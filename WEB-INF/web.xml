@@ -22,7 +22,7 @@
 		<servlet-name>CXFServlet</servlet-name>
 		<display-name>CXF Servlet</display-name>
 		<servlet-class>
-			org.apache.cxf.transport.servlet.CXFServlet
+			org.bandahealth.idempiere.graphql.GraphQLEndpoint
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
