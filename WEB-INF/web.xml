@@ -5,22 +5,9 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			classpath:/META-INF/cxf/graphql_context.xml
-		</param-value>
-	</context-param>
-
-	<listener>
-		<listener-class>
-			org.bandahealth.idempiere.graphql.ContextLoaderListener
-		</listener-class>
-	</listener>
-
 	<servlet>
-		<servlet-name>CXFServlet</servlet-name>
-		<display-name>CXF Servlet</display-name>
+		<servlet-name>GraphQLServlet</servlet-name>
+		<display-name>Graph QL Servlet</display-name>
 		<servlet-class>
 			org.bandahealth.idempiere.graphql.GraphQLEndpoint
 		</servlet-class>
@@ -28,7 +15,7 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>CXFServlet</servlet-name>
+		<servlet-name>GraphQLServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
