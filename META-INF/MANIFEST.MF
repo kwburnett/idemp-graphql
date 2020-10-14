@@ -73,7 +73,7 @@ Bundle-ClassPath: .,
  lib/graphql-java-servlet.jar,
  lib/graphql-java-tools.jar,
  lib/java-jwt.jar
-Web-ContextPath: BHGO
+Web-ContextPath: graphql
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bandahealth.idempiere.graphql,
  org.bandahealth.idempiere.graphql.exceptions,
