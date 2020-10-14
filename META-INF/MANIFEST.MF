@@ -70,8 +70,6 @@ Require-Bundle: org.adempiere.base;bundle-version="0.0.0",
  javax.servlet,
  org.antlr.runtime;bundle-version="4.7.2",
  slf4j.api;bundle-version="1.7.25",
- com.graphql.java.dataloader;bundle-version="2.1.1",
- org.reactivestreams;bundle-version="1.0.2",
  org.apache.commons.lang3;bundle-version="3.1.0"
 Bundle-ClassPath: .,
  lib/graphql-java.jar,
@@ -83,7 +81,9 @@ Bundle-ClassPath: .,
  lib/kotlin-reflect.jar,
  lib/classmate.jar,
  lib/jackson-datatype-jdk8.jar,
- lib/jackson-module-kotlin.jar
+ lib/jackson-module-kotlin.jar,
+ lib/java-dataloader.jar,
+ lib/reactive-streams.jar
 Web-ContextPath: graphql
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bandahealth.idempiere.graphql,
