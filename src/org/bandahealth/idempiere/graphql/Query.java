@@ -1,10 +1,14 @@
 package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
+import org.compiere.util.CLogger;
 
 import java.util.List;
 
 public class Query implements GraphQLQueryResolver {
+
+	private final CLogger logger = CLogger.getCLogger(Query.class);
 
 	private final LinkRepository linkRepository;
 
@@ -12,7 +16,8 @@ public class Query implements GraphQLQueryResolver {
 		this.linkRepository = linkRepository;
 	}
 
-	public List<Link> allLinks() {
+	public List<Link> allLinks(DataFetchingEnvironment environment) {
+		logger.warning(((AuthGraphQLContext) environment.getContext()).getUserId());
 		return linkRepository.getAllLinks();
 	}
 }

@@ -22,12 +22,12 @@
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>3.10.0</version>
+			<version>3.11.0</version>
 		</dependency>
 		<dependency>
-	        <groupId>com.graphql-java</groupId>
-	        <artifactId>graphql-java</artifactId>
-	        <version>15.0</version>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphql-java</artifactId>
+			<version>2020-06-05T10-44-09-eff6106</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.graphql-java-kickstart</groupId>
@@ -36,13 +36,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-java-kickstart</artifactId>
+			<version>10.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java-kickstart</groupId>
 			<artifactId>graphql-java-servlet</artifactId>
-			<version>9.1.0</version>
+			<version>10.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- to embed GraphiQL tool -->
@@ -107,17 +112,16 @@
 							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
 							<artifactItems>
 								<artifactItem>
 									<groupId>com.auth0</groupId>
 									<artifactId>java-jwt</artifactId>
-									<version>3.10.0</version>
+									<version>3.11.0</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.graphql-java</groupId>
 									<artifactId>graphql-java</artifactId>
-									<version>15.0</version>
+									<version>2020-06-05T10-44-09-eff6106</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.graphql-java-kickstart</groupId>
@@ -126,13 +130,18 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.graphql-java-kickstart</groupId>
+									<artifactId>graphql-java-kickstart</artifactId>
+									<version>10.0.0</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.graphql-java-kickstart</groupId>
 									<artifactId>graphql-java-servlet</artifactId>
-									<version>9.1.0</version>
+									<version>10.0.0</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>javax.servlet</groupId>
 									<artifactId>javax.servlet-api</artifactId>
-									<version>3.0.1</version>
+									<version>4.0.1</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.slf4j</groupId>
