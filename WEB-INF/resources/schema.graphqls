@@ -26,7 +26,7 @@ type Warehouse {
   id: ID!
 }
 
-type AuthResponse {
+type AuthenticationResponse {
   token: String
   status: String!
   userId: Int
@@ -39,7 +39,7 @@ type AuthResponse {
   hasAccessToReports: Boolean!
 }
 
-input AuthData {
+input AuthenticationData {
   username: String!
   password: String!
   newPassword: String
@@ -56,7 +56,7 @@ type Query {
 }
 
 type Mutation {
-  signIn(credentials: AuthData!): AuthResponse
+  signIn(credentials: AuthenticationData!): AuthenticationResponse
 }
 
 schema {

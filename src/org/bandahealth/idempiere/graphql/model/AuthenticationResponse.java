@@ -5,7 +5,7 @@ import org.compiere.model.MClient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthResponse {
+public class AuthenticationResponse {
 	private String token;
 	private String status;
 	private int userId;
@@ -17,20 +17,20 @@ public class AuthResponse {
 	private List<String> securityQuestions;
 	private boolean hasAccessToReports;
 
-	public AuthResponse() {
+	public AuthenticationResponse() {
 	}
 
-	public AuthResponse(String status) {
+	public AuthenticationResponse(String status) {
 		this.status = status;
 	}
 
-	public AuthResponse(String token, String status, int userId) {
+	public AuthenticationResponse(String token, String status, int userId) {
 		this.token = token;
 		this.status = status;
 		this.userId = userId;
 	}
 
-	public AuthResponse(String token, String status) {
+	public AuthenticationResponse(String token, String status) {
 		this.token = token;
 		this.status = status;
 	}

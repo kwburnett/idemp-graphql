@@ -1,6 +1,6 @@
 package org.bandahealth.idempiere.graphql.model;
 
-public class AuthData {
+public class AuthenticationData {
 	private String username;
 	private String password;
 	private String newPassword;

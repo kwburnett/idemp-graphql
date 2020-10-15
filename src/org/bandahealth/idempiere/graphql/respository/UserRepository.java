@@ -9,8 +9,8 @@ import org.bandahealth.idempiere.base.config.Transaction;
 import org.bandahealth.idempiere.base.model.MMessage_BH;
 import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.context.AuthGraphQLContext;
-import org.bandahealth.idempiere.graphql.model.AuthData;
-import org.bandahealth.idempiere.graphql.model.AuthResponse;
+import org.bandahealth.idempiere.graphql.model.AuthenticationData;
+import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.model.Client;
 import org.bandahealth.idempiere.graphql.model.Organization;
 import org.bandahealth.idempiere.graphql.utils.LoginClaims;
@@ -40,12 +40,12 @@ public class UserRepository {
 		return new Query(Env.getCtx(), MUser_BH.Table_Name, "AD_User_ID<1000001", null).list();
 	}
 
-	public AuthResponse signIn(AuthData credentials, AuthGraphQLContext context) {
+	public AuthenticationResponse signIn(AuthenticationData credentials, AuthGraphQLContext context) {
 		Login login = new Login(Env.getCtx());
 		// retrieve list of clients the user has access to.
 		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());
 		if (clients == null || clients.length == 0) {
-			return new AuthResponse("Status.UNAUTHORIZED");
+			return new AuthenticationResponse("Status.UNAUTHORIZED");
 		} else {
 			MUser user = MUser.get(Env.getCtx(), credentials.getUsername());
 			if (user == null) {
@@ -53,11 +53,11 @@ public class UserRepository {
 			}
 
 			if (user == null) {
-				return new AuthResponse("Status.UNAUTHORIZED");
+				return new AuthenticationResponse("Status.UNAUTHORIZED");
 			}
 
 			if (user.isLocked()) {
-				return new AuthResponse("Status.FORBIDDEN");
+				return new AuthenticationResponse("Status.FORBIDDEN");
 			}
 
 			if (user.isExpired()) {
@@ -69,7 +69,7 @@ public class UserRepository {
 			// expires after 60 minutes
 			builder.withIssuer(TokenUtils.getTokenIssuer()).withExpiresAt(expiresAt);
 
-			AuthResponse response = new AuthResponse();
+			AuthenticationResponse response = new AuthenticationResponse();
 
 			// has user changed client and role?
 			if (credentials.getClientId() != null && credentials.getRoleId() != null) {
@@ -96,7 +96,7 @@ public class UserRepository {
 				response.setStatus("Status.OK");
 				return response;
 			} catch (Exception e) {
-				return new AuthResponse("Status.BAD_REQUEST");
+				return new AuthenticationResponse("Status.BAD_REQUEST");
 			}
 		}
 	}
@@ -106,7 +106,7 @@ public class UserRepository {
 	 * @param credentials
 	 * @param clients
 	 */
-	private void updateUsersPassword(AuthData credentials, KeyNamePair[] clients) {
+	private void updateUsersPassword(AuthenticationData credentials, KeyNamePair[] clients) {
 		Trx trx = null;
 		try {
 			String trxName = Trx.createTrxName(Transaction.ChangePassword.NAME);
@@ -149,13 +149,13 @@ public class UserRepository {
 	 * @param credentials
 	 * @return
 	 */
-	private AuthResponse handleUserNeedsToChangePassword(AuthData credentials) {
+	private AuthenticationResponse handleUserNeedsToChangePassword(AuthenticationData credentials) {
 		List<String> securityQuestions = new ArrayList<>();
 
 		for (int i = 1; i <= MMessage_BH.NO_OF_SECURITY_QUESTION; i++) {
 			securityQuestions.add(Msg.getMsg(Env.getCtx(), MMessage_BH.SECURITY_QUESTION_PREFIX + i));
 		}
-		AuthResponse response = new AuthResponse();
+		AuthenticationResponse response = new AuthenticationResponse();
 		response.setUsername(credentials.getUsername());
 		response.setNeedsToResetPassword(true);
 		response.setSecurityQuestions(securityQuestions);
@@ -170,7 +170,7 @@ public class UserRepository {
 	 * @param credentials
 	 * @param builder
 	 */
-	private void changeLoginProperties(AuthData credentials, Builder builder, AuthResponse response) {
+	private void changeLoginProperties(AuthenticationData credentials, Builder builder, AuthenticationResponse response) {
 		// set client id
 		if (credentials.getClientId() != null) {
 			MClient client = MClient.get(Env.getCtx(), credentials.getClientId());
@@ -211,7 +211,7 @@ public class UserRepository {
 	 * @param builder
 	 * @param response
 	 */
-	private void setDefaultLoginProperties(KeyNamePair[] clients, MUser user, Builder builder, AuthResponse response) {
+	private void setDefaultLoginProperties(KeyNamePair[] clients, MUser user, Builder builder, AuthenticationResponse response) {
 		// parse all clients that the user has access to.
 		for (KeyNamePair client : clients) {
 			Client mClient = new Client(Env.getCtx(), client.getKey(), null);
@@ -267,7 +267,7 @@ public class UserRepository {
 	 * @param credentials
 	 * @return
 	 */
-	private MUser checkValidSystemUserWithNoSystemRole(KeyNamePair[] clients, AuthData credentials) {
+	private MUser checkValidSystemUserWithNoSystemRole(KeyNamePair[] clients, AuthenticationData credentials) {
 		MUser user = null;
 		for (KeyNamePair client : clients) {
 			// update context with client id
