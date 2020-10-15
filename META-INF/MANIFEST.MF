@@ -90,6 +90,6 @@ Bundle-ClassPath: .,
 Web-ContextPath: graphql
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bandahealth.idempiere.graphql,
- org.bandahealth.idempiere.graphql.exceptions,
+ org.bandahealth.idempiere.graphql.error,
  org.bandahealth.idempiere.graphql.filter,
  org.bandahealth.idempiere.graphql.utils

@@ -1,11 +1,11 @@
 package org.bandahealth.idempiere.graphql;
 
+import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
 import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.context.AuthGraphQLContextBuilder;
+import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.resolver.*;
-import org.compiere.model.MRole;
-import org.compiere.model.MWarehouse;
 import org.compiere.util.CLogger;
 
 import graphql.kickstart.servlet.GraphQLConfiguration;
@@ -19,9 +19,14 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 
 	@Override
 	protected GraphQLConfiguration getConfiguration() {
-		return GraphQLConfiguration.with(createContext()).build();
+		return GraphQLConfiguration.with(createContext()).with(createObjectMapper()).build();
 	}
 
+	/**
+	 * Generates the schema from the appropriate SDL files, then adds the appropriate resolvers
+	 *
+	 * @return The schema to use in this GraphQL plugin
+	 */
 	private GraphQLSchema createSchema() {
 		return SchemaParser.newParser()
 				.file("WEB-INF/resources/schema.graphqls")
@@ -33,9 +38,25 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 				.makeExecutableSchema();
 	}
 
+	/**
+	 * Generates the right object and ensures the custom context builder is used
+	 *
+	 * @return The object to use in the GraphQL configuration
+	 */
 	private GraphQLInvocationInputFactory createContext() {
 		return GraphQLInvocationInputFactory.newBuilder(createSchema())
 				.withGraphQLContextBuilder(AuthGraphQLContextBuilder::new)
+				.build();
+	}
+
+	/**
+	 * Ensure we provide some error handling of our own
+	 *
+	 * @return The object mapper to use in the GraphQL configuration
+	 */
+	private GraphQLObjectMapper createObjectMapper() {
+		return GraphQLObjectMapper.newBuilder()
+				.withGraphQLErrorHandler(new ErrorHandler())
 				.build();
 	}
 }
