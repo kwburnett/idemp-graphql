@@ -13,10 +13,10 @@ import java.util.Optional;
 
 public class AuthGraphQLContext implements GraphQLServletContext {
 
-	private final String userId;
+	private final int userId;
 	private final GraphQLServletContext context;
 
-	public AuthGraphQLContext(GraphQLServletContext context, String userId) {
+	public AuthGraphQLContext(GraphQLServletContext context, int userId) {
 		this.context = context;
 		this.userId = userId;
 	}
@@ -25,7 +25,7 @@ public class AuthGraphQLContext implements GraphQLServletContext {
 		return context;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 

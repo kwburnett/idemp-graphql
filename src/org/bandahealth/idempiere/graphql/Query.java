@@ -1,8 +1,8 @@
 package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.context.AuthGraphQLContext;
+import org.bandahealth.idempiere.graphql.respository.UserRepository;
+import org.compiere.model.MUser;
 import org.compiere.util.CLogger;
 
 import java.util.List;
@@ -11,14 +11,13 @@ public class Query implements GraphQLQueryResolver {
 
 	private final CLogger logger = CLogger.getCLogger(Query.class);
 
-	private final LinkRepository linkRepository;
+	private final UserRepository userRepository;
 
-	public Query(LinkRepository linkRepository) {
-		this.linkRepository = linkRepository;
+	public Query() {
+		this.userRepository = new UserRepository();
 	}
 
-	public List<Link> allLinks(DataFetchingEnvironment environment) {
-		logger.warning(((AuthGraphQLContext) environment.getContext()).getUserId());
-		return linkRepository.getAllLinks();
+	public List<MUser> getUsers() {
+		return userRepository.getUsers();
 	}
 }

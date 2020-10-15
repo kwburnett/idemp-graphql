@@ -1,7 +1,11 @@
 package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
+import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.context.AuthGraphQLContextBuilder;
+import org.bandahealth.idempiere.graphql.resolver.*;
+import org.compiere.model.MRole;
+import org.compiere.model.MWarehouse;
 import org.compiere.util.CLogger;
 
 import graphql.kickstart.servlet.GraphQLConfiguration;
@@ -19,10 +23,12 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 	}
 
 	private GraphQLSchema createSchema() {
-		LinkRepository linkRepository = new LinkRepository();
 		return SchemaParser.newParser()
 				.file("WEB-INF/resources/schema.graphqls")
-				.resolvers(new Query(linkRepository))
+				.resolvers(
+						new Query(), new Mutation(), new UserResolver(), new ClientResolver(),
+						new OrganizationResolver(), new RoleResolver(), new WarehouseResolver()
+				)
 				.build()
 				.makeExecutableSchema();
 	}

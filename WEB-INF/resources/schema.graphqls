@@ -1,12 +1,65 @@
-type Link {
-  url: String!
-  description: String!
+type User {
+  name: String!
+  id: ID!
+}
+
+type Client {
+  name: String!
+  id: ID!
+  organizations: [Organization!]!
+}
+
+type Organization {
+  name: String!
+  id: ID!
+  roles: [Role!]!
+  warehouses: [Warehouse!]!
+}
+
+type Role {
+  name: String!
+  id: ID!
+}
+
+type Warehouse {
+  name: String!
+  id: ID!
+}
+
+type AuthResponse {
+  token: String
+  status: String!
+  userId: Int
+  username: String
+  clients: [Client!]!
+  hasAcceptedTermsOfUse: Boolean
+  roleId: Int!
+  needsToResetPassword: Boolean!
+  securityQuestions: [String!]
+  hasAccessToReports: Boolean!
+}
+
+input AuthData {
+  username: String!
+  password: String!
+  newPassword: String
+  securityQuestion: String
+  answer: String
+  clientId: Int
+  roleId: Int
+  organizationId: Int
+  warehouseId: Int
 }
 
 type Query {
-  allLinks: [Link]
+  getUsers: [User]
+}
+
+type Mutation {
+  signIn(credentials: AuthData!): AuthResponse
 }
 
 schema {
   query: Query
+  mutation: Mutation
 }
