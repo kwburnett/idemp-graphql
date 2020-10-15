@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql;
+package org.bandahealth.idempiere.graphql.context;
 
 import graphql.kickstart.servlet.context.GraphQLServletContext;
 import org.dataloader.DataLoaderRegistry;

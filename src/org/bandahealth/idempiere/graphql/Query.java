@@ -2,6 +2,7 @@ package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.graphql.context.AuthGraphQLContext;
 import org.compiere.util.CLogger;
 
 import java.util.List;

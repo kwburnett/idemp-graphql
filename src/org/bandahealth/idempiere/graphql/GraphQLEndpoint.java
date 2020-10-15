@@ -1,6 +1,7 @@
 package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
+import org.bandahealth.idempiere.graphql.context.AuthGraphQLContextBuilder;
 import org.compiere.util.CLogger;
 
 import graphql.kickstart.servlet.GraphQLConfiguration;
