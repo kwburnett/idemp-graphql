@@ -28,7 +28,6 @@ type Warehouse {
 
 type AuthenticationResponse {
   token: String
-  status: String!
   userId: Int
   username: String
   clients: [Client!]!

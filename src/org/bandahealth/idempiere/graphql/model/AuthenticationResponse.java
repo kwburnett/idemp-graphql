@@ -7,7 +7,6 @@ import java.util.List;
 
 public class AuthenticationResponse {
 	private String token;
-	private String status;
 	private int userId;
 	private String username;
 	private List<Client> clients = new ArrayList<>();
@@ -17,38 +16,12 @@ public class AuthenticationResponse {
 	private List<String> securityQuestions;
 	private boolean hasAccessToReports;
 
-	public AuthenticationResponse() {
-	}
-
-	public AuthenticationResponse(String status) {
-		this.status = status;
-	}
-
-	public AuthenticationResponse(String token, String status, int userId) {
-		this.token = token;
-		this.status = status;
-		this.userId = userId;
-	}
-
-	public AuthenticationResponse(String token, String status) {
-		this.token = token;
-		this.status = status;
-	}
-
 	public String getToken() {
 		return token;
 	}
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public int getUserId() {

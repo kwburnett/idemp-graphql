@@ -45,7 +45,7 @@ public class UserRepository {
 		// retrieve list of clients the user has access to.
 		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());
 		if (clients == null || clients.length == 0) {
-			return new AuthenticationResponse("Status.UNAUTHORIZED");
+			throw new AdempiereException("Unauthorized");
 		} else {
 			MUser user = MUser.get(Env.getCtx(), credentials.getUsername());
 			if (user == null) {
@@ -53,11 +53,11 @@ public class UserRepository {
 			}
 
 			if (user == null) {
-				return new AuthenticationResponse("Status.UNAUTHORIZED");
+				throw new AdempiereException("Unauthorized");
 			}
 
 			if (user.isLocked()) {
-				return new AuthenticationResponse("Status.FORBIDDEN");
+				throw new AdempiereException("Forbidden - user is locked");
 			}
 
 			if (user.isExpired()) {
@@ -92,11 +92,9 @@ public class UserRepository {
 //				response.setHasAcceptedTermsOfUse(TermsOfServiceDBService.hasAccepted());
 				// set username
 				response.setUsername(credentials.getUsername());
-				// status OK.
-				response.setStatus("Status.OK");
 				return response;
 			} catch (Exception e) {
-				return new AuthenticationResponse("Status.BAD_REQUEST");
+				throw new AdempiereException("Bad request");
 			}
 		}
 	}
@@ -159,7 +157,6 @@ public class UserRepository {
 		response.setUsername(credentials.getUsername());
 		response.setNeedsToResetPassword(true);
 		response.setSecurityQuestions(securityQuestions);
-		response.setStatus("Status.OK");
 		return response;
 	}
 
