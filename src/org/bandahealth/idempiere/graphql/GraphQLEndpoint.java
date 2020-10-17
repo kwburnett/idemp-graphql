@@ -2,8 +2,11 @@ package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
+import graphql.kickstart.tools.SchemaParserBuilder;
 import org.bandahealth.idempiere.graphql.context.AuthenticationGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
+import org.bandahealth.idempiere.graphql.mutation.Mutation;
+import org.bandahealth.idempiere.graphql.query.Query;
 import org.bandahealth.idempiere.graphql.resolver.*;
 import org.compiere.util.CLogger;
 
@@ -27,12 +30,15 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 	 * @return The schema to use in this GraphQL plugin
 	 */
 	private GraphQLSchema createSchema() {
-		return SchemaParser.newParser()
-				.file("WEB-INF/resources/schema.graphqls")
-				.resolvers(
-						new Query(), new Mutation(), new UserResolver(), new ClientResolver(),
-						new OrganizationResolver(), new RoleResolver(), new WarehouseResolver()
-				)
+		SchemaParserBuilder builder = SchemaParser.newParser()
+				.files(
+						"WEB-INF/resources/schema.graphqls",
+						"WEB-INF/resources/authentication.graphqls"
+				);
+		Query.addAll(builder);
+		Mutation.addAll(builder);
+		Resolver.addAll(builder);
+		return builder
 				.build()
 				.makeExecutableSchema();
 	}

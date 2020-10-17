@@ -26,37 +26,12 @@ type Warehouse {
   id: ID!
 }
 
-type AuthenticationResponse {
-  token: String
-  userId: Int
-  username: String
-  clients: [Client!]!
-  hasAcceptedTermsOfUse: Boolean
-  roleId: Int!
-  needsToResetPassword: Boolean!
-  securityQuestions: [String!]
-  hasAccessToReports: Boolean!
-}
-
-input AuthenticationData {
-  username: String!
-  password: String!
-  newPassword: String
-  securityQuestion: String
-  answer: String
-  clientId: Int
-  roleId: Int
-  organizationId: Int
-  warehouseId: Int
-}
-
 type Query {
   getUsers: [User]
 }
 
 type Mutation {
-  signIn(credentials: AuthenticationData!): AuthenticationResponse
-  changePassword(credentials: AuthenticationData!): AuthenticationResponse
+  _empty: String
 }
 
 schema {

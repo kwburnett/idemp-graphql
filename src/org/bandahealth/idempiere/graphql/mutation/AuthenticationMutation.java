@@ -1,19 +1,16 @@
-package org.bandahealth.idempiere.graphql;
+package org.bandahealth.idempiere.graphql.mutation;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.model.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.respository.AuthenticationRepository;
-import org.bandahealth.idempiere.graphql.respository.UserRepository;
 
-public class Mutation implements GraphQLMutationResolver {
+public class AuthenticationMutation implements GraphQLMutationResolver {
 
-	private final UserRepository userRepository;
 	private final AuthenticationRepository authenticationRepository;
 
-	public Mutation() {
-		this.userRepository = new UserRepository();
+	public AuthenticationMutation() {
 		this.authenticationRepository = new AuthenticationRepository();
 	}
 

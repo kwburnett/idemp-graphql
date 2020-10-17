@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql;
+package org.bandahealth.idempiere.graphql.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.bandahealth.idempiere.graphql.respository.UserRepository;
@@ -7,13 +7,13 @@ import org.compiere.util.CLogger;
 
 import java.util.List;
 
-public class Query implements GraphQLQueryResolver {
+public class UserQuery implements GraphQLQueryResolver {
 
-	private final CLogger logger = CLogger.getCLogger(Query.class);
+	private final CLogger logger = CLogger.getCLogger(UserQuery.class);
 
 	private final UserRepository userRepository;
 
-	public Query() {
+	public UserQuery() {
 		this.userRepository = new UserRepository();
 	}
 
