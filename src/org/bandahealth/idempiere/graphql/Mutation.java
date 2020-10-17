@@ -17,4 +17,8 @@ public class Mutation implements GraphQLMutationResolver {
 	public AuthenticationResponse signIn(AuthenticationData credentials, DataFetchingEnvironment environment) {
 		return userRepository.signIn(credentials, environment.getContext());
 	}
+
+	public AuthenticationResponse changePassword(AuthenticationData credentials, DataFetchingEnvironment environment) {
+		return userRepository.changePassword(credentials, environment.getContext());
+	}
 }

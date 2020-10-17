@@ -26,6 +26,7 @@ import org.compiere.util.KeyNamePair;
 import org.compiere.util.Login;
 import org.compiere.util.Msg;
 import org.compiere.util.Trx;
+import org.compiere.util.Util;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -40,6 +41,15 @@ public class UserRepository {
 		return new Query(Env.getCtx(), MUser_BH.Table_Name, "AD_User_ID<1000001", null).list();
 	}
 
+	/**
+	 * Authentication Service Accepts Username, password and generates a session
+	 * token. It attempts to set default client, role, warehouse, org values for
+	 * clients, else return a list where multiple values are found
+	 *
+	 * @param credentials
+	 * @param context
+	 * @return
+	 */
 	public AuthenticationResponse signIn(AuthenticationData credentials, AuthenticationGraphQLContext context) {
 		Login login = new Login(Env.getCtx());
 		// retrieve list of clients the user has access to.
@@ -99,8 +109,52 @@ public class UserRepository {
 		}
 	}
 
+	public AuthenticationResponse changePassword(AuthenticationData credentials, AuthenticationGraphQLContext context) {
+		Login login = new Login(Env.getCtx());
+		// retrieve list of clients the user has access to.
+		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());
+		if (clients == null || clients.length == 0) {
+			throw new AdempiereException("Unauthorized");
+		}
+
+		MUser user = MUser.get(Env.getCtx(), credentials.getUsername());
+		if (user == null) {
+			user = checkValidSystemUserWithNoSystemRole(clients, credentials);
+		}
+
+		/**
+		 * Copied from ChangePasswordPanel > validateChangePassword
+		 */
+		if (org.compiere.util.Util.isEmpty(credentials.getPassword())) {
+			throw new IllegalArgumentException(org.compiere.util.Msg.getMsg(Env.getCtx(), MMessage_BH.OLD_PASSWORD_MANDATORY));
+		}
+
+		if (Util.isEmpty(credentials.getNewPassword())) {
+			throw new IllegalArgumentException(Msg.getMsg(Env.getCtx(), MMessage_BH.NEW_PASSWORD_MANDATORY));
+		}
+
+		// TODO: Add this back in if we start using these
+//		if (Util.isEmpty(credentials.getSecurityQuestion())) {
+//			throw new IllegalArgumentException(Msg.getMsg(Env.getCtx(), MADMessage_BH.SECURITY_QUESTION_MANDATORY));
+//		}
+//
+//		if (Util.isEmpty(credentials.getAnswer())) {
+//			throw new IllegalArgumentException(Msg.getMsg(Env.getCtx(), MADMessage_BH.ANSWER_MANDATORY));
+//		}
+
+		if (org.compiere.model.MSysConfig.getBooleanValue(org.compiere.model.MSysConfig.CHANGE_PASSWORD_MUST_DIFFER, true)) {
+			if (credentials.getPassword().equals(credentials.getNewPassword())) {
+				throw new IllegalArgumentException(Msg.getMsg(Env.getCtx(), MMessage_BH.NEW_PASSWORD_MUST_DIFFER));
+			}
+		}
+
+		updateUsersPassword(credentials, clients);
+		return this.signIn(credentials, context);
+	}
+
 	/**
 	 * Handle everything related to updating a user's password. Largely copied from ChangePasswordPanel > validateChangePassword
+	 *
 	 * @param credentials
 	 * @param clients
 	 */
