@@ -8,7 +8,7 @@ import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.config.Transaction;
 import org.bandahealth.idempiere.base.model.MMessage_BH;
 import org.bandahealth.idempiere.base.model.MUser_BH;
-import org.bandahealth.idempiere.graphql.context.AuthGraphQLContext;
+import org.bandahealth.idempiere.graphql.context.AuthenticationGraphQLContext;
 import org.bandahealth.idempiere.graphql.model.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.model.Client;
@@ -40,7 +40,7 @@ public class UserRepository {
 		return new Query(Env.getCtx(), MUser_BH.Table_Name, "AD_User_ID<1000001", null).list();
 	}
 
-	public AuthenticationResponse signIn(AuthenticationData credentials, AuthGraphQLContext context) {
+	public AuthenticationResponse signIn(AuthenticationData credentials, AuthenticationGraphQLContext context) {
 		Login login = new Login(Env.getCtx());
 		// retrieve list of clients the user has access to.
 		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());

@@ -2,8 +2,7 @@ package org.bandahealth.idempiere.graphql;
 
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
-import org.bandahealth.idempiere.base.model.MUser_BH;
-import org.bandahealth.idempiere.graphql.context.AuthGraphQLContextBuilder;
+import org.bandahealth.idempiere.graphql.context.AuthenticationGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.resolver.*;
 import org.compiere.util.CLogger;
@@ -45,7 +44,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 	 */
 	private GraphQLInvocationInputFactory createContext() {
 		return GraphQLInvocationInputFactory.newBuilder(createSchema())
-				.withGraphQLContextBuilder(AuthGraphQLContextBuilder::new)
+				.withGraphQLContextBuilder(AuthenticationGraphQLContextBuilder::new)
 				.build();
 	}
 
