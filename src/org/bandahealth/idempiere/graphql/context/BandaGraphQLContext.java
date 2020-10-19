@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class AuthenticationGraphQLContext implements GraphQLServletContext {
+public class BandaGraphQLContext implements GraphQLServletContext {
 
 	private final int userId;
 	private final GraphQLServletContext context;
 
-	public AuthenticationGraphQLContext(GraphQLServletContext context, int userId) {
+	public BandaGraphQLContext(GraphQLServletContext context, int userId) {
 		this.context = context;
 		this.userId = userId;
 	}

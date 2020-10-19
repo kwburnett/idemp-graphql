@@ -6,7 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.config.Transaction;
 import org.bandahealth.idempiere.base.model.MMessage_BH;
-import org.bandahealth.idempiere.graphql.context.AuthenticationGraphQLContext;
+import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.model.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.model.Client;
@@ -43,7 +43,7 @@ public class AuthenticationRepository {
 	 * @param context
 	 * @return
 	 */
-	public AuthenticationResponse signIn(AuthenticationData credentials, AuthenticationGraphQLContext context) {
+	public AuthenticationResponse signIn(AuthenticationData credentials, BandaGraphQLContext context) {
 		Login login = new Login(Env.getCtx());
 		// retrieve list of clients the user has access to.
 		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());
@@ -102,7 +102,7 @@ public class AuthenticationRepository {
 		}
 	}
 
-	public AuthenticationResponse changePassword(AuthenticationData credentials, AuthenticationGraphQLContext context) {
+	public AuthenticationResponse changePassword(AuthenticationData credentials, BandaGraphQLContext context) {
 		Login login = new Login(Env.getCtx());
 		// retrieve list of clients the user has access to.
 		KeyNamePair[] clients = login.getClients(credentials.getUsername(), credentials.getPassword());
