@@ -1,0 +1,12 @@
+type Charge {
+  clientId: Int!
+  organizationId: Int!
+  id: ID!
+  isActive: Boolean!
+  created: String
+  createdBy: Int
+  description: String
+  name: String
+  isLocked: Boolean
+  accountId: String
+}

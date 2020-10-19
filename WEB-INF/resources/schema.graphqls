@@ -28,6 +28,7 @@ type Warehouse {
 
 type Query {
   getUsers: [User]
+  _empty: String
 }
 
 type Mutation {

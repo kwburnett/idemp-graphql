@@ -34,6 +34,7 @@ public class AuthenticationFilter implements Filter {
 	private final String ERROR_INTERNAL_SERVER_ERROR = "Internal Server Error";
 	private final List<String> ALLOWABLE_UNAUTHENTICATED_QUERIES = new ArrayList<String>() {{
 		add("signIn");
+		add("changePassword");
 	}};
 
 	@Override

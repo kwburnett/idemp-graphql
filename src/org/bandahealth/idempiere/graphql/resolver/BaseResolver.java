@@ -14,7 +14,7 @@ public class BaseResolver<T extends PO> {
 		return entity.get_Value(entity.getUUIDColumnName()).toString();
 	}
 
-	public int orgId(T entity) {
+	public int organizationId(T entity) {
 		return entity.getAD_Org_ID();
 	}
 }

@@ -33,7 +33,17 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 		SchemaParserBuilder builder = SchemaParser.newParser()
 				.files(
 						"WEB-INF/resources/schema.graphqls",
-						"WEB-INF/resources/authentication.graphqls"
+						"WEB-INF/resources/authentication.graphqls",
+						"WEB-INF/resources/business-partner.graphqls",
+						"WEB-INF/resources/charge.graphqls",
+						"WEB-INF/resources/document.graphqls",
+						"WEB-INF/resources/location.graphqls",
+						"WEB-INF/resources/order.graphqls",
+						"WEB-INF/resources/order-line.graphqls",
+						"WEB-INF/resources/order-status.graphqls",
+						"WEB-INF/resources/payment.graphqls",
+						"WEB-INF/resources/product.graphqls",
+						"WEB-INF/resources/reference-list.graphqls"
 				);
 		Query.addAll(builder);
 		Mutation.addAll(builder);

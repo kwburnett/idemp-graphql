@@ -1,0 +1,6 @@
+enum DocStatus {
+  CO
+  DR
+  VO
+  RE
+}

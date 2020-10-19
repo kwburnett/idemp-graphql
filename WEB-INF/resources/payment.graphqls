@@ -1,0 +1,22 @@
+type Payment {
+  clientId: Int!
+  organizationId: Int!
+  id: ID!
+  isActive: Boolean!
+  created: String
+  createdBy: Int
+  businessPartner: BusinessPartner
+  chargeId: Int
+  orderId: Int
+  payAmount: Float
+  paymentType: ReferenceList
+  nhifType: String
+  nhifRelationship: String
+  claimNumber: String
+  memberId: String
+  number: String
+  memberName: String
+  docStatus: DocStatus
+  transactionDate: String
+  tenderAmount: Float
+}

@@ -6,6 +6,8 @@ public class Resolver {
 
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(new UserResolver(), new ClientResolver(), new OrganizationResolver(), new RoleResolver(),
-				new WarehouseResolver());
+				new WarehouseResolver(), new OrderResolver(), new BusinessPartnerResolver(), new OrderLineResolver(),
+				new PaymentResolver(), new LocationResolver(), new ReferenceListResolver(), new ChargeResolver(),
+				new ProductResolver());
 	}
 }
