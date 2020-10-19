@@ -38,40 +38,28 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		return referenceListRepository.getInvoicePaymentType(entity.getTenderType());
 	}
 
-	// TODO: Update our model to capture these fields
 	public String nhifType(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getBH_NHIF_Type();
 	}
 
-	// TODO: Update our model to capture these fields
 	public String nhifRelationship(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getbh_nhif_relationship();
 	}
 
-	// TODO: Update our model to capture these fields
 	public String claimNumber(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getbh_nhif_claim_number();
 	}
 
-	// TODO: Update our model to capture these fields
 	public String memberId(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getbh_nhif_member_id();
 	}
 
-	// TODO: Update our model to capture these fields
 	public String number(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getNHIF_Number();
 	}
 
-	// TODO: Update our model to capture these fields
 	public String memberName(MPayment_BH entity) {
-//		return entity.getbh
-		return "not working yet";
+		return entity.getbh_nhif_member_name();
 	}
 
 	public DocStatus docStatus(MPayment_BH entity) {
