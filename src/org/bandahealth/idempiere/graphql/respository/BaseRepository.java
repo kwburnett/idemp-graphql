@@ -48,7 +48,7 @@ public abstract class BaseRepository<T extends PO> {
 			}
 
 			Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
-					.setClient_ID();
+					.setClient_ID().setNoVirtualColumn(true);
 
 			if (joinClause != null) {
 				query.addJoinClause(joinClause);

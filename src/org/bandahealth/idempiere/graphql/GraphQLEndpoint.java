@@ -1,7 +1,9 @@
 package org.bandahealth.idempiere.graphql;
 
+import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions;
+import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
@@ -36,10 +38,11 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 		DataLoaderDispatcherInstrumentationOptions options = DataLoaderDispatcherInstrumentationOptions
 				.newOptions().includeStatistics(true);
 
-		DataLoaderDispatcherInstrumentation dispatcherInstrumentation
+		Instrumentation dispatcherInstrumentation
 				= new DataLoaderDispatcherInstrumentation(options);
 		return GraphQLQueryInvoker.newBuilder()
-				.withInstrumentation(dispatcherInstrumentation)
+//				.withInstrumentation(new TracingInstrumentation())
+//				.withInstrumentation(dispatcherInstrumentation)
 				.build();
 	}
 
