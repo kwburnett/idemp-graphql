@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.respository;
+package org.bandahealth.idempiere.graphql.repository;
 
 import org.bandahealth.idempiere.base.model.MCharge_BH;
 import org.compiere.util.Env;

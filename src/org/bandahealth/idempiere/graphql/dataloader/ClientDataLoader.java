@@ -1,6 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
-import org.bandahealth.idempiere.graphql.respository.ClientRepository;
+import org.bandahealth.idempiere.graphql.repository.ClientRepository;
 import org.compiere.model.MClient;
 
 public class ClientDataLoader extends BaseDataLoader<MClient, ClientRepository> implements DataLoaderRegisterer {

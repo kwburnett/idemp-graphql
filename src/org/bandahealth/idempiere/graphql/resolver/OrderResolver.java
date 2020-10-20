@@ -12,10 +12,10 @@ import org.bandahealth.idempiere.graphql.dataloader.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
-import org.bandahealth.idempiere.graphql.respository.BusinessPartnerRepository;
-import org.bandahealth.idempiere.graphql.respository.OrderLineRepository;
-import org.bandahealth.idempiere.graphql.respository.PaymentRepository;
-import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
+import org.bandahealth.idempiere.graphql.repository.BusinessPartnerRepository;
+import org.bandahealth.idempiere.graphql.repository.OrderLineRepository;
+import org.bandahealth.idempiere.graphql.repository.PaymentRepository;
+import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 

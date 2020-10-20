@@ -2,7 +2,7 @@ package org.bandahealth.idempiere.graphql.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
-import org.bandahealth.idempiere.graphql.respository.OrderRepository;
+import org.bandahealth.idempiere.graphql.repository.OrderRepository;
 
 import java.util.List;
 

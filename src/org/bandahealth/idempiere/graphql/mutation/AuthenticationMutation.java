@@ -4,7 +4,7 @@ import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.model.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
-import org.bandahealth.idempiere.graphql.respository.AuthenticationRepository;
+import org.bandahealth.idempiere.graphql.repository.AuthenticationRepository;
 
 public class AuthenticationMutation implements GraphQLMutationResolver {
 

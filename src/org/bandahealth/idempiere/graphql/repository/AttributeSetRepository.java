@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.respository;
+package org.bandahealth.idempiere.graphql.repository;
 
 import org.compiere.model.MAttributeSet;
 import org.compiere.util.Env;

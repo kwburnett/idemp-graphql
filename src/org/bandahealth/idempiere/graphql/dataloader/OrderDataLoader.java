@@ -1,7 +1,7 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
 import org.bandahealth.idempiere.base.model.MOrder_BH;
-import org.bandahealth.idempiere.graphql.respository.OrderRepository;
+import org.bandahealth.idempiere.graphql.repository.OrderRepository;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;

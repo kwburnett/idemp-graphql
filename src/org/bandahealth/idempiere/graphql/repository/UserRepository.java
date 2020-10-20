@@ -1,11 +1,7 @@
-package org.bandahealth.idempiere.graphql.respository;
+package org.bandahealth.idempiere.graphql.repository;
 
 import org.bandahealth.idempiere.base.model.MUser_BH;
-import org.compiere.model.MUser;
-import org.compiere.model.Query;
 import org.compiere.util.Env;
-
-import java.util.List;
 
 public class UserRepository extends BaseRepository<MUser_BH> {
 	@Override

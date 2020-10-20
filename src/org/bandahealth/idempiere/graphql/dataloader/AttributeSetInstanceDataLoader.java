@@ -1,6 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
-import org.bandahealth.idempiere.graphql.respository.AttributeSetInstanceRepository;
+import org.bandahealth.idempiere.graphql.repository.AttributeSetInstanceRepository;
 import org.compiere.model.MAttributeSetInstance;
 
 public class AttributeSetInstanceDataLoader

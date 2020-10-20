@@ -1,6 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
-import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
+import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;

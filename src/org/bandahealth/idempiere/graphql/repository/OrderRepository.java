@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.respository;
+package org.bandahealth.idempiere.graphql.repository;
 
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;

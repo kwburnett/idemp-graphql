@@ -1,10 +1,9 @@
-package org.bandahealth.idempiere.graphql.respository;
+package org.bandahealth.idempiere.graphql.repository;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.graphql.utils.FilterUtil;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
-import org.compiere.model.MOrg;
 import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;

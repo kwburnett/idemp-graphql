@@ -1,6 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
-import org.bandahealth.idempiere.graphql.respository.AccountRepository;
+import org.bandahealth.idempiere.graphql.repository.AccountRepository;
 import org.compiere.model.MElementValue;
 
 public class AccountDataLoader extends BaseDataLoader<MElementValue, AccountRepository>

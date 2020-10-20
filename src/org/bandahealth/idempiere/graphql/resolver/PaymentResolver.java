@@ -10,7 +10,7 @@ import org.bandahealth.idempiere.graphql.dataloader.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
-import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
+import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 
