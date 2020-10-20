@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class PaymentRepository {
+public class PaymentRepository extends BaseRepository<MPayment_BH> {
 
 	public CompletableFuture<Map<Integer, List<MPayment_BH>>> getByOrderIds(Set<Integer> orderIds) {
 		List<Object> parameters = new ArrayList<>();
@@ -25,5 +25,10 @@ public class PaymentRepository {
 				.setParameters(parameters).setOnlyActiveRecords(true).list();
 		return CompletableFuture.supplyAsync(() ->
 				payments.stream().collect(Collectors.groupingBy(MPayment_BH::getC_Order_ID)));
+	}
+
+	@Override
+	public MPayment_BH getModelInstance() {
+		return new MPayment_BH(Env.getCtx(), 0, null);
 	}
 }

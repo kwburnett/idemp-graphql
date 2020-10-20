@@ -1,0 +1,7 @@
+type ProductCategory {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  name: String!
+  value: String
+}

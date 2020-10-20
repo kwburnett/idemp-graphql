@@ -1,9 +1,16 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
+import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.ProductCategoryDataLoader;
+import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQLResolver<MProduct_BH> {
 
@@ -35,8 +42,11 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 		return entity.getBH_PriceMargin();
 	}
 
-	public int productCategoryId(MProduct_BH entity) {
-		return entity.getM_Product_Category_ID();
+	public CompletableFuture<MProductCategory_BH> productCategory(MProduct_BH entity,
+																																	DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MProductCategory_BH> productCategoryDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_DATA_LOADER);
+		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());
 	}
 
 	// TODO: Need to calculate this from inventory

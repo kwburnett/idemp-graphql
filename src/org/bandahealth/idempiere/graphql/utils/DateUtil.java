@@ -10,8 +10,8 @@ import org.compiere.util.CLogger;
 
 public class DateUtil {
 
+	public final static String DATE_FORMAT = "yyyy-MM-dd";
 	private final static String DEFAULT_FORMAT = "yyyy-MM-dd hh:mm:ss";
-	private final static String DATE_FORMAT = "yyyy-MM-dd";
 	private final static String QUEUE_DATE_FORMAT = "E, dd MMMM - HH:mm";
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(DEFAULT_FORMAT);
@@ -25,18 +25,25 @@ public class DateUtil {
 		return null;
 	}
 
+	public static String parseDateOnly(Timestamp timestamp, String dateFormat) {
+		if (timestamp != null) {
+			return new SimpleDateFormat(dateFormat).format(timestamp);
+		}
+
+		return null;
+	}
+
 	public static String parseDateOnly(Timestamp timestamp) {
 		if (timestamp != null) {
 			return new SimpleDateFormat(DATE_FORMAT).format(timestamp);
 		}
 
 		return null;
-
 	}
 
 	/**
 	 * Parse Visit Queue Date
-	 * 
+	 *
 	 * @param timestamp
 	 * @return
 	 */
@@ -51,6 +58,7 @@ public class DateUtil {
 
 	/**
 	 * Parse a YYYY-MM-DD (with or without the timestamp) to a Timestamp
+	 *
 	 * @param date
 	 * @return
 	 */
@@ -84,6 +92,7 @@ public class DateUtil {
 
 	/**
 	 * Adds a day to the passed-in timestamp
+	 *
 	 * @param currentDay The timestamp to get a day from
 	 * @return A timestamp exactly 1 day ahead
 	 */

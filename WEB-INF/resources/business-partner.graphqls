@@ -1,16 +1,16 @@
 type BusinessPartner {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String! @dateFormat
+  createdBy: User!
   description: String
   name: String
   value: String
   totalOpenBalance: Float
   patientNumber: String
-  dateOfBirth: String
+  dateOfBirth: String @dateFormat
   phone: String
   location: Location
   gender: String
@@ -25,5 +25,5 @@ type BusinessPartner {
   nextOfKinContact: String
   localPatientNumber: String
   totalVisits: Int
-  lastVisitDate: String
+  lastVisitDate: String @dateFormat
 }

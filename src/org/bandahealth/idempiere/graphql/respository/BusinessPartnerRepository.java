@@ -12,16 +12,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class BusinessPartnerRepository {
-	public CompletableFuture<Map<Integer, MBPartner_BH>> getByIds(Set<Integer> ids) {
-		List<Object> parameters = new ArrayList<>();
-		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<MBPartner_BH> businessPartners = new Query(Env.getCtx(), MBPartner_BH.Table_Name,
-				MBPartner_BH.COLUMNNAME_C_BPartner_ID + " IN (" + whereCondition + ")",
-				null)
-				.setParameters(parameters).list();
-		return CompletableFuture.supplyAsync(() ->
-				businessPartners.stream().collect(
-						Collectors.toMap(MBPartner_BH::getC_BPartner_ID, businessPartner -> businessPartner)));
+public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH> {
+	@Override
+	public MBPartner_BH getModelInstance() {
+		return new MBPartner_BH(Env.getCtx(), 0, null);
 	}
 }

@@ -1,12 +1,18 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
-import org.bandahealth.idempiere.base.model.MCharge_BH;
-import org.bandahealth.idempiere.base.model.MOrderLine_BH;
-import org.bandahealth.idempiere.base.model.MProduct_BH;
-import org.bandahealth.idempiere.graphql.utils.DateUtil;
+import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.base.model.*;
+import org.bandahealth.idempiere.graphql.dataloader.AttributeSetDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.AttributeSetInstanceDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
+import org.compiere.model.MAttributeSet;
+import org.compiere.model.MAttributeSetInstance;
+import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.concurrent.CompletableFuture;
 
 public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements GraphQLResolver<MOrderLine_BH> {
 
@@ -38,11 +44,25 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 		return entity.getM_AttributeSetInstance_ID();
 	}
 
-	public String expiration(MOrderLine_BH entity) {
-		return DateUtil.parseDateOnly(entity.getBH_Expiration());
+	public Timestamp expiration(MOrderLine_BH entity) {
+		return entity.getBH_Expiration();
 	}
 
 	public String instructions(MOrderLine_BH entity) {
 		return entity.getBH_Instructions();
+	}
+
+	public CompletableFuture<MOrder_BH> order(MOrderLine_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MOrder_BH> orderDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_DATA_LOADER);
+		return orderDataLoader.load(entity.getC_Order_ID());
+	}
+
+	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MOrderLine_BH entity,
+																																			 DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MAttributeSetInstance> attributeSetInstanceDataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_DATA_LOADER);
+		return attributeSetInstanceDataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 }

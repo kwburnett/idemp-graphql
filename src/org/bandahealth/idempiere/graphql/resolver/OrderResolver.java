@@ -38,19 +38,19 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER);
 		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_BY_ORDER_DATA_LOADER);
 		return orderLineDataLoader.load(entity.getC_Order_ID());
 	}
 
 	public CompletableFuture<List<MPayment_BH>> payments(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MPayment_BH>> paymentDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoader.PAYMENT_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoader.PAYMENT_BY_ORDER_DATA_LOADER);
 		return paymentDataLoader.load(entity.getC_Order_ID());
 	}
 
@@ -77,14 +77,14 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	public CompletableFuture<MRefList> patientType(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> referenceListPatientTypeDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoader.PATIENT_TYPE_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoader.PATIENT_TYPE_DATA_LOADER);
 		return referenceListPatientTypeDataLoader.load(entity.getBH_PatientType());
 	}
 
 	public CompletableFuture<MRefList> referral(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> referenceListReferralDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoader.REFERRAL_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoader.REFERRAL_DATA_LOADER);
 		return referenceListReferralDataLoader.load(entity.getbh_referral());
 	}
 

@@ -1,10 +1,10 @@
 type Product {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String! @dateFormat
+  createdBy: User!
   description: String
   name: String
   value: String
@@ -16,6 +16,6 @@ type Product {
   type: String
   hasExpiration: Boolean
   priceMargin: Float
-  productCategoryId: ID
+  productCategory: ProductCategory
   totalQuantity: Float
 }

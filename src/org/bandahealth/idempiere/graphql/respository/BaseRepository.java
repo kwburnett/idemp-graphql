@@ -2,7 +2,9 @@ package org.bandahealth.idempiere.graphql.respository;
 
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.graphql.utils.FilterUtil;
+import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
+import org.compiere.model.MOrg;
 import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
@@ -10,10 +12,52 @@ import org.compiere.util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class BaseRepository<T extends PO> {
 
 	public abstract T getModelInstance();
+
+	/**
+	 * Get a list of this entity grouped by IDs
+	 *
+	 * @param groupingFunction The grouping function to apply for these entities
+	 * @param columnToSearch   The search column to check in
+	 * @param ids              The IDs to search by
+	 * @return
+	 */
+	public CompletableFuture<Map<Integer, List<T>>> getGroupsByIds(Function<T, Integer> groupingFunction,
+																																 String columnToSearch, Set<Integer> ids) {
+		T model = getModelInstance();
+		List<Object> parameters = new ArrayList<>();
+		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
+		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
+				columnToSearch + " IN (" + whereCondition + ")", null)
+				.setParameters(parameters).list();
+		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.groupingBy(groupingFunction)));
+
+	}
+
+	/**
+	 * Get a list of entities by their IDs
+	 *
+	 * @param ids The IDs to search by
+	 * @return
+	 */
+	public CompletableFuture<Map<Integer, T>> getByIds(Set<Integer> ids) {
+		T model = getModelInstance();
+		List<Object> parameters = new ArrayList<>();
+		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
+		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
+				model.get_TableName() + "_ID IN (" + whereCondition + ")", null)
+				.setParameters(parameters).list();
+		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.toMap(T::get_ID, m -> m)));
+
+	}
 
 	public List<T> get(String filterJson, String sort, int page, int pageSize, String whereClause,
 										 List<Object> parameters) {

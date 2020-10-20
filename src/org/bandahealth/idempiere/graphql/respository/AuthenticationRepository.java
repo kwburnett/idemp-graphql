@@ -6,11 +6,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.config.Transaction;
 import org.bandahealth.idempiere.base.model.MMessage_BH;
+import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.model.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
-import org.bandahealth.idempiere.graphql.model.Client;
-import org.bandahealth.idempiere.graphql.model.Organization;
 import org.bandahealth.idempiere.graphql.utils.LoginClaims;
 import org.bandahealth.idempiere.graphql.utils.TokenUtils;
 import org.compiere.model.MClient;
@@ -84,7 +83,7 @@ public class AuthenticationRepository {
 
 			builder.withClaim(LoginClaims.AD_User_ID.name(), user.getAD_User_ID());
 			Env.setContext(Env.getCtx(), Env.AD_USER_ID, user.getAD_User_ID());
-			response.setUserId(user.getAD_User_ID());
+			response.setUser(new MUser_BH(Env.getCtx(), user.getAD_User_ID(), null));
 
 			try {
 				// has access to reports
@@ -93,8 +92,6 @@ public class AuthenticationRepository {
 				response.setToken(builder.sign(Algorithm.HMAC256(TokenUtils.getTokenSecret())));
 				// has accepted terms of use?
 //				response.setHasAcceptedTermsOfUse(TermsOfServiceDBService.hasAccepted());
-				// set username
-				response.setUsername(credentials.getUsername());
 				return response;
 			} catch (Exception e) {
 				throw new AdempiereException("Bad request");
@@ -217,9 +214,9 @@ public class AuthenticationRepository {
 	private void changeLoginProperties(AuthenticationData credentials, JWTCreator.Builder builder, AuthenticationResponse response) {
 		// set client id
 		if (credentials.getClientId() != null) {
-			MClient client = MClient.get(Env.getCtx(), credentials.getClientId());
+			org.compiere.model.MClient client = org.compiere.model.MClient.get(Env.getCtx(), credentials.getClientId());
 			if (client != null) {
-				response.getClients().add(new Client(Env.getCtx(), credentials.getClientId(), null));
+				response.getClients().add(new MClient(Env.getCtx(), credentials.getClientId(), null));
 
 				Env.setContext(Env.getCtx(), Env.AD_CLIENT_ID, credentials.getClientId());
 				builder.withClaim(LoginClaims.AD_Client_ID.name(), credentials.getClientId());
@@ -258,7 +255,7 @@ public class AuthenticationRepository {
 	private void setDefaultLoginProperties(KeyNamePair[] clients, MUser user, JWTCreator.Builder builder, AuthenticationResponse response) {
 		// parse all clients that the user has access to.
 		for (KeyNamePair client : clients) {
-			Client mClient = new Client(Env.getCtx(), client.getKey(), null);
+			MClient mClient = new MClient(Env.getCtx(), client.getKey(), null);
 
 			// set default client
 			if (clients.length == 1) {
@@ -267,9 +264,8 @@ public class AuthenticationRepository {
 			}
 
 			// check orgs.
-			MOrg[] organizations = MOrg.getOfClient(new MClient(Env.getCtx(), mClient.getAD_Client_ID(), null));
+			MOrg[] organizations = MOrg.getOfClient(new org.compiere.model.MClient(Env.getCtx(), mClient.getAD_Client_ID(), null));
 			for (MOrg org : organizations) {
-				Organization organization = new Organization(Env.getCtx(), org.getAD_Org_ID(), null);
 				// set default org
 				if (organizations.length == 1) {
 					Env.setContext(Env.getCtx(), Env.AD_ORG_ID, org.getAD_Org_ID());
@@ -278,26 +274,21 @@ public class AuthenticationRepository {
 
 				// check roles
 				MRole[] roles = user.getRoles(org.getAD_Org_ID());
-				for (MRole role : roles) {
-					organization.getRoles().add(role);
-
-					if (roles.length == 1) {
-						Env.setContext(Env.getCtx(), Env.AD_ROLE_ID, role.getAD_Role_ID());
-						builder.withClaim(LoginClaims.AD_Role_ID.name(), role.getAD_Role_ID());
-						response.setRoleId(role.getAD_Role_ID());
-					}
+				if (roles.length == 1) {
+					MRole role = roles[0];
+					Env.setContext(Env.getCtx(), Env.AD_ROLE_ID, role.getAD_Role_ID());
+					builder.withClaim(LoginClaims.AD_Role_ID.name(), role.getAD_Role_ID());
+					response.setRoleId(role.getAD_Role_ID());
 				}
 
-				organization.getWarehouses().addAll(Arrays.asList(MWarehouse.getForOrg(Env.getCtx(), org.getAD_Org_ID())));
+				MWarehouse[] warehouses = MWarehouse.getForOrg(Env.getCtx(), org.getAD_Org_ID());
 
 				// set default warehouse
-				if (organization.getWarehouses().size() == 1) {
-					MWarehouse warehouse = organization.getWarehouses().get(0);
+				if (warehouses.length == 1) {
+					MWarehouse warehouse = warehouses[0];
 					Env.setContext(Env.getCtx(), Env.M_WAREHOUSE_ID, warehouse.get_ID());
 					builder.withClaim(LoginClaims.M_Warehouse_ID.name(), warehouse.get_ID());
 				}
-
-				mClient.getOrganizations().add(organization);
 			}
 
 			response.getClients().add(mClient);

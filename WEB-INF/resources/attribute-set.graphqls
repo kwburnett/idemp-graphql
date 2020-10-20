@@ -1,0 +1,10 @@
+type AttributeSet {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  created: String! @dateFormat
+  createdBy: User!
+  updated: String! @dateFormat
+  updatedBy: User!
+  name: String
+}

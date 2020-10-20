@@ -6,6 +6,6 @@ import graphql.kickstart.tools.SchemaParserBuilder;
 public class Query implements GraphQLQueryResolver {
 
 	public static void addAll(SchemaParserBuilder builder) {
-		builder.resolvers(new UserQuery(), new OrderQuery());
+		builder.resolvers(new OrderQuery());
 	}
 }

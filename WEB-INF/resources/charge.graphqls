@@ -1,12 +1,12 @@
 type Charge {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String! @dateFormat
+  createdBy: User!
   description: String
   name: String
   isLocked: Boolean
-  accountId: String
+  account: Account
 }

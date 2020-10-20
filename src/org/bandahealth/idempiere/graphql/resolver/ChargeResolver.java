@@ -1,7 +1,16 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MCharge_BH;
+import org.bandahealth.idempiere.graphql.dataloader.AccountDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.OrganizationDataLoader;
+import org.compiere.model.MElementValue;
+import org.compiere.model.MOrg;
+import org.dataloader.DataLoader;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLResolver<MCharge_BH> {
 
@@ -9,7 +18,9 @@ public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLR
 		return entity.isBH_Locked();
 	}
 
-	public int accountId(MCharge_BH entity) {
-		return entity.getC_ElementValue_ID();
+	public CompletableFuture<MElementValue> account(MCharge_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MElementValue> accountDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(AccountDataLoader.ACCOUNT_DATA_LOADER);
+		return accountDataLoader.load(entity.getC_ElementValue_ID());
 	}
 }

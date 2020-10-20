@@ -8,6 +8,7 @@ public class Resolver {
 		builder.resolvers(new UserResolver(), new ClientResolver(), new OrganizationResolver(), new RoleResolver(),
 				new WarehouseResolver(), new OrderResolver(), new BusinessPartnerResolver(), new OrderLineResolver(),
 				new PaymentResolver(), new LocationResolver(), new ReferenceListResolver(), new ChargeResolver(),
-				new ProductResolver());
+				new ProductResolver(), new AttributeSetResolver(), new AttributeSetInstanceResolver(),
+				new ProductCategoryResolver(), new AccountResolver());
 	}
 }

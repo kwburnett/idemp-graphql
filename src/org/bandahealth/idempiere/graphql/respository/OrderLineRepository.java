@@ -12,18 +12,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class OrderLineRepository {
-
-	public CompletableFuture<Map<Integer, List<MOrderLine_BH>>> getByOrderIds(Set<Integer> orderIds) {
-		List<Object> parameters = new ArrayList<>();
-		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
-		List<MOrderLine_BH> orderLines = new Query(Env.getCtx(),MOrderLine_BH.Table_Name,
-				MOrderLine_BH.COLUMNNAME_C_Order_ID + " IN (" + whereCondition + ")", null)
-				.setParameters(parameters)
-				.setClient_ID()
-				.setOnlyActiveRecords(true)
-				.list();
-		return CompletableFuture.supplyAsync(() ->
-				orderLines.stream().collect(Collectors.groupingBy(MOrderLine_BH::getC_Order_ID)));
+public class OrderLineRepository extends BaseRepository<MOrderLine_BH> {
+	@Override
+	public MOrderLine_BH getModelInstance() {
+		return new MOrderLine_BH(Env.getCtx(), 0, null);
 	}
 }

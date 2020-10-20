@@ -8,9 +8,10 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class PaymentDataLoader implements DataLoaderRegisterer {
+public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentRepository> implements DataLoaderRegisterer {
 
-	public static String PAYMENT_DATA_LOADER_NAME = "paymentDataLoader";
+	public static String PAYMENT_DATA_LOADER = "paymentDataLoader";
+	public static String PAYMENT_BY_ORDER_DATA_LOADER = "paymentByOrderDataLoader";
 	private final PaymentRepository paymentRepository;
 
 	public PaymentDataLoader() {
@@ -18,8 +19,19 @@ public class PaymentDataLoader implements DataLoaderRegisterer {
 	}
 
 	@Override
+	protected String getDefaultDataLoaderName() {
+		return PAYMENT_DATA_LOADER;
+	}
+
+	@Override
+	protected PaymentRepository getRepositoryInstance() {
+		return paymentRepository;
+	}
+
+	@Override
 	public void register(DataLoaderRegistry registry) {
-		registry.register(PAYMENT_DATA_LOADER_NAME, DataLoader.newMappedDataLoader(getBatchLoader()));
+		super.register(registry);
+		registry.register(PAYMENT_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader()));
 	}
 
 	private MappedBatchLoader<Integer, List<MPayment_BH>> getBatchLoader() {

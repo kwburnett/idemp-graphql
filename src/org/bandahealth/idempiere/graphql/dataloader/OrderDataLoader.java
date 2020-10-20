@@ -1,13 +1,15 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
+import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.respository.OrderRepository;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class OrderDataLoader implements DataLoaderRegisterer {
+public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderRepository> implements DataLoaderRegisterer {
 
-	public static String SALES_ORDER_COUNT_DATA_LOADER_NAME = "salesOrderCountDataLoader";
+	public static String SALES_ORDER_COUNT_DATA_LOADER = "salesOrderCountDataLoader";
+	public static String ORDER_DATA_LOADER = "orderDataLoader";
 	private final OrderRepository orderRepository;
 
 	public OrderDataLoader() {
@@ -15,8 +17,19 @@ public class OrderDataLoader implements DataLoaderRegisterer {
 	}
 
 	@Override
+	protected String getDefaultDataLoaderName() {
+		return ORDER_DATA_LOADER;
+	}
+
+	@Override
+	protected OrderRepository getRepositoryInstance() {
+		return orderRepository;
+	}
+
+	@Override
 	public void register(DataLoaderRegistry registry) {
-		registry.register(SALES_ORDER_COUNT_DATA_LOADER_NAME,
+		super.register(registry);
+		registry.register(SALES_ORDER_COUNT_DATA_LOADER,
 				DataLoader.newMappedDataLoader(getSalesOrderCountBatchLoader()));
 	}
 

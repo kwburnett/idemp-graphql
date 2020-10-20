@@ -7,9 +7,9 @@ import org.compiere.util.Env;
 
 import java.util.List;
 
-public class UserRepository {
-
-	public List<MUser> getUsers() {
-		return new Query(Env.getCtx(), MUser_BH.Table_Name, "AD_User_ID<1000001", null).list();
+public class UserRepository extends BaseRepository<MUser_BH> {
+	@Override
+	public MUser_BH getModelInstance() {
+		return new MUser_BH(Env.getCtx(), 0, null);
 	}
 }

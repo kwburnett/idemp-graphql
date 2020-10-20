@@ -3,15 +3,19 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
+import org.bandahealth.idempiere.base.model.MCharge_BH;
+import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.dataloader.ChargeDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
-import org.bandahealth.idempiere.graphql.utils.DateUtil;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;
 
 public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQLResolver<MPayment_BH> {
@@ -41,7 +45,7 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 	public CompletableFuture<MRefList> paymentType(MPayment_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> paymentTypeDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoader.ORDER_PAYMENT_TYPE_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoader.ORDER_PAYMENT_TYPE_DATA_LOADER);
 		return paymentTypeDataLoader.load(entity.getTenderType());
 	}
 
@@ -73,11 +77,23 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		return DocStatus.valueOf(entity.getDocStatus());
 	}
 
-	public String transactionDate(MPayment_BH entity) {
-		return DateUtil.parseDateOnly(entity.getDateTrx());
+	public Timestamp transactionDate(MPayment_BH entity) {
+		return entity.getDateTrx();
 	}
 
 	public BigDecimal tenderAmount(MPayment_BH entity) {
 		return entity.getBH_TenderAmount();
+	}
+
+	public CompletableFuture<MOrder_BH> order(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MOrder_BH> orderDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_DATA_LOADER);
+		return orderDataLoader.load(entity.getBH_C_Order_ID() == 0 ? entity.getC_Order_ID() : entity.getBH_C_Order_ID());
+	}
+
+	public CompletableFuture<MCharge_BH> charge(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MCharge_BH> chargeDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_DATA_LOADER);
+		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 }

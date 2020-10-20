@@ -1,17 +1,17 @@
 type OrderLine {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String @dateFormat
+  createdBy: User!
   charge: Charge
-  orderId: Int
+  order: Order!
   product: Product
   price: Float
   quantity: Float
   lineNetAmount: Float
-  attributeSetInstanceId: Int
+  attributeSetInstance: AttributeSetInstance
   expiration: String
   instructions: String
 }

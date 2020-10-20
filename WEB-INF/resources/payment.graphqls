@@ -1,13 +1,13 @@
 type Payment {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String @dateFormat
+  createdBy: User!
   businessPartner: BusinessPartner
-  chargeId: Int
-  orderId: Int
+  charge: Charge
+  order: Order
   payAmount: Float
   paymentType: ReferenceList
   nhifType: String
@@ -17,6 +17,6 @@ type Payment {
   number: String
   memberName: String
   docStatus: DocStatus
-  transactionDate: String
+  transactionDate: String @dateFormat
   tenderAmount: Float
 }

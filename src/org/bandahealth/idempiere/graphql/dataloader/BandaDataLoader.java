@@ -17,6 +17,15 @@ public class BandaDataLoader {
 			add(new OrderLineDataLoader());
 			add(new PaymentDataLoader());
 			add(new ReferenceListDataLoader());
+			add(new ClientDataLoader());
+			add(new OrganizationDataLoader());
+			add(new RoleDataLoader());
+			add(new WarehouseDataLoader());
+			add(new UserDataLoader());
+			add(new AttributeSetInstanceDataLoader());
+			add(new AttributeSetDataLoader());
+			add(new ChargeDataLoader());
+			add(new AccountDataLoader());
 		}};
 	}
 

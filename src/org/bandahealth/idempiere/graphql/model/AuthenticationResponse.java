@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.model;
 
+import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.compiere.model.MClient;
 
 import java.util.ArrayList;
@@ -7,9 +8,9 @@ import java.util.List;
 
 public class AuthenticationResponse {
 	private String token;
-	private int userId;
+	private MUser_BH user;
 	private String username;
-	private List<Client> clients = new ArrayList<>();
+	private List<MClient> clients = new ArrayList<>();
 	private boolean hasAcceptedTermsOfUse;
 	private int roleId;
 	private boolean needsToResetPassword;
@@ -24,19 +25,19 @@ public class AuthenticationResponse {
 		this.token = token;
 	}
 
-	public int getUserId() {
-		return userId;
+	public MUser_BH getUser() {
+		return user;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUser(MUser_BH user) {
+		this.user = user;
 	}
 
-	public List<Client> getClients() {
+	public List<MClient> getClients() {
 		return clients;
 	}
 
-	public void setClients(List<Client> clients) {
+	public void setClients(List<MClient> clients) {
 		this.clients = clients;
 	}
 

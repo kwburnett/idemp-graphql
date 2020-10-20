@@ -1,0 +1,8 @@
+type AttributeSetInstance {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  attributeSet: AttributeSet!
+  isActive: Boolean
+  guaranteeDate: String! @dateFormatFormat
+}

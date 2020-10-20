@@ -9,6 +9,7 @@ import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
 import graphql.kickstart.tools.SchemaParserBuilder;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
+import org.bandahealth.idempiere.graphql.directive.Directive;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.mutation.Mutation;
 import org.bandahealth.idempiere.graphql.query.Query;
@@ -21,6 +22,8 @@ import graphql.kickstart.tools.SchemaParser;
 import graphql.schema.GraphQLSchema;
 
 public class GraphQLEndpoint extends GraphQLHttpServlet {
+
+	public static final String GRAPHQL_SDL_FILE_DIRECTORY = "WEB-INF/resources";
 
 	private final CLogger logger = CLogger.getCLogger(GraphQLEndpoint.class);
 
@@ -55,21 +58,31 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 		SchemaParserBuilder builder = SchemaParser.newParser()
 				.files(
 						"WEB-INF/resources/schema.graphqls",
+						"WEB-INF/resources/account.graphqls",
+						"WEB-INF/resources/attribute-set.graphqls",
+						"WEB-INF/resources/attribute-set-instance.graphqls",
 						"WEB-INF/resources/authentication.graphqls",
 						"WEB-INF/resources/business-partner.graphqls",
 						"WEB-INF/resources/charge.graphqls",
+						"WEB-INF/resources/client.graphqls",
 						"WEB-INF/resources/document.graphqls",
 						"WEB-INF/resources/location.graphqls",
 						"WEB-INF/resources/order.graphqls",
 						"WEB-INF/resources/order-line.graphqls",
 						"WEB-INF/resources/order-status.graphqls",
+						"WEB-INF/resources/organization.graphqls",
 						"WEB-INF/resources/payment.graphqls",
 						"WEB-INF/resources/product.graphqls",
-						"WEB-INF/resources/reference-list.graphqls"
+						"WEB-INF/resources/product-category.graphqls",
+						"WEB-INF/resources/reference-list.graphqls",
+						"WEB-INF/resources/role.graphqls",
+						"WEB-INF/resources/user.graphqls",
+						"WEB-INF/resources/warehouse.graphqls"
 				);
 		Query.addAll(builder);
 		Mutation.addAll(builder);
 		Resolver.addAll(builder);
+		Directive.addAll(builder);
 		return builder
 				.build()
 				.makeExecutableSchema();

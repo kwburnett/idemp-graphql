@@ -1,14 +1,14 @@
 #directive @BHDate()
 
 type Order {
-  clientId: Int!
-  organizationId: Int!
   id: ID!
+  client: Client!
+  organization: Organization!
   isActive: Boolean!
-  created: String
-  createdBy: Int
+  created: String @dateFormat
+  createdBy: User!
   businessPartner: BusinessPartner
-  dateOrdered: String
+  dateOrdered: String @dateFormat
   grandTotal: Float
   isSalesOrderTransaction: Boolean
   isExpense: Boolean

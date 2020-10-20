@@ -1,8 +1,8 @@
 type AuthenticationResponse {
     token: String
-    userId: Int
     username: String
     clients: [Client!]!
+    user: User
     hasAcceptedTermsOfUse: Boolean
     roleId: Int!
     needsToResetPassword: Boolean!

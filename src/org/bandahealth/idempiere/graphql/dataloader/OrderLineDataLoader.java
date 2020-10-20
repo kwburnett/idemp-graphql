@@ -8,9 +8,11 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class OrderLineDataLoader implements DataLoaderRegisterer {
+public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLineRepository>
+		implements DataLoaderRegisterer {
 
-	public static String ORDER_LINE_DATA_LOADER_NAME = "orderLineDataLoader";
+	public static String ORDER_LINE_DATA_LOADER = "orderLineDataLoader";
+	public static String ORDER_LINE_BY_ORDER_DATA_LOADER = "orderLineByOrderDataLoader";
 	private final OrderLineRepository orderLineRepository;
 
 	public OrderLineDataLoader() {
@@ -18,11 +20,23 @@ public class OrderLineDataLoader implements DataLoaderRegisterer {
 	}
 
 	@Override
+	protected String getDefaultDataLoaderName() {
+		return ORDER_LINE_DATA_LOADER;
+	}
+
+	@Override
+	protected OrderLineRepository getRepositoryInstance() {
+		return orderLineRepository;
+	}
+
+	@Override
 	public void register(DataLoaderRegistry registry) {
-		registry.register(ORDER_LINE_DATA_LOADER_NAME, DataLoader.newMappedDataLoader(getBatchLoader()));
+		super.register(registry);
+		registry.register(ORDER_LINE_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader()));
 	}
 
 	private MappedBatchLoader<Integer, List<MOrderLine_BH>> getBatchLoader() {
-		return orderLineRepository::getByOrderIds;
+		return keys -> orderLineRepository.getGroupsByIds(MOrderLine_BH::getC_Order_ID, MOrderLine_BH.COLUMNNAME_C_Order_ID,
+				keys);
 	}
 }
