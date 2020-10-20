@@ -6,7 +6,9 @@ import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrderLine_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.dataloader.BusinessPartnerDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrderLineDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
@@ -34,8 +36,10 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		referenceListRepository = new ReferenceListRepository();
 	}
 
-	public MBPartner_BH businessPartner(MOrder_BH entity) {
-		return businessPartnerRepository.getById(entity.getC_BPartner_ID());
+	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER_NAME);
+		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {
@@ -44,8 +48,10 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		return orderLineDataLoader.load(entity.getC_Order_ID());
 	}
 
-	public List<MPayment_BH> payments(MOrder_BH entity) {
-		return paymentRepository.getByOrder(entity.getC_Order_ID());
+	public CompletableFuture<List<MPayment_BH>> payments(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MPayment_BH>> paymentDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoader.PAYMENT_DATA_LOADER_NAME);
+		return paymentDataLoader.load(entity.getC_Order_ID());
 	}
 
 	public boolean isSalesOrderTransaction(MOrder_BH entity) {
@@ -127,12 +133,10 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	 * @param entity
 	 */
 	private CompletableFuture<OrderStatus> getOrderStatus(MOrder_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_DATA_LOADER_NAME);
-
-		return orderLineDataLoader.load(entity.getC_Order_ID()).thenApply(orderLines -> {
+		CompletableFuture<List<MPayment_BH>> paymentFuture = payments(entity, environment);
+		return orderLines(entity, environment).thenCombine(paymentFuture, (orderLines, payments) -> {
 			// check payments
-			boolean paymentsExist = !payments(entity).isEmpty();
+			boolean paymentsExist = payments != null && !payments.isEmpty();
 
 			// check orderlines
 			boolean orderlinesExist = orderLines != null && !orderLines.isEmpty();

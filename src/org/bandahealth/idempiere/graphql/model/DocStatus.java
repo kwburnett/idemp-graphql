@@ -5,4 +5,5 @@ public enum DocStatus {
 	DR,
 	VO,
 	RE,
+	IN,
 }

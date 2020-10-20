@@ -50,13 +50,6 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- to embed GraphiQL tool -->
-		<dependency>
-			<groupId>com.graphql-java-kickstart</groupId>
-			<artifactId>graphiql-spring-boot-starter</artifactId>
-			<version>8.0.0</version>
-			<scope>runtime</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
@@ -152,11 +145,6 @@
 									<groupId>org.slf4j</groupId>
 									<artifactId>slf4j-log4j12</artifactId>
 									<version>1.7.26</version>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.graphql-java-kickstart</groupId>
-									<artifactId>graphiql-spring-boot-starter</artifactId>
-									<version>8.0.0</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.jetbrains.kotlin</groupId>
