@@ -3,8 +3,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
-import org.bandahealth.idempiere.graphql.dataloader.BusinessPartnerDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.utils.DateUtil;
 import org.compiere.model.MLocation;
 import org.dataloader.DataLoader;
@@ -75,7 +74,7 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 
 	public CompletableFuture<Integer> totalVisits(MBPartner_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, Integer> salesOrderCountDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.SALES_ORDER_COUNT_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoaderRegisterer.SALES_ORDER_COUNT_DATA_LOADER_NAME);
 		return salesOrderCountDataLoader.load(entity.getC_BPartner_ID());
 	}
 

@@ -6,10 +6,10 @@ import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrderLine_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
-import org.bandahealth.idempiere.graphql.dataloader.BusinessPartnerDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrderLineDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.PaymentDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.BusinessPartnerDataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.OrderLineDataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.PaymentDataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
 import org.bandahealth.idempiere.graphql.respository.BusinessPartnerRepository;
@@ -38,19 +38,19 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoaderRegisterer.BUSINESS_PARTNER_DATA_LOADER_NAME);
 		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoaderRegisterer.ORDER_LINE_DATA_LOADER_NAME);
 		return orderLineDataLoader.load(entity.getC_Order_ID());
 	}
 
 	public CompletableFuture<List<MPayment_BH>> payments(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MPayment_BH>> paymentDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoader.PAYMENT_DATA_LOADER_NAME);
+				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoaderRegisterer.PAYMENT_DATA_LOADER_NAME);
 		return paymentDataLoader.load(entity.getC_Order_ID());
 	}
 
@@ -77,14 +77,14 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	public CompletableFuture<MRefList> patientType(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> referenceListPatientTypeDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoader.PATIENT_TYPE_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoaderRegisterer.PATIENT_TYPE_DATA_LOADER_NAME);
 		return referenceListPatientTypeDataLoader.load(entity.getBH_PatientType());
 	}
 
 	public CompletableFuture<MRefList> referral(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> referenceListReferralDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoader.REFERRAL_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoaderRegisterer.REFERRAL_DATA_LOADER_NAME);
 		return referenceListReferralDataLoader.load(entity.getbh_referral());
 	}
 
