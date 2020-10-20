@@ -1,10 +1,13 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrderLine_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.dataloader.OrderLineDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
 import org.bandahealth.idempiere.graphql.respository.BusinessPartnerRepository;
@@ -12,9 +15,10 @@ import org.bandahealth.idempiere.graphql.respository.OrderLineRepository;
 import org.bandahealth.idempiere.graphql.respository.PaymentRepository;
 import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
 import org.compiere.model.MRefList;
-import org.compiere.util.Env;
+import org.dataloader.DataLoader;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLResolver<MOrder_BH> {
 
@@ -34,8 +38,10 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		return businessPartnerRepository.getById(entity.getC_BPartner_ID());
 	}
 
-	public List<MOrderLine_BH> orderLines(MOrder_BH entity) {
-		return orderLineRepository.getByOrder(entity.getC_Order_ID());
+	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_DATA_LOADER_NAME);
+		return orderLineDataLoader.load(entity.getC_Order_ID());
 	}
 
 	public List<MPayment_BH> payments(MOrder_BH entity) {
@@ -62,18 +68,22 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		return "";
 	}
 
-	public MRefList patientType(MOrder_BH entity) {
-		return referenceListRepository.getOrderPaymentType(entity.getPaymentRule());
+	public CompletableFuture<MRefList> patientType(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> referenceListPatientTypeDataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(ReferenceListDataLoader.PATIENT_TYPE_DATA_LOADER_NAME);
+		return referenceListPatientTypeDataLoader.load(entity.getBH_PatientType());
 	}
 
-	public MRefList referral(MOrder_BH entity) {
-//		return referenceListRepository.getReferral(entity.getbh_r());
-		return new MRefList(Env.getCtx(), 0, null);
+	public CompletableFuture<MRefList> referral(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> referenceListReferralDataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(ReferenceListDataLoader.REFERRAL_DATA_LOADER_NAME);
+		return referenceListReferralDataLoader.load(entity.getbh_referral());
 	}
 
-	public OrderStatus status(MOrder_BH entity) {
-//		return referenceListRepository.getReferral(entity.getbh_r());
-		return getOrderStatus(entity);
+	public CompletableFuture<OrderStatus> status(MOrder_BH entity, DataFetchingEnvironment environment) {
+		return getOrderStatus(entity, environment);
 	}
 
 	public String chiefComplaint(MOrder_BH entity) {
@@ -116,30 +126,34 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	 *
 	 * @param entity
 	 */
-	private OrderStatus getOrderStatus(MOrder_BH entity) {
-		// check payments
-		boolean paymentsExist = !payments(entity).isEmpty();
+	private CompletableFuture<OrderStatus> getOrderStatus(MOrder_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_DATA_LOADER_NAME);
 
-		// check orderlines
-		boolean orderlinesExist = !orderLines(entity).isEmpty();
+		return orderLineDataLoader.load(entity.getC_Order_ID()).thenApply(orderLines -> {
+			// check payments
+			boolean paymentsExist = !payments(entity).isEmpty();
 
-		if (!orderlinesExist && !paymentsExist) {
-			// check visit information
-//			if (entity.get_Value(COLUMNNAME_REFERRAL) == null && entity.getDescription() == null
-//					&& entity.get_Value(COLUMNNAME_VISIT_NOTES) == null) {
-			if (entity.getDescription() == null) {
-				return OrderStatus.WAITING;
+			// check orderlines
+			boolean orderlinesExist = orderLines != null && !orderLines.isEmpty();
+
+			if (!orderlinesExist && !paymentsExist) {
+				// check visit information
+				if (entity.getbh_referral() == null && entity.getDescription() == null
+						&& entity.getbh_lab_notes() == null) {
+					return OrderStatus.WAITING;
+				} else {
+					return OrderStatus.DISPENSING;
+				}
+			} else if (orderlinesExist && !paymentsExist) {
+				return OrderStatus.PENDING;
 			} else {
-				return OrderStatus.DISPENSING;
+				if (MOrder_BH.DOCSTATUS_Completed.equalsIgnoreCase(entity.getDocStatus())) {
+					return OrderStatus.COMPLETED;
+				} else {
+					return OrderStatus.PENDING_COMPLETION;
+				}
 			}
-		} else if (orderlinesExist && !paymentsExist) {
-			return OrderStatus.PENDING;
-		} else {
-			if (MOrder_BH.DOCSTATUS_Completed.equalsIgnoreCase(entity.getDocStatus())) {
-				return OrderStatus.COMPLETED;
-			} else {
-				return OrderStatus.PENDING_COMPLETION;
-			}
-		}
+		});
 	}
 }

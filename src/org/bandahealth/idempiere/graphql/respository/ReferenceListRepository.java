@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.respository;
 
+import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.compiere.model.MRefList;
 import org.compiere.model.MReference;
 import org.compiere.model.MValRule;
@@ -8,6 +9,10 @@ import org.compiere.util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class ReferenceListRepository {
 
@@ -21,35 +26,37 @@ public class ReferenceListRepository {
 	public final static String DOCUMENT_STATUS = "_Document Status";
 	public final static String PRODUCT_CATEGORY_TYPE = "BH Product Category Type";
 
-	public MRefList getOrderPaymentType(String referenceValue) {
-		return getTypes(ORDER_PAYMENT_TYPE, referenceValue).get(0);
+	public CompletableFuture<Map<String, MRefList>> getOrderPaymentType(Set<String> referenceValues) {
+		return getTypes(ORDER_PAYMENT_TYPE, referenceValues);
 	}
 
-	public MRefList getReferral(String referenceValue) {
-		return getTypes(REFERRAL_DROPDOWN, referenceValue).get(0);
+	public CompletableFuture<Map<String, MRefList>> getPatientType(Set<String> referenceValues) {
+		return getTypes(PATIENT_TYPE, referenceValues);
 	}
 
-	public MRefList getInvoicePaymentType(String referenceValue) {
-		return getTypes(INVOICE_PAYMENT_TYPE, referenceValue).get(0);
+	public CompletableFuture<Map<String, MRefList>> getReferral(Set<String> referenceValues) {
+		return getTypes(REFERRAL_DROPDOWN, referenceValues);
+	}
+
+	public CompletableFuture<Map<String, MRefList>> getInvoicePaymentType(Set<String> referenceValues) {
+		return getTypes(INVOICE_PAYMENT_TYPE, referenceValues);
 	}
 
 	/**
 	 * Get Reference List from MRefList.Table_Name
 	 *
 	 * @param referenceName
-	 * @param referenceValue
+	 * @param referenceValues
 	 * @return
 	 */
-	private List<MRefList> getTypes(String referenceName, String referenceValue) {
+	private CompletableFuture<Map<String, MRefList>> getTypes(String referenceName, Set<String> referenceValues) {
 		List<Object> parameters = new ArrayList<>();
-		parameters.add(referenceName);
 
 		String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
+		parameters.add(referenceName);
 
-		if (referenceValue != null) {
-			whereClause += " AND " + MRefList.COLUMNNAME_Value + "=?";
-			parameters.add(referenceValue);
-		}
+		whereClause += " AND " + MRefList.COLUMNNAME_Value + "="
+				+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters);
 
 		if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
 			// get payment type limits..
@@ -60,10 +67,13 @@ public class ReferenceListRepository {
 			}
 		}
 
-		return new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
+		List<MRefList> types = new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
 				.addJoinClause("JOIN " + MReference.Table_Name + " ON " + MReference.Table_Name + "."
 						+ MReference.COLUMNNAME_AD_Reference_ID + "=" + MRefList.Table_Name + "."
 						+ MRefList.COLUMNNAME_AD_Reference_ID)
-				.setParameters(parameters).setOnlyActiveRecords(true).list();
+				.setParameters(parameters).setOnlyActiveRecords(true)
+				.list();
+		return CompletableFuture.supplyAsync(() ->
+				types.stream().collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 }

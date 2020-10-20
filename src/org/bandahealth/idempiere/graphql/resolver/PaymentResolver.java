@@ -1,14 +1,18 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
 import org.bandahealth.idempiere.graphql.utils.DateUtil;
 import org.compiere.model.MRefList;
+import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQLResolver<MPayment_BH> {
 
@@ -34,8 +38,11 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		return entity.getPayAmt();
 	}
 
-	public MRefList paymentType(MPayment_BH entity) {
-		return referenceListRepository.getInvoicePaymentType(entity.getTenderType());
+	public CompletableFuture<MRefList> paymentType(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> paymentTypeDataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(ReferenceListDataLoader.ORDER_PAYMENT_TYPE_DATA_LOADER_NAME);
+		return paymentTypeDataLoader.load(entity.getTenderType());
 	}
 
 	public String nhifType(MPayment_BH entity) {

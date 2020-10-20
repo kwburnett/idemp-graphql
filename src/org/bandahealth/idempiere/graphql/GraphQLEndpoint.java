@@ -1,9 +1,12 @@
 package org.bandahealth.idempiere.graphql;
 
+import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
+import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions;
 import graphql.kickstart.execution.GraphQLObjectMapper;
+import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
 import graphql.kickstart.tools.SchemaParserBuilder;
-import org.bandahealth.idempiere.graphql.context.AuthenticationGraphQLContextBuilder;
+import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.mutation.Mutation;
 import org.bandahealth.idempiere.graphql.query.Query;
@@ -21,7 +24,23 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 
 	@Override
 	protected GraphQLConfiguration getConfiguration() {
-		return GraphQLConfiguration.with(createContext()).with(createObjectMapper()).build();
+		return GraphQLConfiguration.with(createContext()).with(createObjectMapper()).with(getInvoker()).build();
+	}
+
+	/**
+	 * Allows for the invoked queries to return timing information for debugging and performance-tuning.
+	 *
+	 * @return The configured query invoker
+	 */
+	public GraphQLQueryInvoker getInvoker() {
+		DataLoaderDispatcherInstrumentationOptions options = DataLoaderDispatcherInstrumentationOptions
+				.newOptions().includeStatistics(true);
+
+		DataLoaderDispatcherInstrumentation dispatcherInstrumentation
+				= new DataLoaderDispatcherInstrumentation(options);
+		return GraphQLQueryInvoker.newBuilder()
+				.withInstrumentation(dispatcherInstrumentation)
+				.build();
 	}
 
 	/**
@@ -60,7 +79,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 	 */
 	private GraphQLInvocationInputFactory createContext() {
 		return GraphQLInvocationInputFactory.newBuilder(createSchema())
-				.withGraphQLContextBuilder(AuthenticationGraphQLContextBuilder::new)
+				.withGraphQLContextBuilder(BandaGraphQLContextBuilder::new)
 				.build();
 	}
 
