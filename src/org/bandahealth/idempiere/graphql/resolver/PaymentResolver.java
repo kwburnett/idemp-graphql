@@ -4,7 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
-import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.respository.ReferenceListRepository;
 import org.bandahealth.idempiere.graphql.utils.DateUtil;
@@ -41,7 +41,7 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 	public CompletableFuture<MRefList> paymentType(MPayment_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> paymentTypeDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(ReferenceListDataLoaderRegisterer.ORDER_PAYMENT_TYPE_DATA_LOADER_NAME);
+						.getDataLoader(ReferenceListDataLoader.ORDER_PAYMENT_TYPE_DATA_LOADER_NAME);
 		return paymentTypeDataLoader.load(entity.getTenderType());
 	}
 

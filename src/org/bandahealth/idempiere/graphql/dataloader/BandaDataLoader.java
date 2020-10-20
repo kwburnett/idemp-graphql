@@ -11,12 +11,12 @@ public class BandaDataLoader {
 
 	public BandaDataLoader() {
 		dataLoaders = new ArrayList<>() {{
-			add(new BusinessPartnerDataLoaderRegisterer());
-			add(new OrderDataLoaderRegisterer());
-			add(new OrderDataLoaderRegisterer());
-			add(new OrderLineDataLoaderRegisterer());
-			add(new PaymentDataLoaderRegisterer());
-			add(new ReferenceListDataLoaderRegisterer());
+			add(new BusinessPartnerDataLoader());
+			add(new OrderDataLoader());
+			add(new OrderDataLoader());
+			add(new OrderLineDataLoader());
+			add(new PaymentDataLoader());
+			add(new ReferenceListDataLoader());
 		}};
 	}
 

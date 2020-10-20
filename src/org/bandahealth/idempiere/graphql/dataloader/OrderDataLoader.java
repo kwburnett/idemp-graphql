@@ -5,12 +5,12 @@ import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class OrderDataLoaderRegisterer implements DataLoaderRegisterer {
+public class OrderDataLoader implements DataLoaderRegisterer {
 
 	public static String SALES_ORDER_COUNT_DATA_LOADER_NAME = "salesOrderCountDataLoader";
 	private final OrderRepository orderRepository;
 
-	public OrderDataLoaderRegisterer() {
+	public OrderDataLoader() {
 		orderRepository = new OrderRepository();
 	}
 

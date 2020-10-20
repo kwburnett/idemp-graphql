@@ -8,12 +8,12 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class PaymentDataLoaderRegisterer implements DataLoaderRegisterer {
+public class PaymentDataLoader implements DataLoaderRegisterer {
 
 	public static String PAYMENT_DATA_LOADER_NAME = "paymentDataLoader";
 	private final PaymentRepository paymentRepository;
 
-	public PaymentDataLoaderRegisterer() {
+	public PaymentDataLoader() {
 		paymentRepository = new PaymentRepository();
 	}
 

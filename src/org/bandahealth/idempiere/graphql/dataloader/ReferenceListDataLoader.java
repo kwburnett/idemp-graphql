@@ -6,7 +6,7 @@ import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class ReferenceListDataLoaderRegisterer implements DataLoaderRegisterer {
+public class ReferenceListDataLoader implements DataLoaderRegisterer {
 
 	public static String PATIENT_TYPE_DATA_LOADER_NAME = "referenceListPatientTypeDataLoader";
 	public static String REFERRAL_DATA_LOADER_NAME = "referenceListReferralDataLoader";
@@ -14,7 +14,7 @@ public class ReferenceListDataLoaderRegisterer implements DataLoaderRegisterer {
 	public static String INVOICE_PAYMENT_TYPE_DATA_LOADER_NAME = "referenceListInvoicePaymentTypeDataLoader";
 	private final ReferenceListRepository referenceListRepository;
 
-	public ReferenceListDataLoaderRegisterer() {
+	public ReferenceListDataLoader() {
 		referenceListRepository = new ReferenceListRepository();
 	}
 

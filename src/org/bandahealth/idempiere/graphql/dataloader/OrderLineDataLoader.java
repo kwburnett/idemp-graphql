@@ -8,12 +8,12 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class OrderLineDataLoaderRegisterer implements DataLoaderRegisterer {
+public class OrderLineDataLoader implements DataLoaderRegisterer {
 
 	public static String ORDER_LINE_DATA_LOADER_NAME = "orderLineDataLoader";
 	private final OrderLineRepository orderLineRepository;
 
-	public OrderLineDataLoaderRegisterer() {
+	public OrderLineDataLoader() {
 		orderLineRepository = new OrderLineRepository();
 	}
 

@@ -6,12 +6,12 @@ import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class BusinessPartnerDataLoaderRegisterer implements DataLoaderRegisterer {
+public class BusinessPartnerDataLoader implements DataLoaderRegisterer {
 
 	public static String BUSINESS_PARTNER_DATA_LOADER_NAME = "businessPartnerDataLoader";
 	private final BusinessPartnerRepository businessPartnerRepository;
 
-	public BusinessPartnerDataLoaderRegisterer() {
+	public BusinessPartnerDataLoader() {
 		businessPartnerRepository = new BusinessPartnerRepository();
 	}
 
