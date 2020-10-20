@@ -55,8 +55,8 @@ public class ReferenceListRepository {
 		String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
 		parameters.add(referenceName);
 
-		whereClause += " AND " + MRefList.COLUMNNAME_Value + "="
-				+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters);
+		whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
+				+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
 
 		if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
 			// get payment type limits..
