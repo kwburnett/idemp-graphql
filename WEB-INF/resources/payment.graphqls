@@ -10,8 +10,8 @@ type Payment {
   order: Order
   payAmount: Float
   paymentType: ReferenceList
-  nhifType: String
-  nhifRelationship: String
+  nhifType: ReferenceList
+  nhifRelationship: ReferenceList
   claimNumber: String
   memberId: String
   number: String

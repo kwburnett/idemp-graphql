@@ -13,7 +13,7 @@ type Order {
   isSalesOrderTransaction: Boolean
   isExpense: Boolean
   description: String
-  orderLines: [OrderLine!]!
+  orderLines: [OrderLine!]
   payments: [Payment!]!
   # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
   docStatus: DocStatus

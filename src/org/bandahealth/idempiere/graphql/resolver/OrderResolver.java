@@ -62,10 +62,6 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		return (boolean) entity.getBH_Isexpense();
 	}
 
-	public DocStatus docStatus(MOrder_BH entity) {
-		return DocStatus.valueOf(entity.getDocStatus());
-	}
-
 	public boolean isNewVisit(MOrder_BH entity) {
 		return entity.isBH_NewVisit();
 	}

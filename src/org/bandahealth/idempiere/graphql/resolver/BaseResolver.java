@@ -5,9 +5,11 @@ import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.dataloader.ClientDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrganizationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.UserDataLoader;
+import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.compiere.model.MClient;
 import org.compiere.model.MOrg;
 import org.compiere.model.PO;
+import org.compiere.process.DocAction;
 import org.dataloader.DataLoader;
 
 import java.util.concurrent.CompletableFuture;
@@ -42,5 +44,12 @@ public class BaseResolver<T extends PO> {
 		final DataLoader<Integer, MUser_BH> userDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_DATA_LOADER);
 		return userDataLoader.load(entity.getUpdatedBy());
+	}
+
+	public DocStatus docStatus(T entity) {
+		if (entity instanceof DocAction) {
+			return DocStatus.valueOf(((DocAction) entity).getDocStatus());
+		}
+		throw new IllegalArgumentException("doc status does not exist on entity");
 	}
 }

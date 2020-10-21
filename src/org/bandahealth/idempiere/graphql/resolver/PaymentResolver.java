@@ -6,12 +6,14 @@ import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MCharge_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.dataloader.BusinessPartnerDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
 import org.compiere.model.MRefList;
+import org.compiere.util.Env;
 import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
@@ -26,8 +28,11 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		referenceListRepository = new ReferenceListRepository();
 	}
 
-	public MBPartner_BH businessPartner(MPayment_BH entity) {
-		return (MBPartner_BH) entity.getC_BPartner();
+	public CompletableFuture<MBPartner_BH> businessPartner(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER);
+		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public int chargeId(MPayment_BH entity) {
@@ -49,12 +54,21 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		return paymentTypeDataLoader.load(entity.getTenderType());
 	}
 
-	public String nhifType(MPayment_BH entity) {
-		return entity.getBH_NHIF_Type();
+	public CompletableFuture<MRefList> nhifType(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> dataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(ReferenceListDataLoader.NHIF_TYPE_DATA_LOADER);
+		if (entity.getBH_NHIF_Type() == null) {
+			return CompletableFuture.supplyAsync(() -> new MRefList(Env.getCtx(), 0, null));
+		}
+		return dataLoader.load(entity.getBH_NHIF_Type());
 	}
 
-	public String nhifRelationship(MPayment_BH entity) {
-		return entity.getbh_nhif_relationship();
+	public CompletableFuture<MRefList> nhifRelationship(MPayment_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> dataLoader =
+				environment.getDataLoaderRegistry()
+						.getDataLoader(ReferenceListDataLoader.NHIF_RELATIONSHIP_DATA_LOADER);
+		return dataLoader.load(entity.getbh_nhif_relationship());
 	}
 
 	public String claimNumber(MPayment_BH entity) {
@@ -71,10 +85,6 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 
 	public String memberName(MPayment_BH entity) {
 		return entity.getbh_nhif_member_name();
-	}
-
-	public DocStatus docStatus(MPayment_BH entity) {
-		return DocStatus.valueOf(entity.getDocStatus());
 	}
 
 	public Timestamp transactionDate(MPayment_BH entity) {

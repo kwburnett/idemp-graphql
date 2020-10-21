@@ -291,8 +291,7 @@ public class FilterUtil {
 								false, filterValue, dbColumnIsDateType);
 						break;
 					case "$gt":
-						whereClause.append("?");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName);
 						// For dates, we have to be careful of time zones, so adjust the logic
 						if (dbColumnIsDateType) {
 							// Increase the day value so all times for the date are excluded
@@ -304,18 +303,15 @@ public class FilterUtil {
 						parameters.add(filterValue);
 						break;
 					case "$gte":
-						whereClause.append("?").append(negate ? "<" : ">=").append("?");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName).append(negate ? "<" : ">=").append("?");
 						parameters.add(filterValue);
 						break;
 					case "$lt":
-						whereClause.append("?").append(negate ? ">=" : "<").append("?");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName).append(negate ? ">=" : "<").append("?");
 						parameters.add(filterValue);
 						break;
 					case "$lte":
-						whereClause.append("?");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName);
 						// For dates, we have to be careful of time zones, so adjust the logic
 						if (dbColumnIsDateType) {
 							// Increase the day value so all times for the date are included
@@ -329,9 +325,8 @@ public class FilterUtil {
 					case "$in":
 						listOperatorValues = (List<?>) filterValue;
 						parameterClause = "?,".repeat(listOperatorValues.size());
-						whereClause.append("?").append(negate ? " NOT " : " ").append("IN (")
+						whereClause.append(dbColumnName).append(negate ? " NOT " : " ").append("IN (")
 								.append(parameterClause, 0, parameterClause.length() - 1).append(")");
-						parameters.add(dbColumnName);
 						parameters.addAll(listOperatorValues);
 						break;
 					case "$nin":
@@ -343,22 +338,18 @@ public class FilterUtil {
 						parameters.addAll(listOperatorValues);
 						break;
 					case "$text":
-						whereClause.append("LOWER(").append("?").append(")").append(negate ? " NOT " : " ")
+						whereClause.append("LOWER(").append(dbColumnName).append(")").append(negate ? " NOT " : " ")
 								.append("LIKE '%").append(filterValue.toString().toLowerCase()).append("%'");
-						parameters.add(dbColumnName);
 						break;
 					case "$ntext":
-						whereClause.append("LOWER(").append("?").append(")").append(negate ? " " : " NOT ")
+						whereClause.append("LOWER(").append(dbColumnName).append(")").append(negate ? " " : " NOT ")
 								.append("LIKE '%").append(filterValue.toString().toLowerCase()).append("%'");
-						parameters.add(dbColumnName);
 						break;
 					case "$null":
-						whereClause.append("?").append(" IS").append(negate ? " NOT " : " ").append("NULL");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName).append(" IS").append(negate ? " NOT " : " ").append("NULL");
 						break;
 					case "$nnull":
-						whereClause.append("?").append(" IS").append(negate ? " " : " NOT ").append("NULL");
-						parameters.add(dbColumnName);
+						whereClause.append(dbColumnName).append(" IS").append(negate ? " " : " NOT ").append("NULL");
 						break;
 					default:
 						logger.warning("Unknown comparison: " + comparison + ", skipping...");
@@ -394,17 +385,14 @@ public class FilterUtil {
 		if (dbColumnIsDateType) {
 			Timestamp startDate = (Timestamp) filterValue;
 			Timestamp endDate = DateUtil.getTheNextDay(startDate);
-			whereClause.append(canPrependSeparator ? separator : "").append("(").append("?")
-					.append(negate ? "<" : ">=").append("?").append(negate ? " OR " : " AND ").append("?")
+			whereClause.append(canPrependSeparator ? separator : "").append("(").append(property)
+					.append(negate ? "<" : ">=").append("?").append(negate ? " OR " : " AND ").append(property)
 					.append(negate ? ">=" : "<").append("?)");
-			parameters.add(property);
 			parameters.add(startDate);
-			parameters.add(property);
 			parameters.add(endDate);
 		} else {
 			whereClause.append(canPrependSeparator ? separator : "").append(property)
 					.append(negate ? "!" : "").append("=?");
-			parameters.add(property);
 			parameters.add(filterValue);
 		}
 	}

@@ -42,6 +42,14 @@ public class ReferenceListRepository {
 		return getTypes(INVOICE_PAYMENT_TYPE, referenceValues);
 	}
 
+	public CompletableFuture<Map<String, MRefList>> getNhifType(Set<String> referenceValues) {
+		return getTypes(NHIF_TYPE, referenceValues);
+	}
+
+	public CompletableFuture<Map<String, MRefList>> getNhifRelationship(Set<String> referenceValues) {
+		return getTypes(NHIF_RELATIONSHIP, referenceValues);
+	}
+
 	/**
 	 * Get Reference List from MRefList.Table_Name
 	 *
@@ -61,7 +69,7 @@ public class ReferenceListRepository {
 		if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
 			// get payment type limits..
 			MValRule valRule = new Query(Env.getCtx(), MValRule.Table_Name, MValRule.COLUMNNAME_Name + "=?", null)
-					.setParameters(PAYMENT_TYPE_LIMIT).setOnlyActiveRecords(true).first();
+					.setParameters(PAYMENT_TYPE_LIMIT).setOnlyActiveRecords(true).setNoVirtualColumn(true).first();
 			if (valRule != null) {
 				whereClause += " AND " + valRule.getCode();
 			}
@@ -71,7 +79,7 @@ public class ReferenceListRepository {
 				.addJoinClause("JOIN " + MReference.Table_Name + " ON " + MReference.Table_Name + "."
 						+ MReference.COLUMNNAME_AD_Reference_ID + "=" + MRefList.Table_Name + "."
 						+ MRefList.COLUMNNAME_AD_Reference_ID)
-				.setParameters(parameters).setOnlyActiveRecords(true)
+				.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true)
 				.list();
 		return CompletableFuture.supplyAsync(() ->
 				types.stream().collect(Collectors.toMap(MRefList::getValue, ref -> ref)));

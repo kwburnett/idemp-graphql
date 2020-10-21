@@ -21,9 +21,10 @@ public class PaymentRepository extends BaseRepository<MPayment_BH> {
 		List<MPayment_BH> payments = new Query(Env.getCtx(), MPayment_BH.Table_Name,
 				MPayment_BH.COLUMNNAME_C_Order_ID + " IN (" + whereCondition + ") OR "
 						+ MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")", null)
-				.setParameters(parameters).setOnlyActiveRecords(true).list();
+				.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true).list();
 		return CompletableFuture.supplyAsync(() ->
-				payments.stream().collect(Collectors.groupingBy(MPayment_BH::getC_Order_ID)));
+				payments.stream().collect(Collectors.groupingBy(payment ->
+						payment.getC_Order_ID() == 0 ? payment.getBH_C_Order_ID() : payment.getC_Order_ID())));
 	}
 
 	@Override

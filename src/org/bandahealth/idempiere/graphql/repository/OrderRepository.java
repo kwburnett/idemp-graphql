@@ -20,21 +20,6 @@ public class OrderRepository extends BaseRepository<MOrder_BH> {
 		return super.get(filter, sort, page, pageSize, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters);
 	}
 
-	public CompletableFuture<Map<Integer, Integer>> getSalesOrderCountsByBusinessPartner(Set<Integer> businessPartnerIds) {
-		List<Object> parameters = new ArrayList<>();
-		parameters.add("Y");
-
-		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(businessPartnerIds, parameters);
-		parameters.add("Y");
-
-		String sqlWhere = "WHERE " + MOrder_BH.COLUMNNAME_IsSOTrx + "=? AND " + MOrder_BH.COLUMNNAME_C_BPartner_ID + " IN ("
-				+ whereCondition + ") AND " + MOrder_BH.COLUMNNAME_IsActive + "=?";
-		Map<Integer, Integer> counts = SqlUtil
-				.getGroupedCount(MOrder_BH.Table_Name, sqlWhere, parameters, MOrder_BH.COLUMNNAME_C_BPartner_ID,
-						businessPartnerIds);
-		return CompletableFuture.supplyAsync(() -> counts);
-	}
-
 	@Override
 	public MOrder_BH getModelInstance() {
 		return new MOrder_BH(Env.getCtx(), 0, null);

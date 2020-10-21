@@ -26,6 +26,7 @@ public class BandaDataLoader {
 			add(new AttributeSetDataLoader());
 			add(new ChargeDataLoader());
 			add(new AccountDataLoader());
+			add(new ProductDataLoader());
 		}};
 	}
 

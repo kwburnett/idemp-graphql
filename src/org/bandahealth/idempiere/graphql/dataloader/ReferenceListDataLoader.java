@@ -12,6 +12,8 @@ public class ReferenceListDataLoader implements DataLoaderRegisterer {
 	public static String REFERRAL_DATA_LOADER = "referenceListReferralDataLoader";
 	public static String ORDER_PAYMENT_TYPE_DATA_LOADER = "referenceListOrderPaymentTypeDataLoader";
 	public static String INVOICE_PAYMENT_TYPE_DATA_LOADER = "referenceListInvoicePaymentTypeDataLoader";
+	public static String NHIF_TYPE_DATA_LOADER = "referenceListNhifTypeDataLoader";
+	public static String NHIF_RELATIONSHIP_DATA_LOADER = "referenceListNhifRelationshipDataLoader";
 	private final ReferenceListRepository referenceListRepository;
 
 	public ReferenceListDataLoader() {
@@ -26,6 +28,10 @@ public class ReferenceListDataLoader implements DataLoaderRegisterer {
 				DataLoader.newMappedDataLoader(getOrderPaymentTypeBatchLoader()));
 		registry.register(INVOICE_PAYMENT_TYPE_DATA_LOADER,
 				DataLoader.newMappedDataLoader(getInvoicePaymentTypeBatchLoader()));
+		registry.register(NHIF_TYPE_DATA_LOADER,
+				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader()));
+		registry.register(NHIF_RELATIONSHIP_DATA_LOADER,
+				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader()));
 	}
 
 	private MappedBatchLoader<String, MRefList> getPatientTypeBatchLoader() {
@@ -42,5 +48,13 @@ public class ReferenceListDataLoader implements DataLoaderRegisterer {
 
 	private MappedBatchLoader<String, MRefList> getInvoicePaymentTypeBatchLoader() {
 		return referenceListRepository::getInvoicePaymentType;
+	}
+
+	private MappedBatchLoader<String, MRefList> getNhifTypeBatchLoader() {
+		return referenceListRepository::getNhifType;
+	}
+
+	private MappedBatchLoader<String, MRefList> getNhifRelationshipBatchLoader() {
+		return referenceListRepository::getNhifRelationship;
 	}
 }

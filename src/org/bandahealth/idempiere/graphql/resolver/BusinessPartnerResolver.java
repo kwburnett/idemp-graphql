@@ -3,11 +3,13 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
+import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.compiere.model.MLocation;
 import org.dataloader.DataLoader;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implements GraphQLResolver<MBPartner_BH> {
@@ -72,15 +74,18 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 		return entity.getBH_Local_PatientID();
 	}
 
-	public CompletableFuture<Integer> totalVisits(MBPartner_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, Integer> salesOrderCountDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.SALES_ORDER_COUNT_DATA_LOADER);
-		return salesOrderCountDataLoader.load(entity.getC_BPartner_ID());
+	public CompletableFuture<List<MOrder_BH>> salesOrders(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MOrder_BH>> dataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.SALES_ORDER_BY_BUSINESS_PARTNER_DATA_LOADER);
+		return dataLoader.load(entity.getC_BPartner_ID());
 	}
 
-	// TODO: Add sales orders to this entity
-	public String lastVisitDate(MBPartner_BH entity) {
-//		return entity.getla();
-		return "never";
+	public CompletableFuture<Integer> totalVisits(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		return salesOrders(entity, environment).thenApply(List::size);
+	}
+
+	public CompletableFuture<Timestamp> lastVisitDate(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		return salesOrders(entity, environment)
+				.thenApply(orders -> orders.stream().map(MOrder_BH::getDateOrdered).max(Timestamp::compareTo).orElse(null));
 	}
 }

@@ -3,10 +3,10 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.*;
-import org.bandahealth.idempiere.graphql.dataloader.AttributeSetDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.AttributeSetInstanceDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
-import org.compiere.model.MAttributeSet;
+import org.bandahealth.idempiere.graphql.dataloader.ProductDataLoader;
 import org.compiere.model.MAttributeSetInstance;
 import org.dataloader.DataLoader;
 
@@ -16,16 +16,20 @@ import java.util.concurrent.CompletableFuture;
 
 public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements GraphQLResolver<MOrderLine_BH> {
 
-	public MCharge_BH charge(MOrderLine_BH entity) {
-		return (MCharge_BH) entity.getC_Charge();
+	public CompletableFuture<MCharge_BH> charge(MOrderLine_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MCharge_BH> chargeDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_DATA_LOADER);
+		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 
 	public int orderId(MOrderLine_BH entity) {
 		return entity.getC_Order_ID();
 	}
 
-	public MProduct_BH product(MOrderLine_BH entity) {
-		return (MProduct_BH) entity.getProduct();
+	public CompletableFuture<MProduct_BH> product(MOrderLine_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MProduct_BH> productDataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_DATA_LOADER);
+		return productDataLoader.load(entity.getM_Product_ID());
 	}
 
 	public BigDecimal price(MOrderLine_BH entity) {
