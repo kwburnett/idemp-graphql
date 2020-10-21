@@ -6,7 +6,8 @@ import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class ReferenceListDataLoader implements DataLoaderRegisterer {
+public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceListRepository>
+		implements DataLoaderRegisterer {
 
 	public static String PATIENT_TYPE_DATA_LOADER = "referenceListPatientTypeDataLoader";
 	public static String REFERRAL_DATA_LOADER = "referenceListReferralDataLoader";
@@ -21,17 +22,29 @@ public class ReferenceListDataLoader implements DataLoaderRegisterer {
 	}
 
 	@Override
+	protected String getDefaultDataLoaderName() {
+		return null;
+	}
+
+	@Override
+	protected ReferenceListRepository getRepositoryInstance() {
+		return null;
+	}
+
+	@Override
 	public void register(DataLoaderRegistry registry) {
-		registry.register(PATIENT_TYPE_DATA_LOADER, DataLoader.newMappedDataLoader(getPatientTypeBatchLoader()));
-		registry.register(REFERRAL_DATA_LOADER, DataLoader.newMappedDataLoader(getReferralBatchLoader()));
+		registry.register(PATIENT_TYPE_DATA_LOADER, DataLoader.newMappedDataLoader(getPatientTypeBatchLoader(),
+				getOptionsWithCache()));
+		registry.register(REFERRAL_DATA_LOADER, DataLoader.newMappedDataLoader(getReferralBatchLoader(),
+				getOptionsWithCache()));
 		registry.register(ORDER_PAYMENT_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getOrderPaymentTypeBatchLoader()));
+				DataLoader.newMappedDataLoader(getOrderPaymentTypeBatchLoader(), getOptionsWithCache()));
 		registry.register(INVOICE_PAYMENT_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getInvoicePaymentTypeBatchLoader()));
+				DataLoader.newMappedDataLoader(getInvoicePaymentTypeBatchLoader(), getOptionsWithCache()));
 		registry.register(NHIF_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader()));
+				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader(), getOptionsWithCache()));
 		registry.register(NHIF_RELATIONSHIP_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader()));
+				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<String, MRefList> getPatientTypeBatchLoader() {

@@ -34,7 +34,7 @@ public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderRepository> 
 	public void register(DataLoaderRegistry registry) {
 		super.register(registry);
 		registry.register(SALES_ORDER_BY_BUSINESS_PARTNER_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getSalesOrderByBusinessPartnerBatchLoader()));
+				DataLoader.newMappedDataLoader(getSalesOrderByBusinessPartnerBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MOrder_BH>> getSalesOrderByBusinessPartnerBatchLoader() {

@@ -1,17 +1,15 @@
 package org.bandahealth.idempiere.graphql;
 
-import graphql.ExecutionInput;
 import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions;
-import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import graphql.execution.preparsed.PreparsedDocumentEntry;
 import graphql.execution.preparsed.PreparsedDocumentProvider;
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
 import graphql.kickstart.tools.SchemaParserBuilder;
-import org.adempiere.base.Service;
+import org.bandahealth.idempiere.graphql.cache.BandaCache;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.directive.Directive;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
@@ -24,18 +22,24 @@ import graphql.kickstart.servlet.GraphQLConfiguration;
 import graphql.kickstart.servlet.GraphQLHttpServlet;
 import graphql.kickstart.tools.SchemaParser;
 import graphql.schema.GraphQLSchema;
-import org.idempiere.distributed.ICacheService;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class GraphQLEndpoint extends GraphQLHttpServlet {
 
-	public static final String GRAPHQL_SDL_FILE_DIRECTORY = "WEB-INF/resources";
+	private static final Map<String, BandaCache<Object, Object>> cacheMap = new HashMap<>();
+
+	public static BandaCache<Object, Object> getCache(Class<?> clazz) {
+		BandaCache<Object, Object> classCache = cacheMap.get(clazz.getName());
+		if (classCache == null) {
+			classCache = new BandaCache<>();
+			cacheMap.put(clazz.getName(), classCache);
+		}
+		return classCache;
+	}
 
 	private final CLogger logger = CLogger.getCLogger(GraphQLEndpoint.class);
-	private final Map<String, PreparsedDocumentEntry> cache = Service.locator().locate(ICacheService.class).getService()
-			.getMap(GraphQLEndpoint.class.getName());
 
 	@Override
 	protected GraphQLConfiguration getConfiguration() {
@@ -55,10 +59,11 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 		// Set up the cache so, if a GraphQL query has been passed in before, it doesn't have to be parsed
 		// again before heading to the DB (note, this cache doesn't store DB query results)
 		PreparsedDocumentProvider preparsedCache = (executionInput, computeFunction) -> {
-			PreparsedDocumentEntry preparsedDocumentEntry = cache.get(executionInput.getQuery());
+			BandaCache<Object, Object> cache = GraphQLEndpoint.getCache(PreparsedDocumentEntry.class);
+			PreparsedDocumentEntry preparsedDocumentEntry = (PreparsedDocumentEntry) cache.get(executionInput.getQuery());
 			if (preparsedDocumentEntry == null) {
 				preparsedDocumentEntry = computeFunction.apply(executionInput);
-				cache.put(executionInput.getQuery(), preparsedDocumentEntry);
+				cache.set(executionInput.getQuery(), preparsedDocumentEntry);
 			}
 			return preparsedDocumentEntry;
 		};

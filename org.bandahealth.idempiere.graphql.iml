@@ -53,6 +53,9 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.11" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.8.6" level="project" />
+    <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.7.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.4.0" level="project" />
     <orderEntry type="module" module-name="org.bandahealth.idempiere.base" />
   </component>
 </module>

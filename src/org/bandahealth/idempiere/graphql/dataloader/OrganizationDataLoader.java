@@ -33,7 +33,7 @@ public class OrganizationDataLoader extends BaseDataLoader<MOrg, OrganizationRep
 	public void register(DataLoaderRegistry registry) {
 		super.register(registry);
 		registry.register(ORGANIZATION_BY_CLIENT_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getOrganizationByClientBatchLoader()));
+				DataLoader.newMappedDataLoader(getOrganizationByClientBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MOrg>> getOrganizationByClientBatchLoader() {

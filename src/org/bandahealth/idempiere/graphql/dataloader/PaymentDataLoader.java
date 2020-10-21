@@ -31,7 +31,8 @@ public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentReposi
 	@Override
 	public void register(DataLoaderRegistry registry) {
 		super.register(registry);
-		registry.register(PAYMENT_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader()));
+		registry.register(PAYMENT_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader(),
+				getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MPayment_BH>> getBatchLoader() {

@@ -33,7 +33,7 @@ public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, WarehouseRep
 	public void register(DataLoaderRegistry registry) {
 		super.register(registry);
 		registry.register(WAREHOUSE_BY_ORGANIZATION_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getByOrganizationBatchLoader()));
+				DataLoader.newMappedDataLoader(getByOrganizationBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MWarehouse>> getByOrganizationBatchLoader() {

@@ -32,7 +32,8 @@ public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLine
 	@Override
 	public void register(DataLoaderRegistry registry) {
 		super.register(registry);
-		registry.register(ORDER_LINE_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader()));
+		registry.register(ORDER_LINE_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader(),
+				getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MOrderLine_BH>> getBatchLoader() {

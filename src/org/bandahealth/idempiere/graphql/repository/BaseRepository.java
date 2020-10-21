@@ -38,7 +38,6 @@ public abstract class BaseRepository<T extends PO> {
 				columnToSearch + " IN (" + whereCondition + ")", null)
 				.setParameters(parameters).list();
 		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.groupingBy(groupingFunction)));
-
 	}
 
 	/**
@@ -55,7 +54,6 @@ public abstract class BaseRepository<T extends PO> {
 				model.get_TableName() + "_ID IN (" + whereCondition + ")", null)
 				.setParameters(parameters).list();
 		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.toMap(T::get_ID, m -> m)));
-
 	}
 
 	public List<T> get(String filterJson, String sort, int page, int pageSize, String whereClause,

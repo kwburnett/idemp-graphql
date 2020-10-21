@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BandaDataLoader {
 
-	private List<DataLoaderRegisterer> dataLoaders;
+	private final List<DataLoaderRegisterer> dataLoaders;
 
 	public BandaDataLoader() {
 		dataLoaders = new ArrayList<>() {{

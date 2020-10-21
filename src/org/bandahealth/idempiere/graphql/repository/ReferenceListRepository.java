@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class ReferenceListRepository {
+public class ReferenceListRepository extends BaseRepository<MRefList> {
 
 	public final static String PATIENT_TYPE = "BH_PatientType";
 	public final static String ORDER_PAYMENT_TYPE = "C_Payment Tender Type";
@@ -83,5 +83,10 @@ public class ReferenceListRepository {
 				.list();
 		return CompletableFuture.supplyAsync(() ->
 				types.stream().collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
+	}
+
+	@Override
+	public MRefList getModelInstance() {
+		return new MRefList(Env.getCtx(), 0, null);
 	}
 }
