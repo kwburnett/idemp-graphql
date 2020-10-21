@@ -67,7 +67,7 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	}
 
 	public String visitNotes(MOrder_BH entity) {
-		return "";
+		return entity.getbh_referral();
 	}
 
 	public CompletableFuture<MRefList> patientType(MOrder_BH entity, DataFetchingEnvironment environment) {
@@ -121,10 +121,11 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	}
 
 	/**
-	 * WAITING - visit with no clinical, no line items, no payments DISPENSING -
-	 * visit with clinical information, no line items, no payments PENDING - visit
-	 * with clinical information, line items, no payments, PENDING_COMPLETION -
-	 * visit yet to be processed, COMPLETED - completed visit
+	 * WAITING - visit with no clinical, no line items, no payments
+	 * DISPENSING - visit with clinical information, no line items, no payments
+	 * PENDING - visit with clinical information, line items, no payments
+	 * PENDING_COMPLETION - visit yet to be processed
+	 * COMPLETED - completed visit
 	 *
 	 * @param entity
 	 */
@@ -139,8 +140,7 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 
 			if (!orderlinesExist && !paymentsExist) {
 				// check visit information
-				if (entity.getbh_referral() == null && entity.getDescription() == null
-						&& entity.getbh_lab_notes() == null) {
+				if (entity.getbh_referral() == null && entity.getDescription() == null && entity.getbh_lab_notes() == null) {
 					return OrderStatus.WAITING;
 				} else {
 					return OrderStatus.DISPENSING;
