@@ -1,6 +1,8 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.bandahealth.idempiere.graphql.model.Connection;
+import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.utils.FilterUtil;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
@@ -56,9 +58,9 @@ public abstract class BaseRepository<T extends PO> {
 		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.toMap(T::get_ID, m -> m)));
 	}
 
-	public List<T> get(String filterJson, String sort, int page, int pageSize, String whereClause,
+	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
 										 List<Object> parameters) {
-		return this.get(filterJson, sort, page, pageSize, whereClause, parameters, null);
+		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null);
 	}
 
 	/**
@@ -66,17 +68,15 @@ public abstract class BaseRepository<T extends PO> {
 	 *
 	 * @param filterJson
 	 * @param sort
-	 * @param page
-	 * @param pageSize
+	 * @param pagingInfo
 	 * @param whereClause
 	 * @param parameters
 	 * @param joinClause  Use to specify a linked table so joining can occur
 	 * @return
 	 */
-	public List<T> get(String filterJson, String sort, int page, int pageSize, String whereClause,
-										 List<Object> parameters, String joinClause) {
+	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
+													 List<Object> parameters, String joinClause) {
 		try {
-			List<T> results = new ArrayList<>();
 			if (parameters == null) {
 				parameters = new ArrayList<>();
 			}
@@ -106,11 +106,11 @@ public abstract class BaseRepository<T extends PO> {
 			}
 
 			// get total count without pagination parameters
-//			pagingInfo.setTotalRecordCount(query.count());
+			pagingInfo.setTotalCount(query.count());
 
 			// set pagination params
-			query = query.setPage(pageSize, page);
-			return query.list();
+			query = query.setPage(pagingInfo.getPageSize(), pagingInfo.getPage());
+			return new Connection<>(query.list(), pagingInfo);
 		} catch (Exception ex) {
 			throw new AdempiereException(ex);
 		}

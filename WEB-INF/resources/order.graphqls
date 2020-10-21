@@ -32,6 +32,11 @@ type Order {
   secondDiagnosis: String
 }
 
+type SalesOrdersConnection {
+  results: [Order!]!
+  pagingInfo: PagingInfo!
+}
+
 type Query {
-  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): [Order!]!
+  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
 }

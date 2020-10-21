@@ -1,6 +1,8 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.graphql.model.Connection;
+import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.bandahealth.idempiere.graphql.utils.SqlUtil;
 import org.compiere.util.Env;
@@ -13,11 +15,11 @@ import java.util.concurrent.CompletableFuture;
 
 public class OrderRepository extends BaseRepository<MOrder_BH> {
 
-	public List<MOrder_BH> getSalesOrders(String filter, String sort, int page, int pageSize) {
+	public Connection<MOrder_BH> getSalesOrders(String filter, String sort, PagingInfo pagingInfo) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add("Y");
 
-		return super.get(filter, sort, page, pageSize, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters);
+		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters);
 	}
 
 	@Override

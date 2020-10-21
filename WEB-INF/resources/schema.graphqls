@@ -1,7 +1,14 @@
 directive @dateFormat on FIELD_DEFINITION
 
+type PagingInfo {
+  totalPages: Int!
+  totalCount: Int!
+  hasNextPage: Boolean!
+  page: Int!
+  pageSize: Int!
+}
+
 type Query {
-  getUsers: [User]
   _empty: String
 }
 
