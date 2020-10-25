@@ -130,27 +130,4 @@ public class OrderInput extends MOrder_BH {
 	public void setSecondDiagnosis(String secondDiagnosis) {
 		this.setBH_SecondDiagnosis(secondDiagnosis);
 	}
-
-	public void copyTo(MOrder_BH order) {
-		ModelUtil.setPropertyIfPresent(getbh_lab_notes(), order::setbh_lab_notes);
-		ModelUtil.setPropertyIfPresent(getDescription(), order::setDescription);
-
-		if (getPatientType() != null) {
-			ModelUtil.setPropertyIfPresent(getPatientType().getName(), order::setBH_PatientType);
-		}
-		if (getReferral() != null) {
-			ModelUtil.setPropertyIfPresent(getReferral().getName(), order::setbh_referral);
-		}
-
-		ModelUtil.setPropertyIfPresent(isBH_NewVisit(), order::setBH_NewVisit);
-		ModelUtil.setPropertyIfPresent(getBH_Chief_Complaint(), order::setBH_Chief_Complaint);
-		ModelUtil.setPropertyIfPresent(getBH_Temperature(), order::setBH_Temperature);
-		ModelUtil.setPropertyIfPresent(getBH_Pulse(), order::setBH_Pulse);
-		ModelUtil.setPropertyIfPresent(getBH_Respiratory_Rate(), order::setBH_Respiratory_Rate);
-		ModelUtil.setPropertyIfPresent(getBH_Blood_Pressure(), order::setBH_Blood_Pressure);
-		ModelUtil.setPropertyIfPresent(getBH_Height(), order::setBH_Height);
-		ModelUtil.setPropertyIfPresent(getBH_Weight(), order::setBH_Weight);
-		ModelUtil.setPropertyIfPresent(getBH_SecondDiagnosis(), order::setBH_SecondDiagnosis);
-		ModelUtil.setPropertyIfPresent(isSOTrx(), order::setIsSOTrx);
-	}
 }
