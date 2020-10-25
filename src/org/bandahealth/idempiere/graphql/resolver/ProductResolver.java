@@ -7,9 +7,12 @@ import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ProductCategoryDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.StorageOnHandDataLoader;
+import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQLResolver<MProduct_BH> {
@@ -49,9 +52,17 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());
 	}
 
-	// TODO: Need to calculate this from inventory
-	public BigDecimal totalQuantity(MProduct_BH entity) {
-//		return entity.getBH_PriceMargin();
-		return BigDecimal.ZERO;
+	public CompletableFuture<BigDecimal> totalQuantity(MProduct_BH entity, DataFetchingEnvironment environment) {
+		return getStorageOnHand(entity, environment).thenApply(storageOnHandLines ->
+				storageOnHandLines == null ? BigDecimal.ZERO : storageOnHandLines.stream().map(MStorageOnHand::getQtyOnHand)
+						.reduce(BigDecimal.ZERO, BigDecimal::add)
+		);
+	}
+
+	private CompletableFuture<List<MStorageOnHand>> getStorageOnHand(MProduct_BH entity,
+																																	 DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MStorageOnHand>> dataLoader = environment.getDataLoaderRegistry()
+				.getDataLoader(StorageOnHandDataLoader.STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER);
+		return dataLoader.load(entity.get_ID());
 	}
 }

@@ -29,6 +29,7 @@ public class BandaDataLoader {
 			add(new ReferenceListDataLoader());
 			add(new ReportViewDataLoader());
 			add(new RoleDataLoader());
+			add(new StorageOnHandDataLoader());
 			add(new UserDataLoader());
 			add(new WarehouseDataLoader());
 			add(new WorkflowDataLoader());
