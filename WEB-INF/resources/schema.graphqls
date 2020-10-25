@@ -15,7 +15,8 @@ type Query {
 
 type Mutation {
   # Orders
-  saveOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
+  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
+  processOrder(id: String!): Order!
   # Authentication
   signIn(credentials: AuthenticationData!): AuthenticationResponse
   changePassword(credentials: AuthenticationData!): AuthenticationResponse

@@ -16,11 +16,15 @@ public class OrderMutation implements GraphQLMutationResolver {
 		orderRepository = new OrderRepository();
 	}
 
-	public CompletableFuture<MOrder_BH> saveOrder(OrderInput salesOrder, boolean shouldProcess) {
+	public CompletableFuture<MOrder_BH> saveSalesOrder(OrderInput salesOrder, boolean shouldProcess) {
 		MOrder_BH order = orderRepository.saveSalesOrder(salesOrder);
 		if (shouldProcess) {
 			return orderRepository.process(order.getC_Order_UU());
 		}
 		return CompletableFuture.supplyAsync(() -> order);
+	}
+
+	public CompletableFuture<MOrder_BH> processOrder(String id) {
+		return orderRepository.process(id);
 	}
 }
