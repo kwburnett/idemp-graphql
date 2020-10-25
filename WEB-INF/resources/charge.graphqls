@@ -10,3 +10,12 @@ type Charge {
   isLocked: Boolean
   account: Account
 }
+
+input ChargeInput {
+  id: ID
+  isActive: Boolean!
+  description: String
+  name: String
+  isLocked: Boolean
+  account: AccountInput
+}

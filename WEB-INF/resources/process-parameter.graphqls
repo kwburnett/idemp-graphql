@@ -1,0 +1,24 @@
+type ProcessParameter {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  description: String
+  name: String
+  value: String
+  element: Element
+  reference: Reference
+  referenceValue: ReferenceValue
+  valueRule: ValueRule
+  defaultValue: String
+  defaultValue2: String
+  displayLogic: String
+  entityType: String
+  fieldLength: Int
+  isEncrypted: Boolean
+  isMandatory: Boolean
+  isRange: Boolean
+  mandatoryLogic: String
+}

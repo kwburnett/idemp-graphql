@@ -2,6 +2,7 @@ type Payment {
   id: ID!
   client: Client!
   organization: Organization!
+  description: String
   isActive: Boolean!
   created: String @dateFormat
   createdBy: User!
@@ -18,5 +19,24 @@ type Payment {
   memberName: String
   docStatus: DocStatus
   transactionDate: String @dateFormat
+  tenderAmount: Float
+}
+
+input PaymentInput {
+  id: ID
+  description: String
+  isActive: Boolean
+  businessPartner: BusinessPartnerInput
+  charge: ChargeInput
+  #order: OrderInput not sure on this one
+  payAmount: Float
+  paymentType: ReferenceListInput
+  nhifType: ReferenceListInput
+  nhifRelationship: ReferenceListInput
+  claimNumber: String
+  memberId: String
+  number: String
+  memberName: String
+  transactionDate: String
   tenderAmount: Float
 }

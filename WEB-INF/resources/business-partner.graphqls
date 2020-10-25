@@ -27,3 +27,27 @@ type BusinessPartner {
   totalVisits: Int
   lastVisitDate: String @dateFormat
 }
+
+input BusinessPartnerInput {
+  id: ID
+  isActive: Boolean
+  description: String
+  name: String
+  value: String
+  totalOpenBalance: Float
+  patientNumber: String
+  dateOfBirth: String
+  phone: String
+  location: LocationInput
+  gender: String
+  email: String
+  nhifRelationship: String
+  nhifMemberName: String
+  nhifNumber: String
+  nhifType: String
+  nationalId: String
+  occupation: String
+  nextOfKinName: String
+  nextOfKinContact: String
+  localPatientNumber: String
+}

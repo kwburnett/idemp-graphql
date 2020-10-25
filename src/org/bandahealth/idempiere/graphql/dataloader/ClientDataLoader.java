@@ -3,7 +3,8 @@ package org.bandahealth.idempiere.graphql.dataloader;
 import org.bandahealth.idempiere.graphql.repository.ClientRepository;
 import org.compiere.model.MClient;
 
-public class ClientDataLoader extends BaseDataLoader<MClient, ClientRepository> implements DataLoaderRegisterer {
+public class ClientDataLoader extends BaseDataLoader<MClient, MClient, ClientRepository>
+		implements DataLoaderRegisterer {
 
 	public static String CLIENT_DATA_LOADER = "clientDataLoader";
 	private final ClientRepository clientRepository;

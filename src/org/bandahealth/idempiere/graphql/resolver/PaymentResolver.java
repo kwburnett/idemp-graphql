@@ -35,14 +35,6 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
-	public int chargeId(MPayment_BH entity) {
-		return entity.getC_Charge_ID();
-	}
-
-	public int orderId(MPayment_BH entity) {
-		return entity.getC_Order_ID() == 0 ? entity.getBH_C_Order_ID() : entity.getC_Order_ID();
-	}
-
 	public BigDecimal payAmount(MPayment_BH entity) {
 		return entity.getPayAmt();
 	}

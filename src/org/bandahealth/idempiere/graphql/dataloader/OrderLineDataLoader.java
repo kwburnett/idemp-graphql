@@ -1,6 +1,7 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
 import org.bandahealth.idempiere.base.model.MOrderLine_BH;
+import org.bandahealth.idempiere.graphql.model.input.OrderLineInput;
 import org.bandahealth.idempiere.graphql.repository.OrderLineRepository;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
@@ -8,7 +9,7 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLineRepository>
+public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLineInput, OrderLineRepository>
 		implements DataLoaderRegisterer {
 
 	public static String ORDER_LINE_DATA_LOADER = "orderLineDataLoader";

@@ -1,9 +1,11 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
 import org.bandahealth.idempiere.base.model.MProduct_BH;
+import org.bandahealth.idempiere.graphql.model.input.ProductInput;
 import org.bandahealth.idempiere.graphql.repository.ProductRepository;
 
-public class ProductDataLoader extends BaseDataLoader<MProduct_BH, ProductRepository> implements DataLoaderRegisterer {
+public class ProductDataLoader extends BaseDataLoader<MProduct_BH, ProductInput, ProductRepository>
+		implements DataLoaderRegisterer {
 
 	public static final String PRODUCT_DATA_LOADER = "productDataLoader";
 	private final ProductRepository productRepository;

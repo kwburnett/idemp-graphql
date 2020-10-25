@@ -4,3 +4,7 @@ type Location {
   organization: Organization!
   address1: String
 }
+
+input LocationInput {
+  address1: String
+}

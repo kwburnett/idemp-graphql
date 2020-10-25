@@ -1,12 +1,13 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
+import org.bandahealth.idempiere.graphql.model.input.ReferenceListInput;
 import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
-public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceListRepository>
+public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceListInput, ReferenceListRepository>
 		implements DataLoaderRegisterer {
 
 	public static String PATIENT_TYPE_DATA_LOADER = "referenceListPatientTypeDataLoader";

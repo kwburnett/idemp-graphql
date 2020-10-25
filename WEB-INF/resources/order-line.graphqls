@@ -15,3 +15,16 @@ type OrderLine {
   expiration: String
   instructions: String
 }
+
+input OrderLineInput {
+  id: ID
+  isActive: Boolean
+  charge: ChargeInput
+  product: ProductInput
+  price: Float
+  quantity: Float
+  lineNetAmount: Float
+  attributeSetInstance: AttributeSetInstanceInput
+  expiration: String
+  instructions: String
+}

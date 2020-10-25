@@ -4,6 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.graphql.dataloader.LocationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.compiere.model.MLocation;
 import org.dataloader.DataLoader;
@@ -25,9 +26,10 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 		return entity.getBH_Phone();
 	}
 
-	// TODO: Update to use batching
-	public MLocation location(MBPartner_BH entity) {
-		return (MLocation) entity.getBH_C_Location();
+	public CompletableFuture<MLocation> location(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MLocation> dataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(LocationDataLoader.LOCATION_DATA_LOADER);
+		return dataLoader.load(entity.getBH_C_Location_ID());
 	}
 
 	public String gender(MBPartner_BH entity) {

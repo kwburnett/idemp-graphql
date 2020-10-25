@@ -8,3 +8,8 @@ type AttributeSet {
   updatedBy: User!
   name: String
 }
+
+input AttributeSetInput {
+  id: ID
+  name: String
+}

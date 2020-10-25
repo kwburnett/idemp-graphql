@@ -19,3 +19,21 @@ type Product {
   productCategory: ProductCategory
   totalQuantity: Float
 }
+
+input ProductInput {
+  id: ID
+  isActive: Boolean
+  description: String
+  name: String
+  value: String
+  isStocked: Boolean
+  reorderLevel: Int
+  reorderQuantity: Int
+  buyPrice: Float
+  sellPrice: Float
+  type: String
+  hasExpiration: Boolean
+  priceMargin: Float
+  productCategory: ProductCategoryInput
+  totalQuantity: Float
+}

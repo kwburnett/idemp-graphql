@@ -9,3 +9,11 @@ type ReferenceList {
   name: String
   value: String
 }
+
+input ReferenceListInput {
+  id: ID
+  isActive: Boolean
+  description: String
+  name: String
+  value: String
+}

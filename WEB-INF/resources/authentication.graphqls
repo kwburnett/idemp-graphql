@@ -21,8 +21,3 @@ input AuthenticationData {
     organizationId: Int
     warehouseId: Int
 }
-
-type Mutation {
-    signIn(credentials: AuthenticationData!): AuthenticationResponse
-    changePassword(credentials: AuthenticationData!): AuthenticationResponse
-}

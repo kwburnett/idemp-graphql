@@ -87,7 +87,8 @@ Bundle-ClassPath: .,
  lib/reactive-streams.jar,
  lib/graphql-java-kickstart.jar,
  lib/commons-lang3.jar,
- lib/caffeine.jar
+ lib/caffeine.jar,
+ lib/jackson-annotations.jar
 Web-ContextPath: graphql
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bandahealth.idempiere.graphql,

@@ -1,5 +1,8 @@
 package org.bandahealth.idempiere.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions;
@@ -8,7 +11,7 @@ import graphql.execution.preparsed.PreparsedDocumentProvider;
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
-import graphql.kickstart.tools.SchemaParserBuilder;
+import graphql.kickstart.tools.*;
 import org.bandahealth.idempiere.graphql.cache.BandaCache;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.directive.Directive;
@@ -20,7 +23,6 @@ import org.compiere.util.CLogger;
 
 import graphql.kickstart.servlet.GraphQLConfiguration;
 import graphql.kickstart.servlet.GraphQLHttpServlet;
-import graphql.kickstart.tools.SchemaParser;
 import graphql.schema.GraphQLSchema;
 
 import java.util.HashMap;
@@ -94,18 +96,31 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 						"WEB-INF/resources/charge.graphqls",
 						"WEB-INF/resources/client.graphqls",
 						"WEB-INF/resources/document.graphqls",
+						"WEB-INF/resources/element.graphqls",
+						"WEB-INF/resources/form.graphqls",
 						"WEB-INF/resources/location.graphqls",
 						"WEB-INF/resources/order.graphqls",
 						"WEB-INF/resources/order-line.graphqls",
 						"WEB-INF/resources/order-status.graphqls",
 						"WEB-INF/resources/organization.graphqls",
 						"WEB-INF/resources/payment.graphqls",
+						"WEB-INF/resources/process.graphqls",
+						"WEB-INF/resources/process-info.graphqls",
+						"WEB-INF/resources/process-instance.graphqls",
+						"WEB-INF/resources/process-parameter.graphqls",
 						"WEB-INF/resources/product.graphqls",
 						"WEB-INF/resources/product-category.graphqls",
+						"WEB-INF/resources/record.graphqls",
+						"WEB-INF/resources/reference.graphqls",
 						"WEB-INF/resources/reference-list.graphqls",
+						"WEB-INF/resources/reference-value.graphqls",
+						"WEB-INF/resources/report-view.graphqls",
 						"WEB-INF/resources/role.graphqls",
+						"WEB-INF/resources/table.graphqls",
 						"WEB-INF/resources/user.graphqls",
-						"WEB-INF/resources/warehouse.graphqls"
+						"WEB-INF/resources/value-rule.graphqls",
+						"WEB-INF/resources/warehouse.graphqls",
+						"WEB-INF/resources/workflow.graphqls"
 				);
 		Query.addAll(builder);
 		Mutation.addAll(builder);

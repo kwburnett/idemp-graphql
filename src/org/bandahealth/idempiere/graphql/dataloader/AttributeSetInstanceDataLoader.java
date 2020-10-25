@@ -1,10 +1,12 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
+import org.bandahealth.idempiere.graphql.model.input.AttributeSetInstanceInput;
 import org.bandahealth.idempiere.graphql.repository.AttributeSetInstanceRepository;
 import org.compiere.model.MAttributeSetInstance;
 
 public class AttributeSetInstanceDataLoader
-		extends BaseDataLoader<MAttributeSetInstance, AttributeSetInstanceRepository> implements DataLoaderRegisterer {
+		extends BaseDataLoader<MAttributeSetInstance, AttributeSetInstanceInput, AttributeSetInstanceRepository>
+		implements DataLoaderRegisterer {
 
 	public static final String ATTRIBUTE_SET_INSTANCE_DATA_LOADER = "attributeSetInstanceDataLoader";
 	private final AttributeSetInstanceRepository attributeSetInstanceRepository;

@@ -8,7 +8,7 @@ import org.bandahealth.idempiere.base.config.Transaction;
 import org.bandahealth.idempiere.base.model.MMessage_BH;
 import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
-import org.bandahealth.idempiere.graphql.model.AuthenticationData;
+import org.bandahealth.idempiere.graphql.model.input.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.utils.LoginClaims;
 import org.bandahealth.idempiere.graphql.utils.TokenUtils;

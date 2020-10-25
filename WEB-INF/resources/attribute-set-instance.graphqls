@@ -4,5 +4,12 @@ type AttributeSetInstance {
   organization: Organization!
   attributeSet: AttributeSet!
   isActive: Boolean
-  guaranteeDate: String! @dateFormatFormat
+  guaranteeDate: String! @dateFormat
+}
+
+input AttributeSetInstanceInput {
+  id: ID
+  attributeSet: AttributeSetInput!
+  isActive: Boolean
+  guaranteeDate: String
 }

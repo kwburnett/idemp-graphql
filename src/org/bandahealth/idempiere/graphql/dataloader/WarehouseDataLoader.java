@@ -8,7 +8,7 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, WarehouseRepository>
+public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, WarehouseRepository>
 		implements DataLoaderRegisterer {
 
 	public static final String WAREHOUSE_DATA_LOADER = "warehouseDataLoader";

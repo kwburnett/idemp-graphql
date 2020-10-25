@@ -19,9 +19,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class BaseRepository<T extends PO> {
+public abstract class BaseRepository<T extends PO, S extends T> {
+
+	protected final String PURCHASE_ORDER = "Purchase Order";
 
 	public abstract T getModelInstance();
+
+	public abstract T save(S entity);
 
 	/**
 	 * Get a list of this entity grouped by IDs
@@ -58,8 +62,21 @@ public abstract class BaseRepository<T extends PO> {
 		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.toMap(T::get_ID, m -> m)));
 	}
 
+	/**
+	 * Get an of entity by it's UUID
+	 *
+	 * @param uuid The UUID to search by
+	 * @return
+	 */
+	public T getByUuid(String uuid) {
+		T model = getModelInstance();
+		return new Query(Env.getCtx(), model.get_TableName(),
+				model.getUUIDColumnName() + "=?", null)
+				.setParameters(uuid).first();
+	}
+
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
-										 List<Object> parameters) {
+													 List<Object> parameters) {
 		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null);
 	}
 

@@ -27,6 +27,11 @@ public class BandaDataLoader {
 			add(new ChargeDataLoader());
 			add(new AccountDataLoader());
 			add(new ProductDataLoader());
+			add(new LocationDataLoader());
+			add(new ProcessParameterDataLoader());
+			add(new FormDataLoader());
+			add(new WorkflowDataLoader());
+			add(new ReportViewDataLoader());
 		}};
 	}
 

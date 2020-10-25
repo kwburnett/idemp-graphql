@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.model;
+package org.bandahealth.idempiere.graphql.model.input;
 
 public class AuthenticationData {
 	private String username;

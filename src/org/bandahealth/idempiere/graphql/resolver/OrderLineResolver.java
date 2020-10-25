@@ -22,10 +22,6 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 
-	public int orderId(MOrderLine_BH entity) {
-		return entity.getC_Order_ID();
-	}
-
 	public CompletableFuture<MProduct_BH> product(MOrderLine_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProduct_BH> productDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_DATA_LOADER);
@@ -42,10 +38,6 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 
 	public BigDecimal lineNetAmount(MOrderLine_BH entity) {
 		return entity.getLineNetAmt();
-	}
-
-	public int attributeSetInstanceId(MOrderLine_BH entity) {
-		return entity.getM_AttributeSetInstance_ID();
 	}
 
 	public Timestamp expiration(MOrderLine_BH entity) {

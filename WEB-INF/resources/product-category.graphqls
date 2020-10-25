@@ -5,3 +5,9 @@ type ProductCategory {
   name: String!
   value: String
 }
+
+input ProductCategoryInput {
+  id: ID
+  name: String
+  value: String
+}

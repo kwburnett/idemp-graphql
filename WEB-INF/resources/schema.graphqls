@@ -9,11 +9,16 @@ type PagingInfo {
 }
 
 type Query {
-  _empty: String
+  # Orders
+  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
 }
 
 type Mutation {
-  _empty: String
+  # Orders
+  saveOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
+  # Authentication
+  signIn(credentials: AuthenticationData!): AuthenticationResponse
+  changePassword(credentials: AuthenticationData!): AuthenticationResponse
 }
 
 schema {

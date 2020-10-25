@@ -67,7 +67,7 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 	}
 
 	public String visitNotes(MOrder_BH entity) {
-		return entity.getbh_referral();
+		return entity.getbh_lab_notes();
 	}
 
 	public CompletableFuture<MRefList> patientType(MOrder_BH entity, DataFetchingEnvironment environment) {

@@ -37,6 +37,26 @@ type SalesOrdersConnection {
   pagingInfo: PagingInfo!
 }
 
-type Query {
-  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
+input OrderInput {
+  id: ID
+  isActive: Boolean
+  businessPartner: BusinessPartnerInput
+  dateOrdered: String
+  isSalesOrderTransaction: Boolean
+  isExpense: Boolean
+  description: String
+  orderLines: [OrderLineInput!]
+  payments: [PaymentInput!]
+  newVisit: Boolean
+  visitNotes: String
+  patientType: ReferenceListInput
+  referral: ReferenceListInput
+  chiefComplaint: String
+  temperature: String
+  pulse: String
+  respiratoryRate: String
+  bloodPressure: String
+  height: String
+  weight: String
+  secondDiagnosis: String
 }

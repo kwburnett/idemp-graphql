@@ -1,9 +1,10 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
+import org.bandahealth.idempiere.graphql.model.input.AttributeSetInput;
 import org.bandahealth.idempiere.graphql.repository.AttributeSetRepository;
 import org.compiere.model.MAttributeSet;
 
-public class AttributeSetDataLoader extends BaseDataLoader<MAttributeSet, AttributeSetRepository>
+public class AttributeSetDataLoader extends BaseDataLoader<MAttributeSet, AttributeSetInput, AttributeSetRepository>
 		implements DataLoaderRegisterer {
 
 	public static final String ATTRIBUTE_SET_DATA_LOADER = "attributeSetDataLoader";

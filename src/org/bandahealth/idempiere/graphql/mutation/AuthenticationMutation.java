@@ -2,7 +2,7 @@ package org.bandahealth.idempiere.graphql.mutation;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.model.AuthenticationData;
+import org.bandahealth.idempiere.graphql.model.input.AuthenticationData;
 import org.bandahealth.idempiere.graphql.model.AuthenticationResponse;
 import org.bandahealth.idempiere.graphql.repository.AuthenticationRepository;
 

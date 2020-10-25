@@ -1,0 +1,17 @@
+type ProcessInfo {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  title: String
+  process: Process
+  table: Table
+  record: Record
+  summary: String
+  error: Boolean
+  batch: Boolean
+  timeout: Boolean
+  processInstance: ProcessInstance
+}

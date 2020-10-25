@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import org.bandahealth.idempiere.graphql.model.input.ReferenceListInput;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
 import org.compiere.model.MRefList;
 import org.compiere.model.MReference;
@@ -14,7 +15,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-public class ReferenceListRepository extends BaseRepository<MRefList> {
+public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceListInput> {
 
 	public final static String PATIENT_TYPE = "BH_PatientType";
 	public final static String ORDER_PAYMENT_TYPE = "C_Payment Tender Type";
@@ -88,5 +89,10 @@ public class ReferenceListRepository extends BaseRepository<MRefList> {
 	@Override
 	public MRefList getModelInstance() {
 		return new MRefList(Env.getCtx(), 0, null);
+	}
+
+	@Override
+	public MRefList save(ReferenceListInput entity) {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 }

@@ -1,0 +1,22 @@
+type Process {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  description: String
+  name: String
+  value: String
+  form: Form
+  reportView: ReportView
+  workflow: Workflow
+  allowMultipleExecution: String
+  classname: String
+  copyFromProcess: String
+  entityType: String
+  executionType: String
+  isDirectPrint: Boolean
+  isReport: Boolean
+  parameters: [ProcessParameter!]
+}

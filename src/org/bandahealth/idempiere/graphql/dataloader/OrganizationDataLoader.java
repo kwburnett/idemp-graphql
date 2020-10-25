@@ -8,7 +8,7 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class OrganizationDataLoader extends BaseDataLoader<MOrg, OrganizationRepository>
+public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, OrganizationRepository>
 		implements DataLoaderRegisterer {
 
 	public static String ORGANIZATION_DATA_LOADER = "organizationDataLoader";

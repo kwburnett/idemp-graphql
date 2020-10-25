@@ -10,11 +10,11 @@ import org.dataloader.MappedBatchLoader;
 
 import java.lang.reflect.ParameterizedType;
 
-public abstract class BaseDataLoader<T extends PO, S extends BaseRepository<T>> {
+public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRepository<T, S>> {
 
 	protected abstract String getDefaultDataLoaderName();
 
-	protected abstract S getRepositoryInstance();
+	protected abstract R getRepositoryInstance();
 
 	public void register(DataLoaderRegistry registry) {
 		registry.register(getDefaultDataLoaderName(), DataLoader.newMappedDataLoader(getBatchLoader(),
