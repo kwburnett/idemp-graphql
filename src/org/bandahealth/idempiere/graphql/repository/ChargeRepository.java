@@ -57,6 +57,8 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 
 			charge.saveEx();
 
+			cache.delete(charge.get_ID());
+
 			return getByUuid(charge.getC_Charge_UU());
 
 		} catch (Exception ex) {

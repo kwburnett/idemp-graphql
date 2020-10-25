@@ -11,27 +11,27 @@ public class BandaDataLoader {
 
 	public BandaDataLoader() {
 		dataLoaders = new ArrayList<>() {{
+			add(new AccountDataLoader());
+			add(new AttributeSetDataLoader());
+			add(new AttributeSetInstanceDataLoader());
 			add(new BusinessPartnerDataLoader());
-			add(new OrderDataLoader());
+			add(new ChargeDataLoader());
+			add(new ClientDataLoader());
+			add(new FormDataLoader());
+			add(new LocationDataLoader());
 			add(new OrderDataLoader());
 			add(new OrderLineDataLoader());
-			add(new PaymentDataLoader());
-			add(new ReferenceListDataLoader());
-			add(new ClientDataLoader());
 			add(new OrganizationDataLoader());
-			add(new RoleDataLoader());
-			add(new WarehouseDataLoader());
-			add(new UserDataLoader());
-			add(new AttributeSetInstanceDataLoader());
-			add(new AttributeSetDataLoader());
-			add(new ChargeDataLoader());
-			add(new AccountDataLoader());
-			add(new ProductDataLoader());
-			add(new LocationDataLoader());
+			add(new PaymentDataLoader());
 			add(new ProcessParameterDataLoader());
-			add(new FormDataLoader());
-			add(new WorkflowDataLoader());
+			add(new ProductCategoryDataLoader());
+			add(new ProductDataLoader());
+			add(new ReferenceListDataLoader());
 			add(new ReportViewDataLoader());
+			add(new RoleDataLoader());
+			add(new UserDataLoader());
+			add(new WarehouseDataLoader());
+			add(new WorkflowDataLoader());
 		}};
 	}
 

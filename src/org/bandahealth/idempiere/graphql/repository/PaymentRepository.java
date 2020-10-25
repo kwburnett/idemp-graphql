@@ -112,6 +112,8 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 
 		payment.saveEx();
 
+		cache.delete(payment.get_ID());
+
 		return getByUuid(payment.getC_Payment_UU());
 	}
 

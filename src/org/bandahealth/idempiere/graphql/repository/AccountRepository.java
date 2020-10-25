@@ -26,6 +26,8 @@ public class AccountRepository extends BaseRepository<MElementValue, AccountInpu
 
 			account.saveEx();
 
+			cache.delete(account.get_ID());
+
 			return getByUuid(account.getC_ElementValue_UU());
 
 		} catch (Exception ex) {

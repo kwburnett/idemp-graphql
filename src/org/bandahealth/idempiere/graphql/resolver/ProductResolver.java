@@ -43,7 +43,7 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 	}
 
 	public CompletableFuture<MProductCategory_BH> productCategory(MProduct_BH entity,
-																																	DataFetchingEnvironment environment) {
+																																DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProductCategory_BH> productCategoryDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_DATA_LOADER);
 		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());

@@ -93,6 +93,8 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 
 			product.saveEx();
 
+			cache.delete(product.get_ID());
+
 			return getByUuid(product.getM_Product_UU());
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());

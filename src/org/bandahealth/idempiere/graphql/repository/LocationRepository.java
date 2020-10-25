@@ -19,6 +19,7 @@ public class LocationRepository extends BaseRepository<MLocation, LocationInput>
 		}
 		ModelUtil.setPropertyIfPresent(entity.getAddress1(), location::setAddress1);
 		location.saveEx();
+		cache.delete(location.get_ID());
 		return getByUuid(location.getC_Location_UU());
 	}
 }

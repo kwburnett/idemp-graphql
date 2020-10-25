@@ -1,6 +1,8 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.adempiere.exceptions.AdempiereException;
+import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
+import org.bandahealth.idempiere.graphql.cache.BandaCache;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.utils.FilterUtil;
@@ -11,6 +13,7 @@ import org.compiere.model.PO;
 import org.compiere.model.Query;
 import org.compiere.util.Env;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +23,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class BaseRepository<T extends PO, S extends T> {
+
+	public final BandaCache<Object, Object> cache;
+
+	public BaseRepository() {
+		cache = GraphQLEndpoint.getCache(
+				((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])
+		);
+	}
 
 	protected final String PURCHASE_ORDER = "Purchase Order";
 

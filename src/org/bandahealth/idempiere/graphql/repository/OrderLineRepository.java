@@ -77,6 +77,8 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 
 		orderLine.saveEx();
 
+		cache.delete(orderLine.get_ID());
+
 		return orderLine;
 	}
 }

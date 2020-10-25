@@ -55,6 +55,8 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 
 			businessPartner.saveEx();
 
+			cache.delete(businessPartner.get_ID());
+
 			return getByUuid(businessPartner.getC_BPartner_UU());
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
