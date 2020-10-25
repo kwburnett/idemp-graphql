@@ -9,6 +9,8 @@ type PagingInfo {
 }
 
 type Query {
+  # Products
+  products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Orders
   salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
 }

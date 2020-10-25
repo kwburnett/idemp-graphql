@@ -37,3 +37,8 @@ input ProductInput {
   productCategory: ProductCategoryInput
   totalQuantity: Float
 }
+
+type ProductConnection {
+  results: [Product!]!
+  pagingInfo: PagingInfo!
+}
