@@ -3,9 +3,12 @@ package org.bandahealth.idempiere.graphql;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import graphql.analysis.MaxQueryDepthInstrumentation;
+import graphql.execution.instrumentation.ChainedInstrumentation;
 import graphql.execution.instrumentation.Instrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentation;
 import graphql.execution.instrumentation.dataloader.DataLoaderDispatcherInstrumentationOptions;
+import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import graphql.execution.preparsed.PreparsedDocumentEntry;
 import graphql.execution.preparsed.PreparsedDocumentProvider;
 import graphql.kickstart.execution.GraphQLObjectMapper;
@@ -25,7 +28,9 @@ import graphql.kickstart.servlet.GraphQLConfiguration;
 import graphql.kickstart.servlet.GraphQLHttpServlet;
 import graphql.schema.GraphQLSchema;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GraphQLEndpoint extends GraphQLHttpServlet {
@@ -72,10 +77,14 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 
 		Instrumentation dispatcherInstrumentation
 				= new DataLoaderDispatcherInstrumentation(options);
+		List<Instrumentation> instrumentationList = new ArrayList<>();
+		instrumentationList.add(new MaxQueryDepthInstrumentation(6));
+//		instrumentationList.add(new TracingInstrumentation());
+//		instrumentationList.add(dispatcherInstrumentation);
+
 		return GraphQLQueryInvoker.newBuilder()
 				.withPreparsedDocumentProvider(preparsedCache)
-//				.withInstrumentation(new TracingInstrumentation())
-//				.withInstrumentation(dispatcherInstrumentation)
+				.withInstrumentation(new ChainedInstrumentation(instrumentationList))
 				.build();
 	}
 
@@ -113,7 +122,6 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 						"WEB-INF/resources/record.graphqls",
 						"WEB-INF/resources/reference.graphqls",
 						"WEB-INF/resources/reference-list.graphqls",
-						"WEB-INF/resources/reference-value.graphqls",
 						"WEB-INF/resources/report-view.graphqls",
 						"WEB-INF/resources/role.graphqls",
 						"WEB-INF/resources/table.graphqls",

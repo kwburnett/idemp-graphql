@@ -20,3 +20,8 @@ type Process {
   isReport: Boolean
   parameters: [ProcessParameter!]
 }
+
+type ProcessConnection {
+  results: [Process!]!
+  pagingInfo: PagingInfo!
+}

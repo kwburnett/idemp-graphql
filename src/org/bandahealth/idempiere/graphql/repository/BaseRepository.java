@@ -11,6 +11,7 @@ import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
+import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 
 import java.lang.reflect.ParameterizedType;
@@ -25,18 +26,27 @@ import java.util.stream.Collectors;
 public abstract class BaseRepository<T extends PO, S extends T> {
 
 	public final BandaCache<Object, Object> cache;
+	protected final CLogger logger;
+	protected final String PURCHASE_ORDER = "Purchase Order";
 
 	public BaseRepository() {
-		cache = GraphQLEndpoint.getCache(
-				((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])
-		);
+		Class<?> childClass = ((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+		cache = GraphQLEndpoint.getCache(childClass);
+		logger = CLogger.getCLogger(childClass);
 	}
-
-	protected final String PURCHASE_ORDER = "Purchase Order";
 
 	public abstract T getModelInstance();
 
 	public abstract T save(S entity);
+
+	/**
+	 * Override this in child classes if the client ID in the context should not be added by default
+	 *
+	 * @return
+	 */
+	protected boolean shouldUseContextClientId() {
+		return true;
+	}
 
 	/**
 	 * Get a list of this entity grouped by IDs
@@ -117,7 +127,10 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			}
 
 			Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
-					.setClient_ID().setNoVirtualColumn(true);
+					.setNoVirtualColumn(true);
+			if (shouldUseContextClientId()) {
+				query.setClient_ID();
+			}
 
 			if (joinClause != null) {
 				query.addJoinClause(joinClause);

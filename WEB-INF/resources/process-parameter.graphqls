@@ -7,11 +7,10 @@ type ProcessParameter {
   createdBy: User!
   description: String
   name: String
-  value: String
-  element: Element
+  #element: Element - not sure if we need this
   reference: Reference
-  referenceValue: ReferenceValue
-  valueRule: ValueRule
+  referenceValue: [ReferenceList!]
+#  valueRule: ValueRule - not sure if we need this
   defaultValue: String
   defaultValue2: String
   displayLogic: String

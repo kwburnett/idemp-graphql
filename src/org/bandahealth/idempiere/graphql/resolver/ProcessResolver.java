@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
+import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.dataloader.FormDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ProcessParameterDataLoader;
@@ -15,7 +16,7 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class ProcessResolver extends BaseResolver<MProcess> {
+public class ProcessResolver extends BaseResolver<MProcess> implements GraphQLResolver<MProcess> {
 
 	public CompletableFuture<MForm> form(MProcess entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MForm> dataLoader =

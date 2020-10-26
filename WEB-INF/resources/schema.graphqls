@@ -9,6 +9,8 @@ type PagingInfo {
 }
 
 type Query {
+  # Processes
+  processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
   products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Orders

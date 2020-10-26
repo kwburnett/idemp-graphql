@@ -26,6 +26,7 @@ public class BandaDataLoader {
 			add(new ProcessParameterDataLoader());
 			add(new ProductCategoryDataLoader());
 			add(new ProductDataLoader());
+			add(new ReferenceDataLoader());
 			add(new ReferenceListDataLoader());
 			add(new ReportViewDataLoader());
 			add(new RoleDataLoader());

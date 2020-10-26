@@ -7,6 +7,8 @@ import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
 import org.dataloader.MappedBatchLoader;
 
+import java.util.List;
+
 public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceListInput, ReferenceListRepository>
 		implements DataLoaderRegisterer {
 
@@ -16,6 +18,7 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	public static String INVOICE_PAYMENT_TYPE_DATA_LOADER = "referenceListInvoicePaymentTypeDataLoader";
 	public static String NHIF_TYPE_DATA_LOADER = "referenceListNhifTypeDataLoader";
 	public static String NHIF_RELATIONSHIP_DATA_LOADER = "referenceListNhifRelationshipDataLoader";
+	public static String REFERENCE_LIST_BY_REFERENCE_DATA_LOADER = "referenceListByReferenceDataLoader";
 	private final ReferenceListRepository referenceListRepository;
 
 	public ReferenceListDataLoader() {
@@ -46,6 +49,13 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader(), getOptionsWithCache()));
 		registry.register(NHIF_RELATIONSHIP_DATA_LOADER,
 				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader(), getOptionsWithCache()));
+		registry.register(REFERENCE_LIST_BY_REFERENCE_DATA_LOADER,
+				DataLoader.newMappedDataLoader(getByReferenceBatchLoader(), getOptionsWithCache()));
+	}
+
+	private MappedBatchLoader<Integer, List<MRefList>> getByReferenceBatchLoader() {
+		return keys -> referenceListRepository.getGroupsByIds(MRefList::getAD_Reference_ID,
+				MRefList.COLUMNNAME_AD_Reference_ID, keys);
 	}
 
 	private MappedBatchLoader<String, MRefList> getPatientTypeBatchLoader() {

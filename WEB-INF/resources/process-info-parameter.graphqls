@@ -1,0 +1,13 @@
+type ProcessInfoParameter {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  parameterName: String
+  private Object parameter;
+  private Object parameterTo;
+  private String info;
+  private String infoTo;
+}

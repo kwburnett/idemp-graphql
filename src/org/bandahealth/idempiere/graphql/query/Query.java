@@ -8,6 +8,7 @@ public class Query implements GraphQLQueryResolver {
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(
 				new OrderQuery(),
+				new ProcessQuery(),
 				new ProductQuery()
 		);
 	}
