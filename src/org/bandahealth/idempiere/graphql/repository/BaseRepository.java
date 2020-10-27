@@ -8,18 +8,15 @@ import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.utils.FilterUtil;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
+import org.bandahealth.idempiere.graphql.utils.SortUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
-import org.compiere.model.MUser;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -47,6 +44,16 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 */
 	protected boolean shouldUseContextClientId() {
 		return true;
+	}
+
+	/**
+	 * This should be overridden in inheriting classes.
+	 * Structure: Map<TableName, JOIN clause>
+	 *
+	 * @return A map of table names and their appropriate JOIN clauses
+	 */
+	public Map<String, String> getDynamicJoins() {
+		return new HashMap<>();
 	}
 
 	/**
@@ -150,39 +157,69 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * Get all with the inclusion of a join clause for joined cases of sorting
 	 *
 	 * @param filterJson
-	 * @param sort
+	 * @param sortJson
 	 * @param pagingInfo
 	 * @param whereClause
 	 * @param parameters
 	 * @param joinClause  Use to specify a linked table so joining can occur
 	 * @return
 	 */
-	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
+	public Connection<T> get(String filterJson, String sortJson, PagingInfo pagingInfo, String whereClause,
 			List<Object> parameters, String joinClause, DataFetchingEnvironment environment) {
 		try {
 			if (parameters == null) {
 				parameters = new ArrayList<>();
 			}
+			T modelInstance = getModelInstance();
 
-			String filterWhereClause = FilterUtil.getWhereClauseFromFilter(getModelInstance(), filterJson, parameters);
+			String filterWhereClause = FilterUtil.getWhereClauseFromFilter(modelInstance, filterJson, parameters);
 			if (StringUtil.isNullOrEmpty(whereClause)) {
 				whereClause = filterWhereClause;
 			} else {
 				whereClause += " AND " + filterWhereClause;
 			}
 
-			Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
+			Query query = new Query(Env.getCtx(), modelInstance.get_TableName(), whereClause, null)
 					.setNoVirtualColumn(true);
 			if (shouldUseContextClientId()) {
 				query.setClient_ID();
 			}
 
+			StringBuilder dynamicJoinClause = new StringBuilder();
+			if (!getDynamicJoins().isEmpty()) {
+				String passedInJoinClause = (joinClause == null ? "" : joinClause).toLowerCase();
+				List<String> neededJoinTables = FilterUtil.getTablesNeedingJoins(filterJson);
+				neededJoinTables.addAll(SortUtil.getTablesNeedingJoins(sortJson));
+				neededJoinTables = neededJoinTables.stream().distinct().collect(Collectors.toList());
+				for (String tableNeedingJoin : neededJoinTables) {
+					// If this table was already specified in a JOIN, we don't need to dynamically add it
+					if (passedInJoinClause.contains(tableNeedingJoin + ".")) {
+						continue;
+					}
+					// Find the needed JOIN clause
+					boolean foundMatchForTable = false;
+					for (String dynamicTableJoinName : getDynamicJoins().keySet()) {
+						if (dynamicTableJoinName.equalsIgnoreCase(tableNeedingJoin)) {
+							dynamicJoinClause.append(" ").append(getDynamicJoins().get(dynamicTableJoinName));
+							foundMatchForTable = true;
+						}
+					}
+					// If no JOIN clause is specified in the dynamic JOIN, we need to let the user know
+					if (!foundMatchForTable) {
+						throw new AdempiereException(tableNeedingJoin
+								+ " was specified in the filter/sort, but no dynamic JOIN clause provided");
+					}
+				}
+			}
 			if (joinClause != null) {
-				query.addJoinClause(joinClause);
+				dynamicJoinClause.append(" ").append(joinClause);
 			}
 
-//			String orderBy = getOrderBy(sortColumn, sortOrder);
-			String orderBy = getOrderBy(null, null);
+			if (!dynamicJoinClause.toString().trim().isEmpty()) {
+				query.addJoinClause(dynamicJoinClause.toString().trim());
+			}
+
+			String orderBy = SortUtil.getOrderByClauseFromSort(modelInstance, sortJson);
 			if (orderBy != null) {
 				query = query.setOrderBy(orderBy);
 			}
@@ -202,30 +239,5 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		} catch (Exception ex) {
 			throw new AdempiereException(ex);
 		}
-	}
-
-	protected String getOrderBy(String sortColumn, String sortOrder) {
-		if (sortColumn != null && !sortColumn.isEmpty() && sortOrder != null) {
-			// check if column exists
-			if (checkColumnExists(sortColumn)) {
-				return sortColumn + " "
-						+ (sortOrder.equalsIgnoreCase("DESC") ? "DESC" : "ASC")
-						+ " NULLS LAST";
-			}
-		} else {
-			// every table has the 'created' column
-			return checkColumnExists(MUser.COLUMNNAME_Created) ? MUser.COLUMNNAME_Created + " " + "DESC"
-					+ " NULLS LAST" : null;
-		}
-
-		return null;
-	}
-
-	private boolean checkColumnExists(String columnName) {
-		if (getModelInstance() != null) {
-			return getModelInstance().get_ColumnIndex(columnName) > -1;
-		}
-
-		return false;
 	}
 }

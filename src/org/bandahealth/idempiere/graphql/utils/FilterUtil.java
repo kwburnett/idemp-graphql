@@ -231,7 +231,7 @@ public class FilterUtil {
 		// The keys of the comparison object are DB column names
 		for (String dbColumnName : comparisonQuerySelectors.keySet()) {
 			// We won't allow filtering of DB IDs
-			if (dbColumnName.toLowerCase().endsWith("_id")) {
+			if (dbColumnName.toLowerCase().endsWith("_id") || QueryUtil.doesDBStringHaveInvalidCharacters(dbColumnName)) {
 				continue;
 			}
 			Object comparisons = comparisonQuerySelectors.get(dbColumnName);
@@ -239,7 +239,7 @@ public class FilterUtil {
 			boolean dbColumnIsDateType = false;
 			// If the column already has an alias, we won't check the property on the model (because aliases should only be
 			// supplied when filtering from a joined table)
-			if (!doesTableAliasExistOnColumn(dbColumnName)) {
+			if (!QueryUtil.doesTableAliasExistOnColumn(dbColumnName)) {
 				// Try to see if this property should be a date
 				try {
 					Object columnValue = dbModel.get_Value(dbColumnName);
@@ -272,6 +272,8 @@ public class FilterUtil {
 			Map<String, Object> comparisonMap = (Map<String, Object>) comparisons;
 			for (String comparison : comparisonMap.keySet()) {
 				whereClause.append(canPrependSeparator ? separator : "");
+				// We don't have to check this value for invalid characters because it will eventually be added by the
+				// DB.prepareStatement method, which handles SQL injection
 				Object filterValue = comparisonMap.get(comparison);
 				// If this is a date, go ahead and convert the value to be as such
 				if (dbColumnIsDateType) {
@@ -398,26 +400,6 @@ public class FilterUtil {
 	}
 
 	/**
-	 * Check to see if the table alias already exists on the column (aka Table_Name.ColumnName vs just ColumnName)
-	 *
-	 * @param dbColumn The dbColumn string to check
-	 * @return Whether a table alias is present on the dbColumn
-	 */
-	private static boolean doesTableAliasExistOnColumn(String dbColumn) {
-		return dbColumn.contains(".");
-	}
-
-	/**
-	 * Get the table alias provided in the column
-	 *
-	 * @param dbColumn The dbColumn string to check
-	 * @return The table alias on the dbColumn
-	 */
-	private static String getTableAliasFromColumn(String dbColumn) {
-		return dbColumn.substring(0, dbColumn.indexOf("."));
-	}
-
-	/**
 	 * Parse through the field names and return a list of aliases.
 	 *
 	 * @param filterJson
@@ -448,8 +430,9 @@ public class FilterUtil {
 		for (String logicalQuerySelectorOrDbColumnName : expression.keySet()) {
 			if (!LOGICAL_QUERY_SELECTORS.contains(logicalQuerySelectorOrDbColumnName)) {
 				// It is a DB column
-				if (doesTableAliasExistOnColumn(logicalQuerySelectorOrDbColumnName)) {
-					neededJoinTables.add(getTableAliasFromColumn(logicalQuerySelectorOrDbColumnName));
+				if (!QueryUtil.doesDBStringHaveInvalidCharacters(logicalQuerySelectorOrDbColumnName) &&
+						QueryUtil.doesTableAliasExistOnColumn(logicalQuerySelectorOrDbColumnName)) {
+					neededJoinTables.add(QueryUtil.getTableAliasFromColumn(logicalQuerySelectorOrDbColumnName));
 				}
 				continue;
 			}
