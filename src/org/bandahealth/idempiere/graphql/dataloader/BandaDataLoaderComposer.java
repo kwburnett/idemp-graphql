@@ -5,11 +5,11 @@ import org.dataloader.DataLoaderRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BandaDataLoader {
+public class BandaDataLoaderComposer {
 
 	private final List<DataLoaderRegisterer> dataLoaders;
 
-	public BandaDataLoader() {
+	public BandaDataLoaderComposer() {
 		dataLoaders = new ArrayList<>() {{
 			add(new AccountDataLoader());
 			add(new AttributeSetDataLoader());

@@ -16,3 +16,9 @@ type ProcessInfo {
   processInstance: ProcessInstance
   parameters: [ProcessInfoParameter!]
 }
+
+input ProcessInfoInput {
+  process: ProcessInput!
+  parameters: [ProcessInfoParameterInput!]
+  reportOutputType: ReportOutput
+}

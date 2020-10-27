@@ -56,15 +56,34 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param ids              The IDs to search by
 	 * @return
 	 */
-	public CompletableFuture<Map<Integer, List<T>>> getGroupsByIds(Function<T, Integer> groupingFunction,
-																																 String columnToSearch, Set<Integer> ids) {
+	public CompletableFuture<Map<Integer, List<T>>> getGroupsByIdsCompletableFuture(
+			Function<T, Integer> groupingFunction, String columnToSearch, Set<Integer> ids) {
+		return CompletableFuture.supplyAsync(() -> getGroupsByIds(groupingFunction, columnToSearch, ids));
+	}
+
+	/**
+	 * Get a list of this entity grouped by IDs
+	 *
+	 * @param groupingFunction The grouping function to apply for these entities
+	 * @param columnToSearch   The search column to check in
+	 * @param ids              The IDs to search by
+	 * @return
+	 */
+	public Map<Integer, List<T>> getGroupsByIds(
+			Function<T, Integer> groupingFunction, String columnToSearch, Set<Integer> ids) {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
 		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
 				columnToSearch + " IN (" + whereCondition + ")", null)
 				.setParameters(parameters).list();
-		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.groupingBy(groupingFunction)));
+		return models.stream().collect(Collectors.groupingBy(groupingFunction));
+	}
+
+	public T getById(int id) {
+		T model = getModelInstance();
+		return new Query(Env.getCtx(), model.get_TableName(), model.get_TableName() + "_ID=?", null)
+				.setParameters(id).first();
 	}
 
 	/**
@@ -73,14 +92,24 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param ids The IDs to search by
 	 * @return
 	 */
-	public CompletableFuture<Map<Integer, T>> getByIds(Set<Integer> ids) {
+	public Map<Integer, T> getByIds(Set<Integer> ids) {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
 		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
 				model.get_TableName() + "_ID IN (" + whereCondition + ")", null)
 				.setParameters(parameters).list();
-		return CompletableFuture.supplyAsync(() -> models.stream().collect(Collectors.toMap(T::get_ID, m -> m)));
+		return models.stream().collect(Collectors.toMap(T::get_ID, m -> m));
+	}
+
+	/**
+	 * Get a list of entities by their IDs
+	 *
+	 * @param ids The IDs to search by
+	 * @return
+	 */
+	public CompletableFuture<Map<Integer, T>> getByIdsCompletableFuture(Set<Integer> ids) {
+		return CompletableFuture.supplyAsync(() -> getByIds(ids));
 	}
 
 	/**
@@ -94,6 +123,21 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		return new Query(Env.getCtx(), model.get_TableName(),
 				model.getUUIDColumnName() + "=?", null)
 				.setParameters(uuid).first();
+	}
+
+	/**
+	 * Get an of entity by it's UUID
+	 *
+	 * @param uuids The UUIDs to search by
+	 * @return
+	 */
+	public List<T> getByUuids(List<String> uuids) {
+		T model = getModelInstance();
+		String whereClause = uuids.stream().filter(uuid -> !StringUtil.isNullOrEmpty(uuid)).map(uuid -> "'" + uuid + "'")
+				.collect(Collectors.joining(","));
+		return new Query(Env.getCtx(), model.get_TableName(),
+				model.getUUIDColumnName() + " IN (" + whereClause + ")", null)
+				.list();
 	}
 
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,

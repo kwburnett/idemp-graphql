@@ -1,3 +1,5 @@
+union ParameterType = String | Int
+
 type ProcessInfoParameter {
   id: ID!
   client: Client!
@@ -6,8 +8,16 @@ type ProcessInfoParameter {
   created: String @dateFormat
   createdBy: User!
   parameterName: String
-  private Object parameter;
-  private Object parameterTo;
-  private String info;
-  private String infoTo;
+  parameter: ParameterType
+  parameterTo: ParameterType
+  info: String
+  infoTo: String
+}
+
+input ProcessInfoParameterInput {
+  processParameter: ProcessParameterInput!
+  parameter: IntOrStringInput
+  parameterTo: String
+  info: String
+  infoTo: String
 }

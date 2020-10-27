@@ -16,11 +16,11 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 
 	CLogger logger = CLogger.getCLogger(BandaGraphQLContextBuilder.class);
 
-	private final BandaDataLoader bandaDataLoader;
+	private final BandaDataLoaderComposer bandaDataLoaderComposer;
 
 	public BandaGraphQLContextBuilder() {
 		logger.warning("Constructing GraphQL Context");
-		bandaDataLoader = new BandaDataLoader();
+		bandaDataLoaderComposer = new BandaDataLoaderComposer();
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 	private DataLoaderRegistry buildDataLoaderRegistry() {
 		logger.warning("building data registry");
 		DataLoaderRegistry registry = new DataLoaderRegistry();
-		bandaDataLoader.addDataLoaders(registry);
+		bandaDataLoaderComposer.addDataLoaders(registry);
 		return registry;
 	}
 }

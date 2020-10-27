@@ -28,6 +28,6 @@ public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRe
 	}
 
 	private MappedBatchLoader<Integer, T> getBatchLoader() {
-		return getRepositoryInstance()::getByIds;
+		return getRepositoryInstance()::getByIdsCompletableFuture;
 	}
 }

@@ -1,0 +1,7 @@
+enum ReportOutput {
+  PDF
+  HTML
+  XLS
+  CSV
+  XLSX
+}

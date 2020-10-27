@@ -3,6 +3,7 @@ package org.bandahealth.idempiere.graphql.query;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
+import org.bandahealth.idempiere.graphql.model.input.ProcessInfoInput;
 import org.bandahealth.idempiere.graphql.repository.ProcessRepository;
 import org.compiere.model.MProcess;
 
@@ -16,5 +17,9 @@ public class ProcessQuery implements GraphQLQueryResolver {
 
 	public Connection<MProcess> processes(String filter, String sort, int page, int pageSize) {
 		return processRepository.get(filter, sort, new PagingInfo(page, pageSize));
+	}
+
+	public String generateReport(ProcessInfoInput processInfo) {
+		return processRepository.generateReport(processInfo);
 	}
 }

@@ -8,3 +8,7 @@ type Reference {
   description: String
   name: String
 }
+
+input ReferenceInput {
+  id: ID!
+}

@@ -2,7 +2,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.SchemaParserBuilder;
 
-public class Resolver {
+public class BandaResolverComposer {
 
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(

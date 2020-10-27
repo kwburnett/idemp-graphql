@@ -37,6 +37,6 @@ public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, 
 	}
 
 	private MappedBatchLoader<Integer, List<MWarehouse>> getByOrganizationBatchLoader() {
-		return keys -> warehouseRepository.getGroupsByIds(MWarehouse::getAD_Org_ID, MWarehouse.COLUMNNAME_AD_Org_ID, keys);
+		return keys -> warehouseRepository.getGroupsByIdsCompletableFuture(MWarehouse::getAD_Org_ID, MWarehouse.COLUMNNAME_AD_Org_ID, keys);
 	}
 }

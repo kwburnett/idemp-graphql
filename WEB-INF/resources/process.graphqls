@@ -25,3 +25,7 @@ type ProcessConnection {
   results: [Process!]!
   pagingInfo: PagingInfo!
 }
+
+input ProcessInput {
+  id: ID!
+}

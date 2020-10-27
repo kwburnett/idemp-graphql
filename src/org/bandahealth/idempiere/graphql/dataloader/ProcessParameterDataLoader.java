@@ -37,7 +37,7 @@ public class ProcessParameterDataLoader extends BaseDataLoader<MProcessPara, MPr
 	}
 
 	private MappedBatchLoader<Integer, List<MProcessPara>> getByProcessBatchLoader() {
-		return keys -> processParameterRepository.getGroupsByIds(MProcessPara::getAD_Process_ID,
+		return keys -> processParameterRepository.getGroupsByIdsCompletableFuture(MProcessPara::getAD_Process_ID,
 				MProcessPara.COLUMNNAME_AD_Process_ID, keys);
 	}
 }

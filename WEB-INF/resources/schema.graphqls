@@ -1,4 +1,5 @@
 directive @dateFormat on FIELD_DEFINITION
+scalar IntOrStringInput
 
 type PagingInfo {
   totalPages: Int!
@@ -10,6 +11,7 @@ type PagingInfo {
 
 type Query {
   # Processes
+  generateReport(processInfo: ProcessInfoInput!): String
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
   products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
@@ -18,12 +20,12 @@ type Query {
 }
 
 type Mutation {
-  # Orders
-  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
-  processOrder(id: String!): Order!
   # Authentication
-  signIn(credentials: AuthenticationData!): AuthenticationResponse
   changePassword(credentials: AuthenticationData!): AuthenticationResponse
+  signIn(credentials: AuthenticationData!): AuthenticationResponse
+  # Orders
+  processOrder(id: String!): Order!
+  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
 }
 
 schema {

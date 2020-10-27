@@ -71,7 +71,8 @@ Require-Bundle: org.adempiere.base;bundle-version="0.0.0",
  org.bandahealth.idempiere.base;bundle-version="1.0.0",
  javax.servlet,
  org.antlr.runtime;bundle-version="4.7.2",
- slf4j.api;bundle-version="1.7.25"
+ slf4j.api;bundle-version="1.7.25",
+ org.apache.commons.io;bundle-version="2.6.0"
 Bundle-ClassPath: .,
  lib/graphql-java.jar,
  lib/graphql-java-servlet.jar,

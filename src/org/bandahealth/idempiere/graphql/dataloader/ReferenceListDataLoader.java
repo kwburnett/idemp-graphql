@@ -54,7 +54,7 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	}
 
 	private MappedBatchLoader<Integer, List<MRefList>> getByReferenceBatchLoader() {
-		return keys -> referenceListRepository.getGroupsByIds(MRefList::getAD_Reference_ID,
+		return keys -> referenceListRepository.getGroupsByIdsCompletableFuture(MRefList::getAD_Reference_ID,
 				MRefList.COLUMNNAME_AD_Reference_ID, keys);
 	}
 

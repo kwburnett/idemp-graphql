@@ -21,3 +21,7 @@ type ProcessParameter {
   isRange: Boolean
   mandatoryLogic: String
 }
+
+input ProcessParameterInput {
+  id: ID!
+}

@@ -1,11 +1,19 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import org.adempiere.exceptions.AdempiereException;
+import org.apache.commons.io.FileUtils;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.process.ExpenseProcess;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
+import org.bandahealth.idempiere.graphql.model.ReportOutput;
+import org.bandahealth.idempiere.graphql.model.input.ProcessInfoInput;
+import org.bandahealth.idempiere.graphql.model.input.ProcessInput;
+import org.bandahealth.idempiere.graphql.utils.DateUtil;
 import org.compiere.model.MPInstance;
 import org.compiere.model.MProcess;
+import org.compiere.model.MProcessPara;
+import org.compiere.model.MReference;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.Query;
 import org.compiere.process.ProcessInfo;
@@ -14,13 +22,13 @@ import org.compiere.process.ServerProcessCtl;
 import org.compiere.util.DB;
 import org.compiere.util.Env;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class ProcessRepository extends BaseRepository<MProcess, MProcess> {
+public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 
 	// report names
 	public static final String INCOME_EXPENSE_REPORT = "Income & Expenses";
@@ -44,6 +52,131 @@ public class ProcessRepository extends BaseRepository<MProcess, MProcess> {
 	private final String STOCKTAKE_PROCESS_CLASS_NAME = "org.bandahealth.idempiere.base.process.StockTakeProcess";
 	private final String EXPENSE_PROCESS_CLASS_NAME = "org.bandahealth.idempiere.base.process.ExpenseProcess";
 	private final String QUANTITY = "QUANTITY";
+
+	private final Map<ReportOutput, String> contentTypes = new HashMap<>() {{
+		put(ReportOutput.CSV, "text/csv");
+		put(ReportOutput.HTML, "text/html");
+		put(ReportOutput.PDF, "application/pdf");
+		put(ReportOutput.XLS, "application/vnd.ms-excel");
+		put(ReportOutput.XLSX, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	}};
+
+	private final ReferenceRepository referenceRepository;
+	private final ProcessParameterRepository processParameterRepository;
+
+	public ProcessRepository() {
+		referenceRepository = new ReferenceRepository();
+		processParameterRepository = new ProcessParameterRepository();
+	}
+
+	/**
+	 * Run process
+	 *
+	 * @param request
+	 * @return
+	 */
+	public static ProcessInfo runProcess(ProcessInfo request) {
+		if (request == null) {
+			return null;
+		}
+
+		MProcess mprocess = new Query(Env.getCtx(), MProcess.Table_Name, MProcess.COLUMNNAME_AD_Process_UU
+				+ "=?", null)
+				.setOnlyActiveRecords(true).setParameters(request.getAD_Process_UU()).first();
+
+		MPInstance mpInstance = new MPInstance(mprocess, 0);
+
+		ProcessInfo processInfo = new ProcessInfo(mprocess.getName(), mprocess.getAD_Process_ID());
+		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
+		processInfo.setAD_Client_ID(Env.getAD_Client_ID(Env.getCtx()));
+		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
+		processInfo.setAD_Process_UU(mprocess.getAD_Process_UU());
+
+		if (request.getParameter() != null && request.getParameter().length > 0) {
+			processInfo.setParameter(request.getParameter());
+		}
+
+		ServerProcessCtl.process(processInfo, null);
+
+		return processInfo;
+	}
+
+	public String generateReport(ProcessInfoInput processInfoInput) {
+		MProcess process = getByUuid(processInfoInput.getProcess().getAD_Process_UU());
+
+		if (process == null) {
+			throw new AdempiereException("Could not find report");
+		}
+
+		ReportOutput reportOutput = processInfoInput.getReportOutputType();
+		if (reportOutput == null) {
+			reportOutput = ReportOutput.PDF;
+		}
+
+		MPInstance mpInstance = new MPInstance(process, 0);
+
+		ProcessInfo processInfo = new ProcessInfo(process.getName(), process.getAD_Process_ID());
+		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
+		processInfo.setAD_Process_UU(process.getAD_Process_UU());
+		processInfo.setIsBatch(true);
+		processInfo.setExport(true);
+		processInfo.setReportType(reportOutput.toString().toUpperCase());
+		processInfo.setExportFileExtension(reportOutput.toString().toLowerCase());
+
+		// Let's process the parameters (really, we only need to convert dates if they're dates)
+		Map<String, MProcessPara> processParametersByUuidMap = processParameterRepository
+				.getGroupsByIds(MProcessPara::getAD_Process_ID,
+						MProcessPara.COLUMNNAME_AD_Process_ID, new HashSet<>(new ArrayList<>() {{
+							add(process.get_ID());
+						}})).get(process.get_ID()).stream().collect(
+						Collectors.toMap(MProcessPara::getAD_Process_Para_UU, processParameter -> processParameter));
+		Map<Integer, MReference> referencesByIdMap = referenceRepository
+				.getByIds(processParametersByUuidMap.values().stream().map(MProcessPara::getAD_Reference_ID)
+						.collect(Collectors.toSet()));
+		List<ProcessInfoParameter> processedInfoParameters = new ArrayList<>();
+		// Now, cycle through and process each parameter passed in
+		processInfoInput.getParameters().forEach(processInfoParameter -> {
+			// Get the process parameter
+			MProcessPara processParameter = processParametersByUuidMap.get(processInfoParameter.getProcessParameter()
+					.getAD_Process_Para_UU());
+			// Get the reference to help determine what type of parameter this is
+			MReference referenceForParameter = referencesByIdMap.get(processParameter.getAD_Reference_ID());
+			Object parameter = processInfoParameter.getParameter();
+			if (referenceForParameter.getName().equalsIgnoreCase("Date")) {
+				parameter = DateUtil.parseDate(processInfoParameter.getParameter().toString());
+			}
+			// Create a new process info parameter with the name fetched from MProcessParam
+			processedInfoParameters.add(new ProcessInfoParameter(
+					processParametersByUuidMap.get(processInfoParameter.getProcessParameter().getAD_Process_Para_UU()).getName(),
+					parameter,
+					processInfoParameter.getParameter_To(),
+					processInfoParameter.getInfo(),
+					processInfoParameter.getInfo_To()
+			));
+		});
+
+		if (!processedInfoParameters.isEmpty()) {
+			processInfo.setParameter(processedInfoParameters.toArray(ProcessInfoParameter[]::new));
+		}
+
+		ServerProcessCtl.process(processInfo, null);
+
+		if (processInfo.isError()) {
+			throw new AdempiereException("Could not generate report " + process.getName());
+		}
+
+		if (processInfo.getExportFile() != null) {
+			try {
+				String encodedForm = Base64.getEncoder()
+						.encodeToString(FileUtils.readFileToByteArray(processInfo.getExportFile()));
+				return "data:" + contentTypes.get(reportOutput) + ";base64," + encodedForm;
+			} catch (IOException e) {
+				throw new AdempiereException("Could not read generated report " + process.getName());
+			}
+		}
+
+		return null;
+	}
 
 	public Connection<MProcess> get(String filter, String sort, PagingInfo pagingInfo) {
 		List<Object> parameters = new ArrayList<>();
@@ -96,38 +229,6 @@ public class ProcessRepository extends BaseRepository<MProcess, MProcess> {
 		}
 
 		return super.get(filter, sort, pagingInfo, whereClause, parameters);
-	}
-
-	/**
-	 * Run process
-	 *
-	 * @param request
-	 * @return
-	 */
-	public static ProcessInfo runProcess(ProcessInfo request) {
-		if (request == null) {
-			return null;
-		}
-
-		MProcess mprocess = new Query(Env.getCtx(), MProcess.Table_Name, MProcess.COLUMNNAME_AD_Process_UU
-				+ "=?", null)
-				.setOnlyActiveRecords(true).setParameters(request.getAD_Process_UU()).first();
-
-		MPInstance mpInstance = new MPInstance(mprocess, 0);
-
-		ProcessInfo processInfo = new ProcessInfo(mprocess.getName(), mprocess.getAD_Process_ID());
-		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
-		processInfo.setAD_Client_ID(Env.getAD_Client_ID(Env.getCtx()));
-		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
-		processInfo.setAD_Process_UU(mprocess.getAD_Process_UU());
-
-		if (request.getParameter() != null && request.getParameter().length > 0) {
-			processInfo.setParameter(request.getParameter());
-		}
-
-		ServerProcessCtl.process(processInfo, null);
-
-		return processInfo;
 	}
 
 	/**
@@ -221,11 +322,11 @@ public class ProcessRepository extends BaseRepository<MProcess, MProcess> {
 
 	@Override
 	public MProcess getModelInstance() {
-		return new MProcess(Env.getCtx(), 0, null);
+		return new ProcessInput();
 	}
 
 	@Override
-	public MProcess save(MProcess entity) {
+	public MProcess save(ProcessInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
