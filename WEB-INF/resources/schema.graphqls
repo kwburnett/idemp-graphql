@@ -11,6 +11,7 @@ type PagingInfo {
 
 type Query {
   # Orders
+  purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
   salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
   # Processes
   generateReport(processInfo: ProcessInfoInput!): String

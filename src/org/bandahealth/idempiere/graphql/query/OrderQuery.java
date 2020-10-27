@@ -21,4 +21,9 @@ public class OrderQuery implements GraphQLQueryResolver {
 		return CompletableFuture.supplyAsync(() ->
 				orderRepository.getSalesOrders(filter, sort, new PagingInfo(page, pageSize)));
 	}
+
+	public CompletableFuture<Connection<MOrder_BH>> purchaseOrders(String filter, String sort, int page, int pageSize) {
+		return CompletableFuture.supplyAsync(() ->
+				orderRepository.getPurchaseOrders(filter, sort, new PagingInfo(page, pageSize)));
+	}
 }

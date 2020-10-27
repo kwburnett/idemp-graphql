@@ -14,7 +14,7 @@ type Order {
   isExpense: Boolean
   description: String
   orderLines: [OrderLine!]
-  payments: [Payment!]!
+  payments: [Payment!]
   # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
   docStatus: DocStatus
   newVisit: Boolean

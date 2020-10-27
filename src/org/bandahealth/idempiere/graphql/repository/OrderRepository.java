@@ -37,6 +37,14 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		processRepository = new ProcessRepository();
 	}
 
+	public Connection<MOrder_BH> getPurchaseOrders(String filter, String sort, PagingInfo pagingInfo) {
+		List<Object> parameters = new ArrayList<>();
+		parameters.add("N");
+
+		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=? AND " +
+				MOrder_BH.COLUMNNAME_BH_IsExpense + " IS NULL", parameters);
+	}
+
 	public Connection<MOrder_BH> getSalesOrders(String filter, String sort, PagingInfo pagingInfo) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add("Y");
