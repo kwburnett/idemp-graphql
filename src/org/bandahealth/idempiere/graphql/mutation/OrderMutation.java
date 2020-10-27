@@ -24,6 +24,14 @@ public class OrderMutation implements GraphQLMutationResolver {
 		return CompletableFuture.supplyAsync(() -> order);
 	}
 
+	public CompletableFuture<MOrder_BH> savePurchaseOrder(OrderInput purchaseOrder, boolean shouldProcess) {
+		MOrder_BH order = orderRepository.savePurchaseOrder(purchaseOrder);
+		if (shouldProcess) {
+			return orderRepository.process(order.getC_Order_UU());
+		}
+		return CompletableFuture.supplyAsync(() -> order);
+	}
+
 	public CompletableFuture<MOrder_BH> processOrder(String id) {
 		return orderRepository.process(id);
 	}

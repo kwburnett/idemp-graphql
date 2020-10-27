@@ -71,18 +71,9 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 			order.setIsApproved(true);
 			order.setDocAction(MOrder_BH.DOCACTION_Complete);
 
-			ModelUtil.setPropertyIfPresent(entity.getbh_lab_notes(), order::setbh_lab_notes);
-			ModelUtil.setPropertyIfPresent(entity.getDescription(), order::setDescription);
-
-			if (entity.getPatientType() != null && !StringUtil.isNullOrEmpty(entity.getPatientType().getValue())) {
-				ModelUtil.setPropertyIfPresent(entity.getPatientType().getValue(), order::setBH_PatientType);
-			}
-			if (entity.getReferral() != null && !StringUtil.isNullOrEmpty(entity.getReferral().getValue())) {
-				ModelUtil.setPropertyIfPresent(entity.getReferral().getValue(), order::setbh_referral);
-			}
+			MBPartner_BH businessPartner = null;
 
 			// set patient
-			MBPartner_BH businessPartner = null;
 			if (entity.getBusinessPartner() != null && entity.getBusinessPartner().getC_BPartner_UU() != null) {
 				businessPartner = businessPartnerRepository
 						.getByUuid(entity.getBusinessPartner().getC_BPartner_UU());
@@ -91,16 +82,29 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 				}
 			}
 
-			ModelUtil.setPropertyIfPresent(entity.isBH_NewVisit(), order::setBH_NewVisit);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Chief_Complaint(), order::setBH_Chief_Complaint);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Temperature(), order::setBH_Temperature);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Pulse(), order::setBH_Pulse);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Respiratory_Rate(), order::setBH_Respiratory_Rate);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Blood_Pressure(), order::setBH_Blood_Pressure);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Height(), order::setBH_Height);
-			ModelUtil.setPropertyIfPresent(entity.getBH_Weight(), order::setBH_Weight);
-			ModelUtil.setPropertyIfPresent(entity.getBH_SecondDiagnosis(), order::setBH_SecondDiagnosis);
-			ModelUtil.setPropertyIfPresent(entity.isSOTrx(), order::setIsSOTrx);
+			// Set properties specifically for sales orders
+			if (order.isSOTrx()) {
+				ModelUtil.setPropertyIfPresent(entity.getbh_lab_notes(), order::setbh_lab_notes);
+				ModelUtil.setPropertyIfPresent(entity.getDescription(), order::setDescription);
+
+				if (entity.getPatientType() != null && !StringUtil.isNullOrEmpty(entity.getPatientType().getValue())) {
+					ModelUtil.setPropertyIfPresent(entity.getPatientType().getValue(), order::setBH_PatientType);
+				}
+				if (entity.getReferral() != null && !StringUtil.isNullOrEmpty(entity.getReferral().getValue())) {
+					ModelUtil.setPropertyIfPresent(entity.getReferral().getValue(), order::setbh_referral);
+				}
+
+				ModelUtil.setPropertyIfPresent(entity.isBH_NewVisit(), order::setBH_NewVisit);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Chief_Complaint(), order::setBH_Chief_Complaint);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Temperature(), order::setBH_Temperature);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Pulse(), order::setBH_Pulse);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Respiratory_Rate(), order::setBH_Respiratory_Rate);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Blood_Pressure(), order::setBH_Blood_Pressure);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Height(), order::setBH_Height);
+				ModelUtil.setPropertyIfPresent(entity.getBH_Weight(), order::setBH_Weight);
+				ModelUtil.setPropertyIfPresent(entity.getBH_SecondDiagnosis(), order::setBH_SecondDiagnosis);
+				ModelUtil.setPropertyIfPresent(entity.isSOTrx(), order::setIsSOTrx);
+			}
 
 			// set target document type
 			if (!order.isSOTrx()) {
@@ -122,21 +126,24 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 			// delete order lines not in request
 			orderLineRepository.deleteByOrder(order.get_ID(), orderLineUuidsToKeep);
 
-			// any post save operation
-			List<String> paymentUuidsToKeep = new ArrayList<>();
-			List<PaymentInput> payments = entity.getPayments();
-			if (payments != null && entity.isSOTrx()) {
-				for (PaymentInput payment : entity.getPayments()) {
-					payment.setC_Order_ID(order.get_ID());
-					if (businessPartner != null) {
-						payment.setC_BPartner_ID(businessPartner.getC_BPartner_ID());
+			// Handle payments for sales orders
+			if (order.isSOTrx()) {
+				// any post save operation
+				List<String> paymentUuidsToKeep = new ArrayList<>();
+				List<PaymentInput> payments = entity.getPayments();
+				if (payments != null && entity.isSOTrx()) {
+					for (PaymentInput payment : entity.getPayments()) {
+						payment.setC_Order_ID(order.get_ID());
+						if (businessPartner != null) {
+							payment.setC_BPartner_ID(businessPartner.getC_BPartner_ID());
+						}
+						paymentUuidsToKeep.add(paymentRepository.save(payment).getC_Payment_UU());
 					}
-					paymentUuidsToKeep.add(paymentRepository.save(payment).getC_Payment_UU());
 				}
-			}
 
-			// delete payment lines not in request
-			paymentRepository.deleteByOrder(order.get_ID(), paymentUuidsToKeep);
+				// delete payment lines not in request
+				paymentRepository.deleteByOrder(order.get_ID(), paymentUuidsToKeep);
+			}
 
 			cache.delete(order.get_ID());
 
@@ -152,6 +159,11 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 
 	public MOrder_BH saveSalesOrder(OrderInput entity) {
 		entity.setIsSOTrx(true);
+		return save(entity);
+	}
+
+	public MOrder_BH savePurchaseOrder(OrderInput entity) {
+		entity.setIsSOTrx(false);
 		return save(entity);
 	}
 

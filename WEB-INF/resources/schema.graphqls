@@ -26,7 +26,8 @@ type Mutation {
   signIn(credentials: AuthenticationData!): AuthenticationResponse
   # Orders
   processOrder(id: String!): Order!
-  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
+  savePurchaseOrder(salesOrder: OrderInput!, shouldProcess: Boolean = true): Order!
+  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean = true): Order!
   # Products
   saveProduct(product: ProductInput): Product!
 }
