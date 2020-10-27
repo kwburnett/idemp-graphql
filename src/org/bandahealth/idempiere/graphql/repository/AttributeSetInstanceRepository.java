@@ -27,11 +27,6 @@ public class AttributeSetInstanceRepository extends BaseRepository<MAttributeSet
 	}
 
 	@Override
-	public List<Object> getDefaultParameters() {
-		return attributeSetRepository.getDefaultParameters();
-	}
-
-	@Override
 	public String getDefaultJoinClause() {
 		return "JOIN " + MAttributeSet.Table_Name + " ON " + MAttributeSet.Table_Name + "." +
 				MAttributeSet.COLUMNNAME_M_AttributeSet_ID + "=" + MAttributeSetInstance.Table_Name + "." +

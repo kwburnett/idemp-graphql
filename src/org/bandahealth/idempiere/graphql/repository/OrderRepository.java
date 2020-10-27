@@ -31,6 +31,10 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	private final PaymentRepository paymentRepository;
 	private final ProcessRepository processRepository;
 
+	private final String businessPartnerJoin = "JOIN " + MBPartner_BH.Table_Name + " ON " + MBPartner_BH.Table_Name +
+			"." + MBPartner_BH.COLUMNNAME_C_BPartner_ID + "=" + MOrder_BH.Table_Name + "." +
+			MOrder_BH.COLUMNNAME_C_BPartner_ID;
+
 	public OrderRepository() {
 		orderLineRepository = new OrderLineRepository();
 		businessPartnerRepository = new BusinessPartnerRepository();
@@ -44,7 +48,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		parameters.add("N");
 
 		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=? AND " +
-				MOrder_BH.COLUMNNAME_BH_IsExpense + " IS NULL", parameters, environment);
+				MOrder_BH.COLUMNNAME_BH_IsExpense + " IS NULL", parameters, businessPartnerJoin, environment);
 	}
 
 	public Connection<MOrder_BH> getSalesOrders(String filter, String sort, PagingInfo pagingInfo,
@@ -52,7 +56,8 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add("Y");
 
-		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters, environment);
+		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters,
+				businessPartnerJoin, environment);
 	}
 
 	@Override

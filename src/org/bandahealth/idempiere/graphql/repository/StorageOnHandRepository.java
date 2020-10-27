@@ -25,11 +25,6 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, MSto
 	}
 
 	@Override
-	public List<Object> getDefaultParameters() {
-		return attributeSetInstanceRepository.getDefaultParameters();
-	}
-
-	@Override
 	public String getDefaultJoinClause() {
 		return " JOIN " + MAttributeSetInstance.Table_Name + " ON " + MAttributeSetInstance.Table_Name + "." +
 				MAttributeSetInstance.COLUMNNAME_M_AttributeSetInstance_ID + "=" + MStorageOnHand.Table_Name + "." +

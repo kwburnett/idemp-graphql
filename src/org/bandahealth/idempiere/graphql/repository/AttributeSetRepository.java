@@ -20,11 +20,6 @@ public class AttributeSetRepository extends BaseRepository<MAttributeSet, Attrib
 
 	@Override
 	public String getDefaultWhereClause() {
-		return MAttributeSet.Table_Name + "." + MAttributeSet.COLUMNNAME_Name + "=?";
-	}
-
-	@Override
-	public List<Object> getDefaultParameters() {
-		return Collections.singletonList("BandaHealthProductAttributeSet");
+		return MAttributeSet.Table_Name + "." + MAttributeSet.COLUMNNAME_Name + "='BandaHealthProductAttributeSet'";
 	}
 }

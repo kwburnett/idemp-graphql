@@ -8,23 +8,29 @@ import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.ProductInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
+import org.compiere.model.*;
 import org.compiere.model.MProductCategory;
+import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MTaxCategory;
 import org.compiere.model.MUOM;
 import org.compiere.model.Query;
 import org.compiere.util.Env;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput> {
 
 	private final ProductCategoryRepository productCategoryRepository;
 	private final UomRepository uomRepository;
+	private final StorageOnHandRepository storageOnHandRepository;
 
 	public ProductRepository() {
 		productCategoryRepository = new ProductCategoryRepository();
 		uomRepository = new UomRepository();
+		storageOnHandRepository = new StorageOnHandRepository();
 	}
 
 	@Override
@@ -39,6 +45,22 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 
 		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
 				environment);
+	}
+
+	@Override
+	public Map<String, String> getDynamicJoins() {
+		String storageOnHandBaseSql = storageOnHandRepository.getBaseQuery(null).getSQL();
+		int storageOnHandBaseIndexOfFrom = storageOnHandBaseSql.indexOf("FROM");
+		int storageOnHandBaseIndexOfWhere = storageOnHandBaseSql.indexOf("WHERE");
+		return new HashMap<>() {{
+			put(MStorageOnHand.Table_Name, "LEFT JOIN (" + "SELECT " + MStorageOnHand.COLUMNNAME_M_Product_ID + ",SUM(" +
+					MStorageOnHand.COLUMNNAME_QtyOnHand + ") as totalQuantity " +
+					storageOnHandBaseSql.substring(storageOnHandBaseIndexOfFrom, storageOnHandBaseIndexOfWhere) + " GROUP BY " +
+					MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID + ") AS " +
+					MStorageOnHand.Table_Name + " ON " + MStorageOnHand.Table_Name + "." +
+					MStorageOnHand.COLUMNNAME_M_Product_ID + "=" + MProduct_BH.Table_Name + "." +
+					MProduct_BH.COLUMNNAME_M_Product_ID);
+		}};
 	}
 
 	@Override
