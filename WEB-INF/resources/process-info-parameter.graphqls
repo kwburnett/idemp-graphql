@@ -16,8 +16,8 @@ type ProcessInfoParameter {
 
 input ProcessInfoParameterInput {
   processParameter: ProcessParameterInput!
-  parameter: IntOrStringInput
-  parameterTo: String
+  parameter: Object
+  parameterTo: Object
   info: String
   infoTo: String
 }

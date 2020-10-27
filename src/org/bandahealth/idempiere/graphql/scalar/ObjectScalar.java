@@ -2,8 +2,8 @@ package org.bandahealth.idempiere.graphql.scalar;
 
 import graphql.schema.*;
 
-public class IntOrStringInputScalar {
-	public static final GraphQLScalarType IntOrStringInput = GraphQLScalarType.newScalar().name("IntOrStringInput")
+public class ObjectScalar {
+	public static final GraphQLScalarType Object = GraphQLScalarType.newScalar().name("Object")
 			.coercing(new Coercing() {
 				@Override
 				public Object serialize(Object dataFetcherResult) throws CoercingSerializeException {

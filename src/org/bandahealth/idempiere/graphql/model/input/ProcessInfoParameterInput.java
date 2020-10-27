@@ -4,6 +4,8 @@ import org.compiere.process.ProcessInfoParameter;
 
 public class ProcessInfoParameterInput extends ProcessInfoParameter {
 	private ProcessParameterInput processParameter;
+	private Object parameterTo;
+	private String infoTo;
 
 	public ProcessInfoParameterInput() {
 		super("", null, null, null, null);

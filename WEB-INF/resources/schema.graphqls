@@ -1,5 +1,5 @@
 directive @dateFormat on FIELD_DEFINITION
-scalar IntOrStringInput
+scalar Object
 
 type PagingInfo {
   totalPages: Int!
