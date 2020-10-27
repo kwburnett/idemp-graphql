@@ -10,13 +10,13 @@ type PagingInfo {
 }
 
 type Query {
+  # Orders
+  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
   # Processes
   generateReport(processInfo: ProcessInfoInput!): String
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
   products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
-  # Orders
-  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
 }
 
 type Mutation {
@@ -26,6 +26,8 @@ type Mutation {
   # Orders
   processOrder(id: String!): Order!
   saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean!): Order!
+  # Products
+  saveProduct(product: ProductInput): Product!
 }
 
 schema {

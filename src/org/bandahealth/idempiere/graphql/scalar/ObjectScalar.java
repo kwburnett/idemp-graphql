@@ -19,5 +19,5 @@ public class ObjectScalar {
 				public Object parseLiteral(Object input) throws CoercingParseLiteralException {
 					return input;
 				}
-			}).description("a scalar to hold either Int or String for inputs").build();
+			}).description("a scalar to hold an Object").build();
 }

@@ -7,7 +7,8 @@ public class BandaMutationComposer {
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(
 				new AuthenticationMutation(),
-				new OrderMutation()
+				new OrderMutation(),
+				new ProductMutation()
 		);
 	}
 }
