@@ -2,10 +2,8 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
-import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.ProductCategoryDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.StorageOnHandDataLoader;
 import org.compiere.model.MStorageOnHand;
@@ -53,13 +51,13 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 	}
 
 	public CompletableFuture<BigDecimal> totalQuantity(MProduct_BH entity, DataFetchingEnvironment environment) {
-		return getStorageOnHand(entity, environment).thenApply(storageOnHandLines ->
+		return storageOnHand(entity, environment).thenApply(storageOnHandLines ->
 				storageOnHandLines == null ? BigDecimal.ZERO : storageOnHandLines.stream().map(MStorageOnHand::getQtyOnHand)
 						.reduce(BigDecimal.ZERO, BigDecimal::add)
 		);
 	}
 
-	private CompletableFuture<List<MStorageOnHand>> getStorageOnHand(MProduct_BH entity,
+	public CompletableFuture<List<MStorageOnHand>> storageOnHand(MProduct_BH entity,
 																																	 DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MStorageOnHand>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(StorageOnHandDataLoader.STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER);

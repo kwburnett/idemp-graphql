@@ -19,7 +19,7 @@ public class ReferenceRepository extends BaseRepository<MReference, MReference> 
 	}
 
 	public List<MReference> getByUuids(List<String> uuids) {
-		return new Query(Env.getCtx(), MReference.Table_Name, MReference.COLUMNNAME_AD_Reference_UU + " IN (" +
-				uuids.stream().map(uuid -> "'" + uuid + "'").collect(Collectors.joining(",")), null).list();
+		return getBaseQuery(MReference.COLUMNNAME_AD_Reference_UU + " IN (" +
+				uuids.stream().map(uuid -> "'" + uuid + "'").collect(Collectors.joining(","))).list();
 	}
 }

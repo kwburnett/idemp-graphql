@@ -57,6 +57,80 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
+	 * This should be overridden in inheriting classes.
+	 *
+	 * @return A WHERE clause to apply in all queries
+	 */
+	public String getDefaultWhereClause() {
+		return "";
+	}
+
+	/**
+	 * This should be overridden in inheriting classes.
+	 *
+	 * @return A parameters to use in all queries
+	 */
+	public List<Object> getDefaultParameters() {
+		return new ArrayList<>();
+	}
+
+	/**
+	 * This should be overridden in inheriting classes.
+	 *
+	 * @return A JOIN clause to apply in all queries
+	 */
+	public String getDefaultJoinClause() {
+		return "";
+	}
+
+	/**
+	 * The default method to create a Query for this entity type
+	 *
+	 * @param additionalWhereClause An additional WHERE clause above the default
+	 * @param parameters            Any parameters needed for the additional WHERE clause
+	 * @return
+	 */
+	public Query getBaseQuery(String additionalWhereClause, Object... parameters) {
+		String whereClause = additionalWhereClause;
+		// If there's a default where clause, we need to add it
+		if (!getDefaultWhereClause().isEmpty()) {
+			if (StringUtil.isNullOrEmpty(additionalWhereClause)) {
+				whereClause = "";
+			} else {
+				whereClause = " AND " + whereClause;
+			}
+			// To ensure the parameters are added correctly, we'll assume passed-in parameters are added last
+			whereClause = getDefaultWhereClause() + whereClause;
+		}
+		List<Object> parametersToUse = new ArrayList<>();
+		// Handle any default parameters
+		if (getDefaultParameters() != null) {
+			parametersToUse.addAll(getDefaultParameters());
+		}
+		if (parameters != null) {
+			Arrays.stream(parameters).forEach(parameter -> {
+				if (parameter instanceof List<?>) {
+					parametersToUse.addAll((List<?>) parameter);
+				} else {
+					parametersToUse.add(parameter);
+				}
+			});
+		}
+		// Set up the query
+		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
+				.setParameters(parametersToUse).setNoVirtualColumn(true);
+		// If we should use the client ID in the context, add it
+		if (shouldUseContextClientId()) {
+			query.setClient_ID();
+		}
+		// Add any JOIN clauses specified by default
+		if (!getDefaultJoinClause().isEmpty()) {
+			query.addJoinClause(getDefaultJoinClause());
+		}
+		return query;
+	}
+
+	/**
 	 * Get a list of this entity grouped by IDs
 	 *
 	 * @param groupingFunction The grouping function to apply for these entities
@@ -82,16 +156,14 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
-				columnToSearch + " IN (" + whereCondition + ")", null)
-				.setParameters(parameters).list();
+		Query query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters);
+		List<T> models = query.list();
 		return models.stream().collect(Collectors.groupingBy(groupingFunction));
 	}
 
 	public T getById(int id) {
 		T model = getModelInstance();
-		return new Query(Env.getCtx(), model.get_TableName(), model.get_TableName() + "_ID=?", null)
-				.setParameters(id).first();
+		return getBaseQuery(model.get_TableName() + "_ID=?", id).first();
 	}
 
 	/**
@@ -104,9 +176,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<T> models = new Query(Env.getCtx(), model.get_TableName(),
-				model.get_TableName() + "_ID IN (" + whereCondition + ")", null)
-				.setParameters(parameters).list();
+		List<T> models = getBaseQuery(model.get_TableName() + "_ID IN (" + whereCondition + ")",
+				parameters).list();
 		return models.stream().collect(Collectors.toMap(T::get_ID, m -> m));
 	}
 
@@ -128,9 +199,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 */
 	public T getByUuid(String uuid) {
 		T model = getModelInstance();
-		return new Query(Env.getCtx(), model.get_TableName(),
-				model.getUUIDColumnName() + "=?", null)
-				.setParameters(uuid).first();
+		return getBaseQuery(model.getUUIDColumnName() + "=?", uuid).first();
 	}
 
 	/**
@@ -143,9 +212,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		T model = getModelInstance();
 		String whereClause = uuids.stream().filter(uuid -> !StringUtil.isNullOrEmpty(uuid)).map(uuid -> "'" + uuid + "'")
 				.collect(Collectors.joining(","));
-		return new Query(Env.getCtx(), model.get_TableName(),
-				model.getUUIDColumnName() + " IN (" + whereClause + ")", null)
-				.list();
+		return getBaseQuery(model.getUUIDColumnName() + " IN (" + whereClause + ")").list();
 	}
 
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
@@ -179,21 +246,27 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				whereClause += " AND " + filterWhereClause;
 			}
 
-			Query query = new Query(Env.getCtx(), modelInstance.get_TableName(), whereClause, null)
-					.setNoVirtualColumn(true);
-			if (shouldUseContextClientId()) {
-				query.setClient_ID();
-			}
+			Query query = getBaseQuery(whereClause, parameters);
 
 			StringBuilder dynamicJoinClause = new StringBuilder();
 			if (!getDynamicJoins().isEmpty()) {
-				String passedInJoinClause = (joinClause == null ? "" : joinClause).toLowerCase();
+				String currentJoinClause = (joinClause == null ? "" : joinClause).toLowerCase();
+				// If the current query already has a JOIN (the default), we need to get it
+				String currentQuerySql = query.getSQL();
+				if (currentQuerySql.contains("JOIN")) {
+					int firstJoinStatementIndex = currentQuerySql.indexOf("JOIN");
+					int endOfJoinStatementIndex = currentQuerySql.contains("WHERE") ? currentQuerySql.indexOf("WHERE") :
+							currentQuerySql.length();
+					currentJoinClause += " " + currentQuerySql.substring(firstJoinStatementIndex, endOfJoinStatementIndex - 1);
+				}
+
+				// Now figure out which tables are needed based on the filter/sort criteria
 				List<String> neededJoinTables = FilterUtil.getTablesNeedingJoins(filterJson);
 				neededJoinTables.addAll(SortUtil.getTablesNeedingJoins(sortJson));
 				neededJoinTables = neededJoinTables.stream().distinct().collect(Collectors.toList());
 				for (String tableNeedingJoin : neededJoinTables) {
 					// If this table was already specified in a JOIN, we don't need to dynamically add it
-					if (passedInJoinClause.contains(tableNeedingJoin + ".")) {
+					if (currentJoinClause.contains(tableNeedingJoin + ".")) {
 						continue;
 					}
 					// Find the needed JOIN clause

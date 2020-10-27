@@ -19,6 +19,7 @@ public class BandaDataLoaderComposer {
 			add(new ClientDataLoader());
 			add(new FormDataLoader());
 			add(new LocationDataLoader());
+			add(new LocatorDataLoader());
 			add(new OrderDataLoader());
 			add(new OrderLineDataLoader());
 			add(new OrganizationDataLoader());

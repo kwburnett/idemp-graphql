@@ -4,7 +4,7 @@ type AttributeSetInstance {
   organization: Organization!
   attributeSet: AttributeSet!
   isActive: Boolean
-  guaranteeDate: String! @dateFormat
+  guaranteeDate: String @dateFormat
 }
 
 input AttributeSetInstanceInput {

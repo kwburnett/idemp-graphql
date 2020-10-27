@@ -1,0 +1,10 @@
+type Locator {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  value: String
+  warehouse: Warehouse!
+}

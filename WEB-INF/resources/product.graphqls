@@ -18,6 +18,7 @@ type Product {
   priceMargin: Float
   productCategory: ProductCategory
   totalQuantity: Float
+  storageOnHand: [StorageOnHand!]
 }
 
 input ProductInput {

@@ -14,6 +14,7 @@ public class BandaResolverComposer {
 				new ClientResolver(),
 				new FormResolver(),
 				new LocationResolver(),
+				new LocatorResolver(),
 				new OrderLineResolver(),
 				new OrderResolver(),
 				new OrganizationResolver(),
@@ -26,6 +27,7 @@ public class BandaResolverComposer {
 				new ReferenceResolver(),
 				new ReportViewResolver(),
 				new RoleResolver(),
+				new StorageOnHandResolver(),
 				new UserResolver(),
 				new WarehouseResolver(),
 				new WorkflowResolver()

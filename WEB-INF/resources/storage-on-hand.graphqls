@@ -1,0 +1,12 @@
+type StorageOnHand {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  locator: Locator!
+  product: Product!
+  attributeSetInstance: AttributeSetInstance
+  quantityOnHand: Float
+}

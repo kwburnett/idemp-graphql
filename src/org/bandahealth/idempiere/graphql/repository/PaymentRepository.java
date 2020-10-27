@@ -33,10 +33,9 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		List<Object> parameters = new ArrayList<>();
 		QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
-		List<MPayment_BH> payments = new Query(Env.getCtx(), MPayment_BH.Table_Name,
-				MPayment_BH.COLUMNNAME_C_Order_ID + " IN (" + whereCondition + ") OR "
-						+ MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")", null)
-				.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true).list();
+		List<MPayment_BH> payments = getBaseQuery(MPayment_BH.COLUMNNAME_C_Order_ID + " IN (" +
+				whereCondition + ") OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")", parameters)
+				.setOnlyActiveRecords(true).list();
 		return CompletableFuture.supplyAsync(() ->
 				payments.stream().collect(Collectors.groupingBy(payment ->
 						payment.getC_Order_ID() == 0 ? payment.getBH_C_Order_ID() : payment.getC_Order_ID())));

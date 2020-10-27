@@ -20,9 +20,11 @@ import java.util.List;
 public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput> {
 
 	private final ProductCategoryRepository productCategoryRepository;
+	private final UomRepository uomRepository;
 
 	public ProductRepository() {
 		productCategoryRepository = new ProductCategoryRepository();
+		uomRepository = new UomRepository();
 	}
 
 	@Override
@@ -48,16 +50,14 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 				product.setProductType(MProduct_BH.PRODUCTTYPE_Item);
 
 				// set default uom (unit of measure).
-				MUOM uom = new Query(Env.getCtx(), MUOM.Table_Name, MUOM.COLUMNNAME_Name + "=?", null)
-						.setParameters("Each").first();
+				MUOM uom = uomRepository.getBaseQuery(MUOM.COLUMNNAME_Name + "=?", "Each").first();
 				if (uom != null) {
 					product.setC_UOM_ID(uom.get_ID());
 				}
 
 				// set product category.
-				MProductCategory productCategory = new Query(Env.getCtx(), MProductCategory.Table_Name,
-						MProductCategory.COLUMNNAME_Name + "=?", null)
-						.setParameters("Pharmacy").setClient_ID().first();
+				MProductCategory productCategory = productCategoryRepository
+						.getBaseQuery(MProductCategory.COLUMNNAME_Name + "=?", "Pharmacy").first();
 				if (productCategory != null) {
 					product.setM_Product_Category_ID(productCategory.get_ID());
 				}
