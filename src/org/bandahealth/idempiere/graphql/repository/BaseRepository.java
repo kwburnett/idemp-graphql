@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
 import org.bandahealth.idempiere.graphql.cache.BandaCache;
@@ -141,8 +142,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
-													 List<Object> parameters) {
-		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null);
+			List<Object> parameters, DataFetchingEnvironment environment) {
+		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null, environment);
 	}
 
 	/**
@@ -157,7 +158,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @return
 	 */
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
-													 List<Object> parameters, String joinClause) {
+			List<Object> parameters, String joinClause, DataFetchingEnvironment environment) {
 		try {
 			if (parameters == null) {
 				parameters = new ArrayList<>();
@@ -190,8 +191,10 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				query = query.setParameters(parameters);
 			}
 
-			// get total count without pagination parameters
-			pagingInfo.setTotalCount(query.count());
+			if (QueryUtil.isTotalCountRequested(environment)) {
+				// get total count without pagination parameters
+				pagingInfo.setTotalCount(query.count());
+			}
 
 			// set pagination params
 			query = query.setPage(pagingInfo.getPageSize(), pagingInfo.getPage());

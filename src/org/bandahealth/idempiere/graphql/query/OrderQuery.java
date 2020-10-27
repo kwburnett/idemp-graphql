@@ -1,6 +1,7 @@
 package org.bandahealth.idempiere.graphql.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
@@ -17,13 +18,15 @@ public class OrderQuery implements GraphQLQueryResolver {
 		orderRepository = new OrderRepository();
 	}
 
-	public CompletableFuture<Connection<MOrder_BH>> salesOrders(String filter, String sort, int page, int pageSize) {
+	public CompletableFuture<Connection<MOrder_BH>> salesOrders(String filter, String sort, int page, int pageSize,
+																															DataFetchingEnvironment environment) {
 		return CompletableFuture.supplyAsync(() ->
-				orderRepository.getSalesOrders(filter, sort, new PagingInfo(page, pageSize)));
+				orderRepository.getSalesOrders(filter, sort, new PagingInfo(page, pageSize), environment));
 	}
 
-	public CompletableFuture<Connection<MOrder_BH>> purchaseOrders(String filter, String sort, int page, int pageSize) {
+	public CompletableFuture<Connection<MOrder_BH>> purchaseOrders(String filter, String sort, int page, int pageSize,
+																																 DataFetchingEnvironment environment) {
 		return CompletableFuture.supplyAsync(() ->
-				orderRepository.getPurchaseOrders(filter, sort, new PagingInfo(page, pageSize)));
+				orderRepository.getPurchaseOrders(filter, sort, new PagingInfo(page, pageSize), environment));
 	}
 }

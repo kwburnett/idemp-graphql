@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrderLine_BH;
@@ -37,19 +38,21 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		processRepository = new ProcessRepository();
 	}
 
-	public Connection<MOrder_BH> getPurchaseOrders(String filter, String sort, PagingInfo pagingInfo) {
+	public Connection<MOrder_BH> getPurchaseOrders(String filter, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add("N");
 
 		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=? AND " +
-				MOrder_BH.COLUMNNAME_BH_IsExpense + " IS NULL", parameters);
+				MOrder_BH.COLUMNNAME_BH_IsExpense + " IS NULL", parameters, environment);
 	}
 
-	public Connection<MOrder_BH> getSalesOrders(String filter, String sort, PagingInfo pagingInfo) {
+	public Connection<MOrder_BH> getSalesOrders(String filter, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add("Y");
 
-		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters);
+		return super.get(filter, sort, pagingInfo, MOrder_BH.COLUMNNAME_IsSOTrx + "=?", parameters, environment);
 	}
 
 	@Override

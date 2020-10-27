@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.apache.commons.io.FileUtils;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
@@ -178,7 +179,8 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 		return null;
 	}
 
-	public Connection<MProcess> get(String filter, String sort, PagingInfo pagingInfo) {
+	public Connection<MProcess> get(String filter, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
 		List<Object> parameters = new ArrayList<>();
 		List<String> reportNames = new ArrayList<>() {{
 			add(INCOME_EXPENSE_REPORT);
@@ -228,7 +230,7 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 					.map(reportName -> "'" + reportName + "'").collect(Collectors.joining(",")) + ")";
 		}
 
-		return super.get(filter, sort, pagingInfo, whereClause, parameters);
+		return super.get(filter, sort, pagingInfo, whereClause, parameters, environment);
 	}
 
 	/**

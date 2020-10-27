@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
@@ -29,11 +30,13 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		return new MProduct_BH(Env.getCtx(), 0, null);
 	}
 
-	public Connection<MProduct_BH> get(String filterJson, String sort, PagingInfo pagingInfo) {
+	public Connection<MProduct_BH> get(String filterJson, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add(MProduct_BH.PRODUCTTYPE_Item);
 
-		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters);
+		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
+				environment);
 	}
 
 	@Override
