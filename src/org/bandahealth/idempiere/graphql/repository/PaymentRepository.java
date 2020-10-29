@@ -1,7 +1,10 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MPayment_BH;
+import org.bandahealth.idempiere.graphql.model.Connection;
+import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.PaymentInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.QueryUtil;
@@ -114,6 +117,19 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		cache.delete(payment.get_ID());
 
 		return getByUuid(payment.getC_Payment_UU());
+	}
+
+	public Connection<MPayment_BH> getServiceDebtPayments(String filterJson, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
+		List<Object> parameters = new ArrayList<>();
+		parameters.add("Y");
+
+		String join = "JOIN " + MBPartner_BH.Table_Name + " ON " + MBPartner_BH.Table_Name + "." +
+				MBPartner_BH.COLUMNNAME_C_BPartner_ID + "=" + MPayment_BH.Table_Name + "." +
+				MPayment_BH.COLUMNNAME_C_BPartner_ID;
+
+		return get(filterJson, sort, pagingInfo, MPayment_BH.COLUMNNAME_BH_IsServiceDebt + "=?", parameters,
+				join, environment);
 	}
 
 	public void deleteByOrder(int orderId, List<String> paymentUuidsToKeep) {

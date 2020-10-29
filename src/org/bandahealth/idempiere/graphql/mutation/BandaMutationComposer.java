@@ -11,6 +11,7 @@ public class BandaMutationComposer {
 				new ChargeMutation(),
 				new InvoiceMutation(),
 				new OrderMutation(),
+				new PaymentMutation(),
 				new ProductMutation(),
 				new StorageOnHandMutation()
 		);

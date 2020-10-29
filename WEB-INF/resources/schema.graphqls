@@ -25,6 +25,8 @@ type Query {
   # Orders
   purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
   salesOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
+  # Payments
+  serviceDebtPayments(filter: String, sort: String, page: Int, pageSize: Int): PaymentConnection!
   # Processes
   generateReport(processInfo: ProcessInfoInput!): String
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
@@ -55,6 +57,8 @@ type Mutation {
   processOrder(id: String!): Order!
   savePurchaseOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   saveSalesOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
+  # Payments
+  saveServiceDebtPayment(payment: PaymentInput!): Payment!
   # Products
   saveItem(product: ProductInput): Product!
   saveService(product: ProductInput): Product!

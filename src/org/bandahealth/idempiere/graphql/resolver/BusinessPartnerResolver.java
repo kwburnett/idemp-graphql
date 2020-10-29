@@ -4,8 +4,10 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.base.model.MPayment_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.compiere.model.MLocation;
 import org.compiere.model.MRefList;
@@ -96,5 +98,11 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 		return salesOrders(entity, environment)
 				.thenApply(orders -> orders == null ? null :
 						orders.stream().map(MOrder_BH::getDateOrdered).max(Timestamp::compareTo).orElse(null));
+	}
+
+	public CompletableFuture<List<MPayment_BH>> payments(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, List<MPayment_BH>> dataLoader = environment.getDataLoaderRegistry()
+				.getDataLoader(PaymentDataLoader.PAYMENT_BY_BUSINESS_PARTNER_DATA_LOADER);
+		return dataLoader.load(entity.getC_BPartner_ID());
 	}
 }
