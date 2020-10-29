@@ -1,19 +1,41 @@
 package org.bandahealth.idempiere.graphql.repository;
 
+import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
+import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.graphql.model.Connection;
+import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.BusinessPartnerInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MLocation;
 import org.compiere.util.Env;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, BusinessPartnerInput> {
 
 	private final LocationRepository locationRepository;
+	private Map<String, String> dynamicJoins = new HashMap<>() {{
+		put(MOrder_BH.Table_Name, "LEFT JOIN (" + "SELECT " + MOrder_BH.COLUMNNAME_C_BPartner_ID
+				+ ",MAX(" + MOrder_BH.COLUMNNAME_DateOrdered + ") as " + MOrder_BH.COLUMNNAME_DateOrdered + " FROM "
+				+ MOrder_BH.Table_Name + " WHERE " + MOrder_BH.COLUMNNAME_IsSOTrx + "='Y' GROUP BY "
+				+ MOrder_BH.COLUMNNAME_C_BPartner_ID + ") AS " + MOrder_BH.Table_Name + " ON " + MOrder_BH.Table_Name + "."
+				+ MOrder_BH.COLUMNNAME_C_BPartner_ID + "=" + MBPartner_BH.Table_Name + "."
+				+ MBPartner_BH.COLUMNNAME_C_BPartner_ID);
+	}};
 
 	public BusinessPartnerRepository() {
 		locationRepository = new LocationRepository();
+	}
+
+	@Override
+	public Map<String, String> getDynamicJoins() {
+		return dynamicJoins;
 	}
 
 	@Override
@@ -27,10 +49,14 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 			MBPartner_BH businessPartner = getByUuid(entity.getC_BPartner_UU());
 			if (businessPartner == null) {
 				businessPartner = getModelInstance();
-				businessPartner.setBH_IsPatient(true);
 			}
 
+			businessPartner.setBH_IsPatient(entity.isBH_IsPatient());
+			businessPartner.setIsCustomer(entity.isCustomer());
+			businessPartner.setIsVendor(entity.isVendor());
+
 			ModelUtil.setPropertyIfPresent(entity.getName(), businessPartner::setName);
+			ModelUtil.setPropertyIfPresent(entity.getDescription(), businessPartner::setDescription);
 			ModelUtil.setPropertyIfPresent(entity.getBH_PatientID(), businessPartner::setBH_PatientID);
 			ModelUtil.setPropertyIfPresent(entity.getBH_Birthday(), businessPartner::setBH_Birthday);
 			ModelUtil.setPropertyIfPresent(entity.getBH_Phone(), businessPartner::setBH_Phone);
@@ -61,5 +87,37 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}
+	}
+
+	public MBPartner_BH saveCustomer(BusinessPartnerInput businessPartner) {
+		businessPartner.setBH_IsPatient(true);
+		businessPartner.setIsCustomer(true);
+		businessPartner.setIsVendor(false);
+		return save(businessPartner);
+	}
+
+	public MBPartner_BH saveVendor(BusinessPartnerInput businessPartner) {
+		businessPartner.setBH_IsPatient(false);
+		businessPartner.setIsCustomer(false);
+		businessPartner.setIsVendor(true);
+		return save(businessPartner);
+	}
+
+	public Connection<MBPartner_BH> getCustomers(String filter, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
+		List<Object> parameters = new ArrayList<>();
+		parameters.add("Y");
+
+		return super.get(filter, sort, pagingInfo, MBPartner_BH.COLUMNNAME_BH_IsPatient + "=?", parameters,
+				environment);
+	}
+
+	public Connection<MBPartner_BH> getVendors(String filter, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
+		List<Object> parameters = new ArrayList<>();
+		parameters.add("Y");
+
+		return super.get(filter, sort, pagingInfo, MBPartner_BH.COLUMNNAME_IsVendor + "=?", parameters,
+				environment);
 	}
 }

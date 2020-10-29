@@ -15,10 +15,10 @@ type BusinessPartner {
   location: Location
   gender: String
   email: String
-  nhifRelationship: String
+  nhifRelationship: ReferenceList
   nhifMemberName: String
   nhifNumber: String
-  nhifType: String
+  nhifType: ReferenceList
   nationalId: String
   occupation: String
   nextOfKinName: String
@@ -26,6 +26,11 @@ type BusinessPartner {
   localPatientNumber: String
   totalVisits: Int
   lastVisitDate: String @dateFormat
+}
+
+type BusinessPartnerConnection {
+  results: [BusinessPartner!]!
+  pagingInfo: PagingInfo!
 }
 
 input BusinessPartnerInput {
@@ -41,10 +46,10 @@ input BusinessPartnerInput {
   location: LocationInput
   gender: String
   email: String
-  nhifRelationship: String
+  nhifRelationship: ReferenceListInput
   nhifMemberName: String
   nhifNumber: String
-  nhifType: String
+  nhifType: ReferenceListInput
   nationalId: String
   occupation: String
   nextOfKinName: String

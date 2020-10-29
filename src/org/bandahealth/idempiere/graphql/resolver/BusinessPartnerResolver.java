@@ -6,7 +6,9 @@ import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.compiere.model.MLocation;
+import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 
 import java.sql.Timestamp;
@@ -40,8 +42,10 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 		return entity.getBH_EMail();
 	}
 
-	public String nhifRelationship(MBPartner_BH entity) {
-		return entity.getbh_nhif_relationship();
+	public CompletableFuture<MRefList> nhifRelationship(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> dataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ReferenceListDataLoader.NHIF_RELATIONSHIP_DATA_LOADER);
+		return dataLoader.load(entity.getbh_nhif_relationship());
 	}
 
 	public String nhifMemberName(MBPartner_BH entity) {
@@ -52,8 +56,10 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 		return entity.getNHIF_Number();
 	}
 
-	public String nhifType(MBPartner_BH entity) {
-		return entity.getBH_NHIF_Type();
+	public CompletableFuture<MRefList> nhifType(MBPartner_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<String, MRefList> dataLoader =
+				environment.getDataLoaderRegistry().getDataLoader(ReferenceListDataLoader.NHIF_TYPE_DATA_LOADER);
+		return dataLoader.load(entity.getBH_NHIF_Type());
 	}
 
 	public String nationalId(MBPartner_BH entity) {
@@ -83,11 +89,12 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	}
 
 	public CompletableFuture<Integer> totalVisits(MBPartner_BH entity, DataFetchingEnvironment environment) {
-		return salesOrders(entity, environment).thenApply(List::size);
+		return salesOrders(entity, environment).thenApply(orders -> orders == null ? 0 : orders.size());
 	}
 
 	public CompletableFuture<Timestamp> lastVisitDate(MBPartner_BH entity, DataFetchingEnvironment environment) {
 		return salesOrders(entity, environment)
-				.thenApply(orders -> orders.stream().map(MOrder_BH::getDateOrdered).max(Timestamp::compareTo).orElse(null));
+				.thenApply(orders -> orders == null ? null :
+						orders.stream().map(MOrder_BH::getDateOrdered).max(Timestamp::compareTo).orElse(null));
 	}
 }

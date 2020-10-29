@@ -10,6 +10,9 @@ type PagingInfo {
 }
 
 type Query {
+  # Business Partners
+  customers(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
+  vendors(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
   # Home Screen Buttons
   homeScreenButtons: [HomeScreenButton!]
   # Invoices
@@ -34,6 +37,9 @@ type Mutation {
   # Authentication
   changePassword(credentials: AuthenticationData!): AuthenticationResponse
   signIn(credentials: AuthenticationData!): AuthenticationResponse
+  # Business Partner
+  saveCustomer(businessPartner: BusinessPartnerInput!): BusinessPartner!
+  saveVendor(businessPartner: BusinessPartnerInput!): BusinessPartner!
   # Invoices
   deleteInvoice(id: String!): Boolean!
   processInvoice(id: String!): Invoice!

@@ -9,8 +9,9 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 public class BusinessPartnerInput extends MBPartner_BH {
-
-	public LocationInput location;
+	private LocationInput location;
+	private ReferenceListInput nhifType;
+	private ReferenceListInput nhifRelationship;
 
 	public BusinessPartnerInput() {
 		super(Env.getCtx(), 0, null);
@@ -42,6 +43,28 @@ public class BusinessPartnerInput extends MBPartner_BH {
 
 	public LocationInput getLocation() {
 		return location;
+	}
+
+	public void setNhifType(ReferenceListInput nhifType) {
+		this.nhifType = nhifType;
+		if (nhifType != null) {
+			setBH_NHIF_Type(nhifType.getValue());
+		}
+	}
+
+	public ReferenceListInput getNhifType() {
+		return nhifType;
+	}
+
+	public void setNhifRelationship(ReferenceListInput nhifRelationship) {
+		this.nhifRelationship = nhifRelationship;
+		if (nhifRelationship != null) {
+			setbh_nhif_relationship(nhifRelationship.getValue());
+		}
+	}
+
+	public ReferenceListInput getNhifRelationship() {
+		return nhifRelationship;
 	}
 
 	public void setPatientNumber(String patientNumber) {
