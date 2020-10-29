@@ -16,20 +16,20 @@ public class OrderMutation implements GraphQLMutationResolver {
 		orderRepository = new OrderRepository();
 	}
 
-	public CompletableFuture<MOrder_BH> saveSalesOrder(OrderInput salesOrder, boolean shouldProcess) {
-		MOrder_BH order = orderRepository.saveSalesOrder(salesOrder);
+	public CompletableFuture<MOrder_BH> saveSalesOrder(OrderInput order, boolean shouldProcess) {
+		MOrder_BH savedOrder = orderRepository.saveSalesOrder(order);
 		if (shouldProcess) {
-			return orderRepository.process(order.getC_Order_UU());
+			return orderRepository.process(savedOrder.getC_Order_UU());
 		}
-		return CompletableFuture.supplyAsync(() -> order);
+		return CompletableFuture.supplyAsync(() -> savedOrder);
 	}
 
-	public CompletableFuture<MOrder_BH> savePurchaseOrder(OrderInput purchaseOrder, boolean shouldProcess) {
-		MOrder_BH order = orderRepository.savePurchaseOrder(purchaseOrder);
+	public CompletableFuture<MOrder_BH> savePurchaseOrder(OrderInput order, boolean shouldProcess) {
+		MOrder_BH savedOrder = orderRepository.savePurchaseOrder(order);
 		if (shouldProcess) {
-			return orderRepository.process(order.getC_Order_UU());
+			return orderRepository.process(savedOrder.getC_Order_UU());
 		}
-		return CompletableFuture.supplyAsync(() -> order);
+		return CompletableFuture.supplyAsync(() -> savedOrder);
 	}
 
 	public CompletableFuture<MOrder_BH> processOrder(String id) {

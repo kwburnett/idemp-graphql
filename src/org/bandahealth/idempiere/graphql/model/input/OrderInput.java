@@ -83,8 +83,8 @@ public class OrderInput extends MOrder_BH {
 		return referral;
 	}
 
-	public void setIsSalesOrderTransaction(Boolean isSalesOrderTransaction) {
-		this.setIsSOTrx(isSalesOrderTransaction);
+	public void setIsSalesTransaction(Boolean isSalesTransaction) {
+		this.setIsSOTrx(isSalesTransaction);
 	}
 
 	public void setIsExpense(boolean isExpense) {

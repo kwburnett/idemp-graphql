@@ -20,6 +20,8 @@ public class BandaDataLoaderComposer {
 			add(new ClientDataLoader());
 			add(new FormDataLoader());
 			add(new HomeScreenButtonDataLoader());
+			add(new InvoiceDataLoader());
+			add(new InvoiceLineDataLoader());
 			add(new LocationDataLoader());
 			add(new LocatorDataLoader());
 			add(new OrderDataLoader());

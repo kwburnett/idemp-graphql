@@ -12,9 +12,12 @@ type PagingInfo {
 type Query {
   # Home Screen Buttons
   homeScreenButtons: [HomeScreenButton!]
+  # Invoices
+  customerInvoices(filter: String, sort: String, page: Int, pageSize: Int): InvoiceConnection!
+  vendorInvoices(filter: String, sort: String, page: Int, pageSize: Int): InvoiceConnection!
   # Orders
-  purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
-  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
+  purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
+  salesOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
   # Processes
   generateReport(processInfo: ProcessInfoInput!): String
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
@@ -30,10 +33,15 @@ type Mutation {
   # Authentication
   changePassword(credentials: AuthenticationData!): AuthenticationResponse
   signIn(credentials: AuthenticationData!): AuthenticationResponse
+  # Invoices
+  deleteInvoice(id: String!): Boolean!
+  processInvoice(id: String!): Invoice!
+  saveCustomerInvoice(invoice: InvoiceInput!, shouldProcess: Boolean = true): Invoice!
+  saveVendorInvoice(invoice: InvoiceInput!, shouldProcess: Boolean = true): Invoice!
   # Orders
   processOrder(id: String!): Order!
-  savePurchaseOrder(salesOrder: OrderInput!, shouldProcess: Boolean = true): Order!
-  saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean = true): Order!
+  savePurchaseOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
+  saveSalesOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   # Products
   saveProduct(product: ProductInput): Product!
   # Storage on hand

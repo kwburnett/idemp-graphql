@@ -1,0 +1,35 @@
+type Invoice {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  businessPartner: BusinessPartner
+  dateInvoiced: String @dateFormat
+  grandTotal: Float
+  isSalesTransaction: Boolean
+  isExpense: Boolean
+  description: String
+  invoiceLines: [InvoiceLine!]
+  paymentType: ReferenceList!
+  # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
+  docStatus: DocStatus
+}
+
+type InvoiceConnection {
+  results: [Invoice!]!
+  pagingInfo: PagingInfo!
+}
+
+input InvoiceInput {
+  id: ID
+  isActive: Boolean
+  businessPartner: BusinessPartnerInput
+  dateInvoiced: String
+  isSalesTransaction: Boolean
+  isExpense: Boolean
+  description: String
+  invoiceLines: [InvoiceLineInput!]
+  paymentType: ReferenceListInput!
+}

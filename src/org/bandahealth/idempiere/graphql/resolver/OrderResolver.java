@@ -22,19 +22,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLResolver<MOrder_BH> {
-
-	private final BusinessPartnerRepository businessPartnerRepository;
-	private final OrderLineRepository orderLineRepository;
-	private final PaymentRepository paymentRepository;
-	private final ReferenceListRepository referenceListRepository;
-
-	public OrderResolver() {
-		businessPartnerRepository = new BusinessPartnerRepository();
-		orderLineRepository = new OrderLineRepository();
-		paymentRepository = new PaymentRepository();
-		referenceListRepository = new ReferenceListRepository();
-	}
-
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER);
@@ -53,7 +40,7 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		return paymentDataLoader.load(entity.getC_Order_ID());
 	}
 
-	public boolean isSalesOrderTransaction(MOrder_BH entity) {
+	public boolean isSalesTransaction(MOrder_BH entity) {
 		return entity.isSOTrx();
 	}
 

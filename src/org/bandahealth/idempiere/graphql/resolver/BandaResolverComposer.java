@@ -14,6 +14,8 @@ public class BandaResolverComposer {
 				new ClientResolver(),
 				new FormResolver(),
 				new HomeScreenButtonResolver(),
+				new InvoiceLineResolver(),
+				new InvoiceResolver(),
 				new LocationResolver(),
 				new LocatorResolver(),
 				new OrderLineResolver(),

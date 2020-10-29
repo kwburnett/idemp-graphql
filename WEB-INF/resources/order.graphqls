@@ -1,5 +1,3 @@
-#directive @BHDate()
-
 type Order {
   id: ID!
   client: Client!
@@ -10,7 +8,7 @@ type Order {
   businessPartner: BusinessPartner
   dateOrdered: String @dateFormat
   grandTotal: Float
-  isSalesOrderTransaction: Boolean
+  isSalesTransaction: Boolean
   isExpense: Boolean
   description: String
   orderLines: [OrderLine!]
@@ -32,7 +30,7 @@ type Order {
   secondDiagnosis: String
 }
 
-type SalesOrdersConnection {
+type OrderConnection {
   results: [Order!]!
   pagingInfo: PagingInfo!
 }
@@ -42,7 +40,7 @@ input OrderInput {
   isActive: Boolean
   businessPartner: BusinessPartnerInput
   dateOrdered: String
-  isSalesOrderTransaction: Boolean
+  isSalesTransaction: Boolean
   isExpense: Boolean
   description: String
   orderLines: [OrderLineInput!]

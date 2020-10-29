@@ -19,13 +19,13 @@ public class OrderQuery implements GraphQLQueryResolver {
 	}
 
 	public CompletableFuture<Connection<MOrder_BH>> salesOrders(String filter, String sort, int page, int pageSize,
-																															DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		return CompletableFuture.supplyAsync(() ->
 				orderRepository.getSalesOrders(filter, sort, new PagingInfo(page, pageSize), environment));
 	}
 
 	public CompletableFuture<Connection<MOrder_BH>> purchaseOrders(String filter, String sort, int page, int pageSize,
-																																 DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		return CompletableFuture.supplyAsync(() ->
 				orderRepository.getPurchaseOrders(filter, sort, new PagingInfo(page, pageSize), environment));
 	}

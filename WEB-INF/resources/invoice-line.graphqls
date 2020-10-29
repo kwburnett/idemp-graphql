@@ -1,0 +1,26 @@
+type InvoiceLine {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  charge: Charge
+  invoice: Invoice!
+  product: Product
+  price: Float
+  quantity: Float
+  lineNetAmount: Float
+  attributeSetInstance: AttributeSetInstance
+}
+
+input InvoiceLineInput {
+  id: ID
+  isActive: Boolean
+  charge: ChargeInput
+  product: ProductInput
+  price: Float
+  quantity: Float
+  lineNetAmount: Float
+  attributeSetInstance: AttributeSetInstanceInput
+}

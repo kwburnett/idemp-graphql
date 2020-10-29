@@ -36,6 +36,10 @@ public class ProcessInfoParameterInput extends ProcessInfoParameter {
 		setParameter_To(parameterTo);
 	}
 
+	public Object getParameterTo() {
+		return getParameter_To();
+	}
+
 	public void setInfoTo(String infoTo) {
 		setInfo_To(infoTo);
 	}
