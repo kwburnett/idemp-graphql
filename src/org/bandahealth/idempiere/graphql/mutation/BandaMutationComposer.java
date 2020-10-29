@@ -8,6 +8,7 @@ public class BandaMutationComposer {
 		builder.resolvers(
 				new AuthenticationMutation(),
 				new BusinessPartnerMutation(),
+				new ChargeMutation(),
 				new InvoiceMutation(),
 				new OrderMutation(),
 				new ProductMutation(),

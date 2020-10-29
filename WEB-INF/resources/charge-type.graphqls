@@ -1,4 +1,4 @@
-type Account {
+type ChargeType {
   id: ID!
   client: Client!
   organization: Organization!
@@ -10,11 +10,6 @@ type Account {
   value: String
 }
 
-type AccountConnection {
-  results: [Account!]!
-  pagingInfo: PagingInfo
-}
-
-input AccountInput {
-  id: ID
+input ChargeTypeInput {
+  id: ID!
 }

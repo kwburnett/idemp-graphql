@@ -10,9 +10,13 @@ type PagingInfo {
 }
 
 type Query {
+  # Accounts
+  accounts(filter: String, sort: String, page: Int, pageSize: Int): AccountConnection!
   # Business Partners
   customers(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
   vendors(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
+  # Charges
+  expenseCategories(filter: String, sort: String, page: Int, pageSize: Int): ChargeConnection!
   # Home Screen Buttons
   homeScreenButtons: [HomeScreenButton!]
   # Invoices
@@ -40,6 +44,8 @@ type Mutation {
   # Business Partner
   saveCustomer(businessPartner: BusinessPartnerInput!): BusinessPartner!
   saveVendor(businessPartner: BusinessPartnerInput!): BusinessPartner!
+  # Charges
+  saveExpenseCategory(charge: ChargeInput!): Charge!
   # Invoices
   deleteInvoice(id: String!): Boolean!
   processInvoice(id: String!): Invoice!

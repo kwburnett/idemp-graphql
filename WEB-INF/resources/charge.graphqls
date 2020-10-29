@@ -9,6 +9,12 @@ type Charge {
   name: String
   isLocked: Boolean
   account: Account
+  chargeType: ChargeType!
+}
+
+type ChargeConnection {
+  results: [Charge!]!
+  pagingInfo: PagingInfo
 }
 
 input ChargeInput {
@@ -18,4 +24,5 @@ input ChargeInput {
   name: String
   isLocked: Boolean
   account: AccountInput
+  chargeType: ChargeTypeInput
 }

@@ -17,6 +17,7 @@ public class BandaDataLoaderComposer {
 			add(new AttributeSetInstanceDataLoader());
 			add(new BusinessPartnerDataLoader());
 			add(new ChargeDataLoader());
+			add(new ChargeTypeDataLoader());
 			add(new ClientDataLoader());
 			add(new FormDataLoader());
 			add(new HomeScreenButtonDataLoader());

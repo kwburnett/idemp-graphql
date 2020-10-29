@@ -11,6 +11,7 @@ public class BandaResolverComposer {
 				new AttributeSetResolver(),
 				new BusinessPartnerResolver(),
 				new ChargeResolver(),
+				new ChargeTypeResolver(),
 				new ClientResolver(),
 				new FormResolver(),
 				new HomeScreenButtonResolver(),

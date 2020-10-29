@@ -2,8 +2,10 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.base.model.MChargeType_BH;
 import org.bandahealth.idempiere.base.model.MCharge_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.AccountDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeTypeDataLoader;
 import org.compiere.model.MElementValue;
 import org.dataloader.DataLoader;
 
@@ -16,8 +18,14 @@ public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLR
 	}
 
 	public CompletableFuture<MElementValue> account(MCharge_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MElementValue> accountDataLoader =
+		final DataLoader<Integer, MElementValue> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(AccountDataLoader.ACCOUNT_DATA_LOADER);
-		return accountDataLoader.load(entity.getC_ElementValue_ID());
+		return dataLoader.load(entity.getC_ElementValue_ID());
+	}
+
+	public CompletableFuture<MChargeType_BH> chargeType(MCharge_BH entity, DataFetchingEnvironment environment) {
+		final DataLoader<Integer, MChargeType_BH> dataLoader = environment.getDataLoaderRegistry()
+				.getDataLoader(ChargeTypeDataLoader.CHARGE_TYPE_DATA_LOADER);
+		return dataLoader.load(entity.getC_ChargeType_ID());
 	}
 }

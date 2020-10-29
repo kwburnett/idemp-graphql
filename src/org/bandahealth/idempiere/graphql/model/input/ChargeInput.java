@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 public class ChargeInput extends MCharge_BH {
-
 	private AccountInput account;
+	private ChargeTypeInput chargeType;
 
 	public ChargeInput() {
 		super(Env.getCtx(), 0, null);
@@ -36,5 +36,16 @@ public class ChargeInput extends MCharge_BH {
 
 	public AccountInput getAccount() {
 		return account;
+	}
+
+	public void setChargeType(ChargeTypeInput chargeType) {
+		this.chargeType = chargeType;
+		if (chargeType != null) {
+			setC_ChargeType_ID(chargeType.getC_ChargeType_ID());
+		}
+	}
+
+	public ChargeTypeInput getChargeType() {
+		return chargeType;
 	}
 }
