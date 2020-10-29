@@ -2,10 +2,10 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.dataloader.FormDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ProcessParameterDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ReportViewDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.WorkflowDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.FormDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ProcessParameterDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReportViewDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.WorkflowDataLoader;
 import org.compiere.model.MForm;
 import org.compiere.model.MProcess;
 import org.compiere.model.MProcessPara;

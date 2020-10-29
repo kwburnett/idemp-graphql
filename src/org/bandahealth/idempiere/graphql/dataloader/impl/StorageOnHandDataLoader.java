@@ -1,5 +1,7 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
+import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.repository.StorageOnHandRepository;
 import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;

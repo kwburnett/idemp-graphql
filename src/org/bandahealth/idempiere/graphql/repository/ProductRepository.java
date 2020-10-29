@@ -7,8 +7,8 @@ import org.bandahealth.idempiere.base.model.MProduct_BH;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.ProductInput;
+import org.bandahealth.idempiere.graphql.utils.BandaQuery;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
-import org.compiere.model.*;
 import org.compiere.model.MProductCategory;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MTaxCategory;
@@ -53,9 +53,11 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		int storageOnHandBaseIndexOfFrom = storageOnHandBaseSql.indexOf("FROM");
 		int storageOnHandBaseIndexOfWhere = storageOnHandBaseSql.indexOf("WHERE");
 		return new HashMap<>() {{
-			put(MStorageOnHand.Table_Name, "LEFT JOIN (" + "SELECT " + MStorageOnHand.COLUMNNAME_M_Product_ID + ",SUM(" +
-					MStorageOnHand.COLUMNNAME_QtyOnHand + ") as totalQuantity " +
-					storageOnHandBaseSql.substring(storageOnHandBaseIndexOfFrom, storageOnHandBaseIndexOfWhere) + " GROUP BY " +
+			put(MStorageOnHand.Table_Name, "LEFT JOIN (" + "SELECT " + MStorageOnHand.Table_Name + "." +
+					MStorageOnHand.COLUMNNAME_M_Product_ID + "," + StorageOnHandRepository
+					.MODIFIED_COLUMNS.get(MStorageOnHand.COLUMNNAME_QtyOnHand) + " AS " +
+					MStorageOnHand.COLUMNNAME_QtyOnHand + " " + storageOnHandBaseSql
+					.substring(storageOnHandBaseIndexOfFrom, storageOnHandBaseIndexOfWhere) + " GROUP BY " +
 					MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID + ") AS " +
 					MStorageOnHand.Table_Name + " ON " + MStorageOnHand.Table_Name + "." +
 					MStorageOnHand.COLUMNNAME_M_Product_ID + "=" + MProduct_BH.Table_Name + "." +

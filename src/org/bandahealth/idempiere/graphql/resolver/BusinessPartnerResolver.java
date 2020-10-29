@@ -4,8 +4,8 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
-import org.bandahealth.idempiere.graphql.dataloader.LocationDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.compiere.model.MLocation;
 import org.dataloader.DataLoader;
 

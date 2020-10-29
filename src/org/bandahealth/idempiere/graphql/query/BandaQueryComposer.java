@@ -9,7 +9,8 @@ public class BandaQueryComposer implements GraphQLQueryResolver {
 		builder.resolvers(
 				new OrderQuery(),
 				new ProcessQuery(),
-				new ProductQuery()
+				new ProductQuery(),
+				new StorageOnHandQuery()
 		);
 	}
 }

@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader;
 
+import org.bandahealth.idempiere.graphql.dataloader.impl.*;
 import org.dataloader.DataLoaderRegistry;
 
 import java.util.ArrayList;

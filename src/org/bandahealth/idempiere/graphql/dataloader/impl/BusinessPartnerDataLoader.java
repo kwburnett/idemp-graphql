@@ -1,6 +1,7 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
+import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.model.input.BusinessPartnerInput;
 import org.bandahealth.idempiere.graphql.repository.BusinessPartnerRepository;
 

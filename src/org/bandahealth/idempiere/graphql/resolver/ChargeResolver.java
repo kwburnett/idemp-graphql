@@ -3,13 +3,10 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MCharge_BH;
-import org.bandahealth.idempiere.graphql.dataloader.AccountDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrganizationDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.AccountDataLoader;
 import org.compiere.model.MElementValue;
-import org.compiere.model.MOrg;
 import org.dataloader.DataLoader;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLResolver<MCharge_BH> {

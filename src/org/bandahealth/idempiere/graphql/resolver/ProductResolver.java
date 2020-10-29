@@ -4,8 +4,8 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
-import org.bandahealth.idempiere.graphql.dataloader.ProductCategoryDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.StorageOnHandDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ProductCategoryDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.StorageOnHandDataLoader;
 import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;
 

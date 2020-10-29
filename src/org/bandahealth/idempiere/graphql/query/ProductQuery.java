@@ -18,7 +18,7 @@ public class ProductQuery implements GraphQLQueryResolver {
 	}
 
 	public CompletableFuture<Connection<MProduct_BH>> products(String filter, String sort, int page, int pageSize,
-																														 DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		return CompletableFuture.supplyAsync(() ->
 				productRepository.get(filter, sort, new PagingInfo(page, pageSize), environment));
 	}

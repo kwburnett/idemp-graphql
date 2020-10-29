@@ -10,3 +10,8 @@ type StorageOnHand {
   attributeSetInstance: AttributeSetInstance
   quantityOnHand: Float
 }
+
+type StorageOnHandConnection {
+  results: [StorageOnHand!]!
+  pagingInfo: PagingInfo
+}

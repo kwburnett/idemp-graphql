@@ -3,7 +3,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MUser_BH;
-import org.bandahealth.idempiere.graphql.dataloader.WarehouseDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.WarehouseDataLoader;
 import org.compiere.model.MOrg;
 import org.compiere.model.MRole;
 import org.compiere.model.MWarehouse;

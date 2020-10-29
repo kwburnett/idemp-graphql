@@ -2,8 +2,8 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.dataloader.ReferenceDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.compiere.model.MProcessPara;
 import org.compiere.model.MRefList;
 import org.compiere.model.MReference;

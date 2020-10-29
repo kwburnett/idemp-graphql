@@ -18,6 +18,8 @@ type Query {
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
   products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
+  # Storage on hand
+  allStorageOnHand(filter: String, sort: String, page: Int, pageSize: Int): StorageOnHandConnection!
 }
 
 type Mutation {

@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
 import org.bandahealth.idempiere.graphql.repository.BaseRepository;

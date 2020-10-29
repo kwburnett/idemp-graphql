@@ -3,10 +3,10 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.*;
-import org.bandahealth.idempiere.graphql.dataloader.AttributeSetInstanceDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ChargeDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.ProductDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.AttributeSetInstanceDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ProductDataLoader;
 import org.compiere.model.MAttributeSetInstance;
 import org.dataloader.DataLoader;
 

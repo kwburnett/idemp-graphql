@@ -14,17 +14,16 @@ import org.compiere.util.DB;
 
 /**
  * Abstract common sql functionality
- * 
- * @author andrew
  *
+ * @author andrew
  */
 public class SqlUtil {
 
 	private static CLogger log = CLogger.getCLogger(SqlUtil.class);
 
 	public static Map<Integer, Timestamp> getGroupedMaxDates(String tableName, String whereClause,
-																													 List<Object> parameters, String groupingIdColumn,
-																													 Set<Integer> idsToGroupBy, String dateColumn) {
+			List<Object> parameters, String groupingIdColumn,
+			Set<Integer> idsToGroupBy, String dateColumn) {
 		StringBuilder sql = new StringBuilder("SELECT " + groupingIdColumn + ", MAX(" + dateColumn + ") FROM ")
 				.append(tableName)
 				.append(" ")
@@ -57,14 +56,14 @@ public class SqlUtil {
 	}
 
 	public static Map<Integer, Integer> getGroupedCount(String tableName, String whereClause, List<Object> parameters,
-																											String groupingIdColumn, Set<Integer> idsToGroupBy) {
+			String groupingIdColumn, Set<Integer> idsToGroupBy) {
 		return getGroupedCount(tableName, whereClause, parameters, groupingIdColumn, new ArrayList<>() {{
 			addAll(idsToGroupBy);
 		}});
 	}
 
 	public static Map<Integer, Integer> getGroupedCount(String tableName, String whereClause, List<Object> parameters,
-																											String groupingIdColumn, List<Integer> idsToGroupBy) {
+			String groupingIdColumn, List<Integer> idsToGroupBy) {
 		StringBuilder sql = new StringBuilder("SELECT " + groupingIdColumn + ", COUNT(*) FROM ")
 				.append(tableName)
 				.append(" ")
@@ -96,12 +95,8 @@ public class SqlUtil {
 		return counts;
 	}
 
-	public static Integer getCount(String tableName, String whereClause, List<Object> parameters) {
-		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ")
-				.append(tableName)
-				.append(" ")
-				.append(whereClause);
-		
+	public static Integer getCount(String sqlFromAndWhereClause, List<Object> parameters) {
+		String sql = "SELECT COUNT(*) " + sqlFromAndWhereClause;
 		Integer count = null;
 
 		PreparedStatement statement = null;
@@ -120,10 +115,28 @@ public class SqlUtil {
 			throw new DBException(e, sql.toString());
 		} finally {
 			DB.close(resultSet, statement);
-			resultSet = null;
-			statement = null;
 		}
 
 		return count;
+	}
+
+	public static Integer getCount(String tableName, String whereClause, List<Object> parameters) {
+		return getCount("FROM " + tableName + " " + whereClause, parameters);
+	}
+
+	/**
+	 * The will only work for PostgresQL JDBC, but gets the wrapped SQL string to handle parameters dealings.
+	 *
+	 * @param preparedStatement
+	 * @return
+	 */
+	public static String getSql(PreparedStatement preparedStatement) {
+		String statement = preparedStatement.toString();
+		if (!statement.contains(" SELECT ")) {
+			return null;
+		}
+		int indexOfSelect = statement.indexOf("SELECT ");
+		int lastIndexOfBox = statement.lastIndexOf("]");
+		return statement.substring(indexOfSelect, lastIndexOfBox - 1);
 	}
 }

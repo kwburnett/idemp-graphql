@@ -1,5 +1,6 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
+import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.model.input.AttributeSetInput;
 import org.bandahealth.idempiere.graphql.repository.AttributeSetRepository;
 import org.compiere.model.MAttributeSet;

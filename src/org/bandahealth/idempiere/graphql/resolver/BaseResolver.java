@@ -2,9 +2,9 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MUser_BH;
-import org.bandahealth.idempiere.graphql.dataloader.ClientDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrganizationDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.UserDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ClientDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.OrganizationDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.UserDataLoader;
 import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.compiere.model.MClient;
 import org.compiere.model.MOrg;

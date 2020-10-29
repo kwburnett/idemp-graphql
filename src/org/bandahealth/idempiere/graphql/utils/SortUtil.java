@@ -37,8 +37,8 @@ public class SortUtil {
 	 * @return An ORDER BY clause based off the sort criteria to use in a DB query
 	 */
 	public static <T extends PO> String getOrderByClauseFromSort(T dbModel, String sortJson) {
-		String defaultOrderBy = checkColumnExists(dbModel, MUser.COLUMNNAME_Created) ? MUser.COLUMNNAME_Created +
-				" DESC NULLS LAST" : null;
+		String defaultOrderBy = checkColumnExists(dbModel, MUser.COLUMNNAME_Created) ? dbModel.get_TableName() + "." +
+				MUser.COLUMNNAME_Created + " DESC NULLS LAST" : null;
 		if (StringUtil.isNullOrEmpty(sortJson)) {
 			return defaultOrderBy;
 		}
@@ -72,6 +72,9 @@ public class SortUtil {
 				if (QueryUtil.doesDBStringHaveInvalidCharacters(sortColumn) ||
 						QueryUtil.doesDBStringHaveInvalidCharacters(sortDirection)) {
 					return null;
+				}
+				if (!QueryUtil.doesTableAliasExistOnColumn(sortColumn)) {
+					sortColumn = dbModel.get_TableName() + "." + sortColumn;
 				}
 				return sortColumn + " " + sortDirection + " NULLS LAST";
 			}).filter(sortCriteria -> !StringUtil.isNullOrEmpty(sortCriteria)).collect(Collectors.joining(","));

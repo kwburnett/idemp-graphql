@@ -1,6 +1,8 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.base.model.MUser_BH;
+import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
+import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.repository.UserRepository;
 
 public class UserDataLoader extends BaseDataLoader<MUser_BH, MUser_BH, UserRepository> implements DataLoaderRegisterer {

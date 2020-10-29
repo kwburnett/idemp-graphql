@@ -2,7 +2,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.dataloader.WarehouseDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.WarehouseDataLoader;
 import org.compiere.model.MLocator;
 import org.compiere.model.MWarehouse;
 import org.dataloader.DataLoader;

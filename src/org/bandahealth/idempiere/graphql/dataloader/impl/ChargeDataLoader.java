@@ -1,6 +1,7 @@
-package org.bandahealth.idempiere.graphql.dataloader;
+package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.base.model.MCharge_BH;
+import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.model.input.ChargeInput;
 import org.bandahealth.idempiere.graphql.repository.ChargeRepository;
 

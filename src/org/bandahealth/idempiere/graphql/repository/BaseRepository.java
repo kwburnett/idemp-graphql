@@ -2,14 +2,12 @@ package org.bandahealth.idempiere.graphql.repository;
 
 import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
+import org.adempiere.exceptions.DBException;
 import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
 import org.bandahealth.idempiere.graphql.cache.BandaCache;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
-import org.bandahealth.idempiere.graphql.utils.FilterUtil;
-import org.bandahealth.idempiere.graphql.utils.QueryUtil;
-import org.bandahealth.idempiere.graphql.utils.SortUtil;
-import org.bandahealth.idempiere.graphql.utils.StringUtil;
+import org.bandahealth.idempiere.graphql.utils.*;
 import org.compiere.model.PO;
 import org.compiere.model.Query;
 import org.compiere.util.CLogger;
@@ -70,7 +68,16 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 *
 	 * @return A parameters to use in all queries
 	 */
-	public List<Object> getDefaultParameters() {
+	public List<Object> getDefaultWhereClauseParameters() {
+		return new ArrayList<>();
+	}
+
+	/**
+	 * This should be overridden in inheriting classes.
+	 *
+	 * @return A parameters to use in all queries
+	 */
+	public List<Object> getDefaultJoinClauseParameters() {
 		return new ArrayList<>();
 	}
 
@@ -84,15 +91,16 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * The default method to create a Query for this entity type
+	 * The default method to create a BandaQuery for this entity type. This handles adding the default WHERE and JOIN
+	 * clauses
 	 *
 	 * @param additionalWhereClause An additional WHERE clause above the default
 	 * @param parameters            Any parameters needed for the additional WHERE clause
-	 * @return
+	 * @return A query that can be used to fetch data
 	 */
-	public Query getBaseQuery(String additionalWhereClause, Object... parameters) {
+	public BandaQuery<T> getBaseQuery(String additionalWhereClause, Object... parameters) {
 		String whereClause = additionalWhereClause;
-		// If there's a default where clause, we need to add it
+		// If there's a default where clause, we need to add it (add to the end for parameter sequencing purposes)
 		if (!getDefaultWhereClause().isEmpty()) {
 			if (StringUtil.isNullOrEmpty(additionalWhereClause)) {
 				whereClause = "";
@@ -102,11 +110,27 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			// To ensure the parameters are added correctly, we'll assume passed-in parameters are added last
 			whereClause = getDefaultWhereClause() + whereClause;
 		}
-		List<Object> parametersToUse = new ArrayList<>();
-		// Handle any default parameters
-		if (getDefaultParameters() != null) {
-			parametersToUse.addAll(getDefaultParameters());
+		// Set up the query
+		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
+				.setNoVirtualColumn(true);
+		// If we should use the client ID in the context, add it
+		if (shouldUseContextClientId()) {
+			query.setClient_ID();
 		}
+		List<Object> parametersToUse = new ArrayList<>();
+		// Add parameters in the specified order of query construction: JOIN, WHERE, additional WHERE
+		// Add any JOIN clauses specified by default
+		if (!getDefaultJoinClause().isEmpty()) {
+			query.addJoinClause(getDefaultJoinClause());
+			if (getDefaultJoinClauseParameters() != null) {
+				parametersToUse.addAll(getDefaultJoinClauseParameters());
+			}
+		}
+		// Handle any default parameters
+		if (getDefaultWhereClauseParameters() != null) {
+			parametersToUse.addAll(getDefaultWhereClauseParameters());
+		}
+		// Lastly, handle any that were passed in
 		if (parameters != null) {
 			Arrays.stream(parameters).forEach(parameter -> {
 				if (parameter instanceof List<?>) {
@@ -116,18 +140,60 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				}
 			});
 		}
-		// Set up the query
-		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
-				.setParameters(parametersToUse).setNoVirtualColumn(true);
-		// If we should use the client ID in the context, add it
-		if (shouldUseContextClientId()) {
-			query.setClient_ID();
+		if (!parametersToUse.isEmpty()) {
+			query.setParameters(parametersToUse);
 		}
-		// Add any JOIN clauses specified by default
-		if (!getDefaultJoinClause().isEmpty()) {
-			query.addJoinClause(getDefaultJoinClause());
-		}
-		return query;
+		return new BandaQuery<T>() {
+			@Override
+			public List<T> list() throws DBException {
+				return query.list();
+			}
+
+			@Override
+			public T first() throws DBException {
+				return query.first();
+			}
+
+			@Override
+			public String getSQL() throws DBException {
+				return query.getSQL();
+			}
+
+			@Override
+			public BandaQuery<T> addJoinClause(String joinClause) {
+				query.addJoinClause(joinClause);
+				return this;
+			}
+
+			@Override
+			public BandaQuery<T> setOrderBy(String orderBy) {
+				query.setOrderBy(orderBy);
+				return this;
+			}
+
+			@Override
+			public int count() throws DBException {
+				return query.count();
+			}
+
+			@Override
+			public BandaQuery<T> setPage(int pPageSize, int pPagesToSkip) {
+				query.setPage(pPageSize, pPagesToSkip);
+				return this;
+			}
+
+			@Override
+			public BandaQuery<T> setOnlyActiveRecords(boolean onlyActiveRecords) {
+				query.setOnlyActiveRecords(onlyActiveRecords);
+				return this;
+			}
+
+			@Override
+			public BandaQuery<T> setParameters(List<Object> parameters) {
+				query.setParameters(parameters);
+				return this;
+			}
+		};
 	}
 
 	/**
@@ -156,14 +222,17 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		Query query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters);
+		if (!QueryUtil.doesTableAliasExistOnColumn(columnToSearch)) {
+			columnToSearch = model.get_TableName() + "." + columnToSearch;
+		}
+		BandaQuery<T> query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters);
 		List<T> models = query.list();
 		return models.stream().collect(Collectors.groupingBy(groupingFunction));
 	}
 
 	public T getById(int id) {
 		T model = getModelInstance();
-		return getBaseQuery(model.get_TableName() + "_ID=?", id).first();
+		return getBaseQuery(model.get_TableName() + "." + model.get_TableName() + "_ID=?", id).first();
 	}
 
 	/**
@@ -176,8 +245,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<T> models = getBaseQuery(model.get_TableName() + "_ID IN (" + whereCondition + ")",
-				parameters).list();
+		List<T> models = getBaseQuery(model.get_TableName() + "." + model.get_TableName() + "_ID IN (" +
+				whereCondition + ")", parameters).list();
 		return models.stream().collect(Collectors.toMap(T::get_ID, m -> m));
 	}
 
@@ -215,6 +284,10 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		return getBaseQuery(model.getUUIDColumnName() + " IN (" + whereClause + ")").list();
 	}
 
+	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, DataFetchingEnvironment environment) {
+		return this.get(filterJson, sort, pagingInfo, null, null, null, environment);
+	}
+
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
 			List<Object> parameters, DataFetchingEnvironment environment) {
 		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null, environment);
@@ -246,7 +319,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				whereClause += " AND " + filterWhereClause;
 			}
 
-			Query query = getBaseQuery(whereClause, parameters);
+			BandaQuery<T> query = getBaseQuery(whereClause, parameters);
 
 			StringBuilder dynamicJoinClause = new StringBuilder();
 			if (!getDynamicJoins().isEmpty()) {
@@ -295,10 +368,6 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			String orderBy = SortUtil.getOrderByClauseFromSort(modelInstance, sortJson);
 			if (orderBy != null) {
 				query = query.setOrderBy(orderBy);
-			}
-
-			if (parameters.size() > 0) {
-				query = query.setParameters(parameters);
 			}
 
 			if (QueryUtil.isTotalCountRequested(environment)) {

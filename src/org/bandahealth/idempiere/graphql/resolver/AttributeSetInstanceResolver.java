@@ -2,8 +2,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.graphql.dataloader.AttributeSetDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.OrderDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.AttributeSetDataLoader;
 import org.compiere.model.MAttributeSet;
 import org.compiere.model.MAttributeSetInstance;
 import org.dataloader.DataLoader;
