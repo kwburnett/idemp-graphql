@@ -24,6 +24,7 @@ import org.compiere.util.DB;
 import org.compiere.util.Env;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
@@ -300,9 +301,9 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	 * @param attributeSetInstanceId
 	 * @param quantity
 	 */
-	public String runStockTakeProcess(int productID, int attributeSetInstanceId, int quantity) {
-		MProcess mprocess = new Query(Env.getCtx(), MProcess.Table_Name, MProcess.COLUMNNAME_Classname + "=?", null)
-				.setOnlyActiveRecords(true).setParameters(STOCKTAKE_PROCESS_CLASS_NAME).first();
+	public String runStockTakeProcess(int productID, int attributeSetInstanceId, BigDecimal quantity) {
+		MProcess mprocess = getBaseQuery(MProcess.COLUMNNAME_Classname + "=?",
+				STOCKTAKE_PROCESS_CLASS_NAME).setOnlyActiveRecords(true).first();
 
 		MPInstance mpInstance = new MPInstance(mprocess, 0);
 

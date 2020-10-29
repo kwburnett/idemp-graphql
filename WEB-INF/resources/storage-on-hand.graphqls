@@ -15,3 +15,8 @@ type StorageOnHandConnection {
   results: [StorageOnHand!]!
   pagingInfo: PagingInfo
 }
+
+input StorageOnHandInput {
+  id: ID!
+  quantityOnHand: Float!
+}

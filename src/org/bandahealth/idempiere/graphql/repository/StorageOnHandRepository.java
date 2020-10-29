@@ -1,10 +1,9 @@
 package org.bandahealth.idempiere.graphql.repository;
 
-import graphql.schema.DataFetchingEnvironment;
+import org.adempiere.exceptions.AdempiereException;
 import org.adempiere.exceptions.DBException;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
-import org.bandahealth.idempiere.graphql.model.Connection;
-import org.bandahealth.idempiere.graphql.model.PagingInfo;
+import org.bandahealth.idempiere.graphql.model.input.StorageOnHandInput;
 import org.bandahealth.idempiere.graphql.utils.*;
 import org.compiere.model.MAttributeSetInstance;
 import org.compiere.model.MStorageOnHand;
@@ -18,7 +17,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, MStorageOnHand> {
+public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, StorageOnHandInput> {
 
 	public static final List<String> GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS = Arrays.asList(
 			MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID,
@@ -97,19 +96,29 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, MSto
 			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID;
 
 	private final AttributeSetInstanceRepository attributeSetInstanceRepository;
+	private final ProcessRepository processRepository;
 
 	public StorageOnHandRepository() {
 		attributeSetInstanceRepository = new AttributeSetInstanceRepository();
+		processRepository = new ProcessRepository();
 	}
 
 	@Override
 	public MStorageOnHand getModelInstance() {
-		return new MStorageOnHand(Env.getCtx(), 0, null);
+		return new StorageOnHandInput();
 	}
 
 	@Override
-	public MStorageOnHand save(MStorageOnHand entity) {
-		throw new UnsupportedOperationException("Not implemented");
+	public MStorageOnHand save(StorageOnHandInput entity) {
+		MStorageOnHand storageOnHand = getByUuid(entity.getM_StorageOnHand_UU());
+		if (storageOnHand == null) {
+			throw new AdempiereException("Storage entity not specified");
+		}
+		processRepository.runStockTakeProcess(storageOnHand.getM_Product_ID(),
+				storageOnHand.getM_AttributeSetInstance_ID(), entity.getQuantityOnHand());
+		return getBaseQuery(MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID +
+						"=? AND " + MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=?",
+				storageOnHand.getM_Product_ID(), storageOnHand.getM_AttributeSetInstance_ID()).first();
 	}
 
 	@Override

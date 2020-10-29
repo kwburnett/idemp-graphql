@@ -2,6 +2,7 @@ package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
 import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
+import org.bandahealth.idempiere.graphql.model.input.StorageOnHandInput;
 import org.bandahealth.idempiere.graphql.repository.StorageOnHandRepository;
 import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;
@@ -10,7 +11,7 @@ import org.dataloader.MappedBatchLoader;
 
 import java.util.List;
 
-public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, MStorageOnHand, StorageOnHandRepository>
+public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, StorageOnHandInput, StorageOnHandRepository>
 		implements DataLoaderRegisterer {
 
 	public static final String STORAGE_ON_HAND_DATA_LOADER = "storageOnHandDataLoader";

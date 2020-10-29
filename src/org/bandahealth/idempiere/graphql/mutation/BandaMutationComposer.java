@@ -8,7 +8,8 @@ public class BandaMutationComposer {
 		builder.resolvers(
 				new AuthenticationMutation(),
 				new OrderMutation(),
-				new ProductMutation()
+				new ProductMutation(),
+				new StorageOnHandMutation()
 		);
 	}
 }

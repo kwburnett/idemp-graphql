@@ -32,6 +32,8 @@ type Mutation {
   saveSalesOrder(salesOrder: OrderInput!, shouldProcess: Boolean = true): Order!
   # Products
   saveProduct(product: ProductInput): Product!
+  # Storage on hand
+  updateStorageOnHand(storageOnHand: StorageOnHandInput!): StorageOnHand!
 }
 
 schema {
