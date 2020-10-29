@@ -104,6 +104,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 						"WEB-INF/resources/document.graphqls",
 						"WEB-INF/resources/element.graphqls",
 						"WEB-INF/resources/form.graphqls",
+						"WEB-INF/resources/home-screen-button.graphqls",
 						"WEB-INF/resources/location.graphqls",
 						"WEB-INF/resources/locator.graphqls",
 						"WEB-INF/resources/order.graphqls",

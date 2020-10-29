@@ -7,10 +7,12 @@ public class BandaQueryComposer implements GraphQLQueryResolver {
 
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(
+				new HomeScreenButtonQuery(),
 				new OrderQuery(),
 				new ProcessQuery(),
 				new ProductQuery(),
-				new StorageOnHandQuery()
+				new StorageOnHandQuery(),
+				new UserQuery()
 		);
 	}
 }

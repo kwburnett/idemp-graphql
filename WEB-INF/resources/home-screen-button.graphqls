@@ -1,0 +1,13 @@
+type HomeScreenButton {
+  id: ID!
+  client: Client!
+  organization: Organization!
+  isActive: Boolean!
+  created: String @dateFormat
+  createdBy: User!
+  description: String
+  name: String
+  lineNumber: Int
+  iconClassName: String
+  buttonClassName: String
+}

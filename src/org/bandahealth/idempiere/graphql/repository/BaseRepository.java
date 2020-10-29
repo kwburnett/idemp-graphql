@@ -193,6 +193,11 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				query.setParameters(parameters);
 				return this;
 			}
+
+			@Override
+			public boolean match() throws DBException {
+				return query.match();
+			}
 		};
 	}
 
@@ -225,7 +230,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		if (!QueryUtil.doesTableAliasExistOnColumn(columnToSearch)) {
 			columnToSearch = model.get_TableName() + "." + columnToSearch;
 		}
-		BandaQuery<T> query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters);
+		BandaQuery<T> query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters)
+				.setOnlyActiveRecords(true);
 		List<T> models = query.list();
 		return models.stream().collect(Collectors.groupingBy(groupingFunction));
 	}

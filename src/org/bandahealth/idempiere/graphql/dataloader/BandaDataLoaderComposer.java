@@ -19,6 +19,7 @@ public class BandaDataLoaderComposer {
 			add(new ChargeDataLoader());
 			add(new ClientDataLoader());
 			add(new FormDataLoader());
+			add(new HomeScreenButtonDataLoader());
 			add(new LocationDataLoader());
 			add(new LocatorDataLoader());
 			add(new OrderDataLoader());
@@ -32,6 +33,7 @@ public class BandaDataLoaderComposer {
 			add(new ReferenceListDataLoader());
 			add(new ReportViewDataLoader());
 			add(new RoleDataLoader());
+			add(new RoleIncludedDataLoader());
 			add(new StorageOnHandDataLoader());
 			add(new UserDataLoader());
 			add(new WarehouseDataLoader());

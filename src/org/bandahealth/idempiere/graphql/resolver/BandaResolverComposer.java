@@ -13,6 +13,7 @@ public class BandaResolverComposer {
 				new ChargeResolver(),
 				new ClientResolver(),
 				new FormResolver(),
+				new HomeScreenButtonResolver(),
 				new LocationResolver(),
 				new LocatorResolver(),
 				new OrderLineResolver(),

@@ -10,6 +10,8 @@ type PagingInfo {
 }
 
 type Query {
+  # Home Screen Buttons
+  homeScreenButtons: [HomeScreenButton!]
   # Orders
   purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
   salesOrders(filter: String, sort: String, page: Int, pageSize: Int): SalesOrdersConnection!
@@ -20,6 +22,8 @@ type Query {
   products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Storage on hand
   allStorageOnHand(filter: String, sort: String, page: Int, pageSize: Int): StorageOnHandConnection!
+  # Users
+  acceptTermsOfUse: User!
 }
 
 type Mutation {

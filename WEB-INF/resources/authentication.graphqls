@@ -1,23 +1,21 @@
 type AuthenticationResponse {
-    token: String
-    username: String
-    clients: [Client!]!
-    user: User
-    hasAcceptedTermsOfUse: Boolean
-    roleId: Int!
-    needsToResetPassword: Boolean!
-    securityQuestions: [String!]
-    hasAccessToReports: Boolean!
+  token: String
+  username: String
+  clients: [Client!]!
+  user: User
+  roleId: Int!
+  needsToResetPassword: Boolean!
+  securityQuestions: [String!]
 }
 
 input AuthenticationData {
-    username: String!
-    password: String!
-    newPassword: String
-    securityQuestion: String
-    answer: String
-    clientId: Int
-    roleId: Int
-    organizationId: Int
-    warehouseId: Int
+  username: String!
+  password: String!
+  newPassword: String
+  securityQuestion: String
+  answer: String
+  clientId: Int
+  roleId: Int
+  organizationId: Int
+  warehouseId: Int
 }

@@ -260,6 +260,11 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 				return this;
 			}
 
+			@Override
+			public boolean match() throws DBException {
+				throw new UnsupportedOperationException("Not implemented");
+			}
+
 			private PreparedStatement buildSql() throws SQLException {
 				String sqlToUse = sqlSelect.toString() + getSqlFromJoinAndWhere() + " " + orderByBuilder.toString();
 

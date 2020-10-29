@@ -11,11 +11,9 @@ public class AuthenticationResponse {
 	private MUser_BH user;
 	private String username;
 	private List<MClient> clients = new ArrayList<>();
-	private boolean hasAcceptedTermsOfUse;
 	private int roleId;
 	private boolean needsToResetPassword;
 	private List<String> securityQuestions;
-	private boolean hasAccessToReports;
 
 	public String getToken() {
 		return token;
@@ -39,14 +37,6 @@ public class AuthenticationResponse {
 
 	public void setClients(List<MClient> clients) {
 		this.clients = clients;
-	}
-
-	public boolean isHasAcceptedTermsOfUse() {
-		return hasAcceptedTermsOfUse;
-	}
-
-	public void setHasAcceptedTermsOfUse(boolean hasAcceptedTermsOfUse) {
-		this.hasAcceptedTermsOfUse = hasAcceptedTermsOfUse;
 	}
 
 	public String getUsername() {
@@ -79,13 +69,5 @@ public class AuthenticationResponse {
 
 	public void setSecurityQuestions(List<String> securityQuestions) {
 		this.securityQuestions = securityQuestions;
-	}
-
-	public boolean isHasAccessToReports() {
-		return hasAccessToReports;
-	}
-
-	public void setHasAccessToReports(boolean hasAccessToReports) {
-		this.hasAccessToReports = hasAccessToReports;
 	}
 }

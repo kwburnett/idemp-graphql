@@ -85,12 +85,8 @@ public class AuthenticationRepository {
 			response.setUser(new MUser_BH(Env.getCtx(), user.getAD_User_ID(), null));
 
 			try {
-				// has access to reports
-//				response.setHasAccessToReports(menuDbservice.hasAccessToReports());
 				// generate session token
 				response.setToken(builder.sign(Algorithm.HMAC256(TokenUtils.getTokenSecret())));
-				// has accepted terms of use?
-//				response.setHasAcceptedTermsOfUse(TermsOfServiceDBService.hasAccepted());
 				return response;
 			} catch (Exception e) {
 				throw new AdempiereException("Bad request");
