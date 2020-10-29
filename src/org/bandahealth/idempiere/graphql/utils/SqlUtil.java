@@ -137,6 +137,6 @@ public class SqlUtil {
 		}
 		int indexOfSelect = statement.indexOf("SELECT ");
 		int lastIndexOfBox = statement.lastIndexOf("]");
-		return statement.substring(indexOfSelect, lastIndexOfBox - 1);
+		return statement.substring(indexOfSelect, lastIndexOfBox);
 	}
 }

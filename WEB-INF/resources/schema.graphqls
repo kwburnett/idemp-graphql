@@ -22,7 +22,8 @@ type Query {
   generateReport(processInfo: ProcessInfoInput!): String
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
-  products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
+  items(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
+  services(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Storage on hand
   allStorageOnHand(filter: String, sort: String, page: Int, pageSize: Int): StorageOnHandConnection!
   # Users
@@ -43,7 +44,8 @@ type Mutation {
   savePurchaseOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   saveSalesOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   # Products
-  saveProduct(product: ProductInput): Product!
+  saveItem(product: ProductInput): Product!
+  saveService(product: ProductInput): Product!
   # Storage on hand
   updateStorageOnHand(storageOnHand: StorageOnHandInput!): StorageOnHand!
 }

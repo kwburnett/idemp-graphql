@@ -38,10 +38,19 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		return new MProduct_BH(Env.getCtx(), 0, null);
 	}
 
-	public Connection<MProduct_BH> get(String filterJson, String sort, PagingInfo pagingInfo,
+	public Connection<MProduct_BH> getItems(String filterJson, String sort, PagingInfo pagingInfo,
 			DataFetchingEnvironment environment) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add(MProduct_BH.PRODUCTTYPE_Item);
+
+		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
+				environment);
+	}
+
+	public Connection<MProduct_BH> getServices(String filterJson, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
+		List<Object> parameters = new ArrayList<>();
+		parameters.add(MProduct_BH.PRODUCTTYPE_Service);
 
 		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
 				environment);

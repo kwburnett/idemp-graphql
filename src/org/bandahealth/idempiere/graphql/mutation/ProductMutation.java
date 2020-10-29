@@ -13,7 +13,11 @@ public class ProductMutation implements GraphQLMutationResolver {
 		productRepository = new ProductRepository();
 	}
 
-	public MProduct_BH saveProduct(ProductInput product) {
+	public MProduct_BH saveItem(ProductInput product) {
+		return productRepository.save(product);
+	}
+
+	public MProduct_BH saveService(ProductInput product) {
 		return productRepository.save(product);
 	}
 }

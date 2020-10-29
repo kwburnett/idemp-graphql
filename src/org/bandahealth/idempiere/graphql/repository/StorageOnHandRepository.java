@@ -290,14 +290,14 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 			}
 
 			private String getSqlFromJoinAndWhere() {
-				String sql = sqlFromAndJoin + " " + additionalJoins.toString() + sqlWhere.toString();
+				String sql = sqlFromAndJoin + " " + additionalJoins.toString();
 				if (this.onlyActiveRecords) {
 					if (sqlWhere.length() > 0) {
 						sqlWhere.append(" AND ");
 					}
 					sqlWhere.append(MStorageOnHand.Table_Name).append(".IsActive=?");
 				}
-				return sql;
+				return sql + sqlWhere.toString();
 			}
 		};
 	}
