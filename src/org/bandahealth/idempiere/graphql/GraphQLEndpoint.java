@@ -16,6 +16,7 @@ import org.bandahealth.idempiere.graphql.cache.CacheFactory;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.directive.BandaDirectiveComposer;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
+import org.bandahealth.idempiere.graphql.instrumentation.LoggingInstrumentation;
 import org.bandahealth.idempiere.graphql.mutation.BandaMutationComposer;
 import org.bandahealth.idempiere.graphql.query.BandaQueryComposer;
 import org.bandahealth.idempiere.graphql.resolver.*;
@@ -69,6 +70,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 				= new DataLoaderDispatcherInstrumentation(options);
 		List<Instrumentation> instrumentationList = new ArrayList<>();
 		instrumentationList.add(new MaxQueryDepthInstrumentation(6));
+		instrumentationList.add(new LoggingInstrumentation());
 //		instrumentationList.add(new TracingInstrumentation());
 //		instrumentationList.add(dispatcherInstrumentation);
 
