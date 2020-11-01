@@ -7,14 +7,10 @@ import org.dataloader.CacheMap;
 import java.util.concurrent.TimeUnit;
 
 public class BandaCache<U, V> implements CacheMap<U, V> {
-
-	private final int CACHE_TIMEOUT_IN_MINUTES = 5;
-	private final int CACHE_MAX_SIZE = 200;
 	private final Cache<U, V> cache;
 
-	public BandaCache() {
-		cache = Caffeine.newBuilder().expireAfterWrite(CACHE_TIMEOUT_IN_MINUTES, TimeUnit.MINUTES)
-				.maximumSize(CACHE_MAX_SIZE).build();
+	public BandaCache(Cache<U, V> cache) {
+		this.cache = cache;
 	}
 
 	public Cache<U, V> getCache() {

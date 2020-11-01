@@ -12,6 +12,7 @@ import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
 import graphql.kickstart.tools.*;
 import org.bandahealth.idempiere.graphql.cache.BandaCache;
+import org.bandahealth.idempiere.graphql.cache.CacheFactory;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.directive.BandaDirectiveComposer;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
@@ -26,21 +27,13 @@ import graphql.kickstart.servlet.GraphQLHttpServlet;
 import graphql.schema.GraphQLSchema;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GraphQLEndpoint extends GraphQLHttpServlet {
-
-	private static final Map<String, BandaCache<Object, Object>> cacheMap = new HashMap<>();
+	private static final CacheFactory cacheFactory = new CacheFactory();
 
 	public static BandaCache<Object, Object> getCache(Class<?> clazz) {
-		BandaCache<Object, Object> classCache = cacheMap.get(clazz.getName());
-		if (classCache == null) {
-			classCache = new BandaCache<>();
-			cacheMap.put(clazz.getName(), classCache);
-		}
-		return classCache;
+		return cacheFactory.getCache(clazz);
 	}
 
 	private final CLogger logger = CLogger.getCLogger(GraphQLEndpoint.class);
