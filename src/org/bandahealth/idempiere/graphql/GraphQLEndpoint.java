@@ -102,7 +102,6 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 						"WEB-INF/resources/charge.graphqls",
 						"WEB-INF/resources/charge-type.graphqls",
 						"WEB-INF/resources/client.graphqls",
-						"WEB-INF/resources/document.graphqls",
 						"WEB-INF/resources/element.graphqls",
 						"WEB-INF/resources/form.graphqls",
 						"WEB-INF/resources/home-screen-button.graphqls",

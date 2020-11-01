@@ -23,6 +23,7 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	public static String REFERENCE_LIST_BY_REFERENCE_DATA_LOADER = "referenceListByReferenceDataLoader";
 	public static String REFERENCE_LIST_BY_PRODUCT_CATEGORY_TYPE_DATA_LOADER =
 			"referenceListByProductCategoryTypeDataLoader";
+	public static String REFERENCE_LIST_BY_DOCUMENT_STATUS_DATA_LOADER = "referenceListByDocumentStatusDataLoader";
 	private final ReferenceListRepository referenceListRepository;
 
 	public ReferenceListDataLoader() {
@@ -57,6 +58,8 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 				DataLoader.newMappedDataLoader(getByReferenceBatchLoader(), getOptionsWithCache()));
 		registry.register(REFERENCE_LIST_BY_PRODUCT_CATEGORY_TYPE_DATA_LOADER,
 				DataLoader.newMappedDataLoader(getProductCategoryTypeBatchLoader(), getOptionsWithCache()));
+		registry.register(REFERENCE_LIST_BY_DOCUMENT_STATUS_DATA_LOADER,
+				DataLoader.newMappedDataLoader(getDocumentStatusTypeBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MRefList>> getByReferenceBatchLoader() {
@@ -90,5 +93,9 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 
 	private MappedBatchLoader<String, MRefList> getProductCategoryTypeBatchLoader() {
 		return referenceListRepository::getProductCategoryType;
+	}
+
+	private MappedBatchLoader<String, MRefList> getDocumentStatusTypeBatchLoader() {
+		return referenceListRepository::getDocumentStatus;
 	}
 }

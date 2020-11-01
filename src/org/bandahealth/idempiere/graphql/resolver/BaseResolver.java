@@ -4,10 +4,11 @@ import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ClientDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrganizationDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.UserDataLoader;
-import org.bandahealth.idempiere.graphql.model.DocStatus;
 import org.compiere.model.MClient;
 import org.compiere.model.MOrg;
+import org.compiere.model.MRefList;
 import org.compiere.model.PO;
 import org.compiere.process.DocAction;
 import org.dataloader.DataLoader;
@@ -46,9 +47,11 @@ public class BaseResolver<T extends PO> {
 		return userDataLoader.load(entity.getUpdatedBy());
 	}
 
-	public DocStatus docStatus(T entity) {
+	public CompletableFuture<MRefList> docStatus(T entity, DataFetchingEnvironment environment) {
 		if (entity instanceof DocAction) {
-			return DocStatus.valueOf(((DocAction) entity).getDocStatus());
+			final DataLoader<String, MRefList> dataLoader = environment.getDataLoaderRegistry()
+					.getDataLoader(ReferenceListDataLoader.REFERENCE_LIST_BY_DOCUMENT_STATUS_DATA_LOADER);
+			return dataLoader.load(((DocAction) entity).getDocStatus());
 		}
 		throw new IllegalArgumentException("doc status does not exist on entity");
 	}

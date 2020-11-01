@@ -14,7 +14,7 @@ type Invoice {
   invoiceLines: [InvoiceLine!]
   paymentType: ReferenceList!
   # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
-  docStatus: DocStatus
+  docStatus: ReferenceList!
 }
 
 type InvoiceConnection {

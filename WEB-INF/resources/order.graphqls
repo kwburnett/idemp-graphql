@@ -14,7 +14,7 @@ type Order {
   orderLines: [OrderLine!]
   payments: [Payment!]
   # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
-  docStatus: DocStatus
+  docStatus: ReferenceList!
   newVisit: Boolean
   visitNotes: String
   patientType: ReferenceList!

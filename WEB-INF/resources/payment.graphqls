@@ -17,7 +17,7 @@ type Payment {
   memberId: String
   number: String
   memberName: String
-  docStatus: DocStatus
+  docStatus: ReferenceList!
   transactionDate: String @dateFormat
   tenderAmount: Float
 }
