@@ -28,44 +28,66 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 	public final static String PRODUCT_CATEGORY_TYPE = "BH Product Category Type";
 
 	public CompletableFuture<Map<String, MRefList>> getOrderPaymentType(Set<String> referenceValues) {
-		return getTypes(ORDER_PAYMENT_TYPE, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(ORDER_PAYMENT_TYPE, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	public CompletableFuture<Map<String, MRefList>> getPatientType(Set<String> referenceValues) {
-		return getTypes(PATIENT_TYPE, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(PATIENT_TYPE, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	public CompletableFuture<Map<String, MRefList>> getReferral(Set<String> referenceValues) {
-		return getTypes(REFERRAL_DROPDOWN, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(REFERRAL_DROPDOWN, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	public CompletableFuture<Map<String, MRefList>> getInvoicePaymentType(Set<String> referenceValues) {
-		return getTypes(INVOICE_PAYMENT_TYPE, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(INVOICE_PAYMENT_TYPE, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	public CompletableFuture<Map<String, MRefList>> getNhifType(Set<String> referenceValues) {
-		return getTypes(NHIF_TYPE, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(NHIF_TYPE, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	public CompletableFuture<Map<String, MRefList>> getNhifRelationship(Set<String> referenceValues) {
-		return getTypes(NHIF_RELATIONSHIP, referenceValues);
+		return CompletableFuture.supplyAsync(() -> getTypes(NHIF_RELATIONSHIP, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
+	}
+
+	public CompletableFuture<Map<String, MRefList>> getDocumentStatus(Set<String> referenceValues) {
+		return CompletableFuture.supplyAsync(() -> getTypes(DOCUMENT_STATUS, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
+	}
+
+	public CompletableFuture<Map<String, MRefList>> getProductCategoryType(Set<String> referenceValues) {
+		return CompletableFuture.supplyAsync(() -> getTypes(PRODUCT_CATEGORY_TYPE, referenceValues).stream()
+				.collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
+	}
+
+	public List<MRefList> getTypes(String referenceName) {
+		return getTypes(referenceName, null);
 	}
 
 	/**
 	 * Get Reference List from MRefList.Table_Name
 	 *
-	 * @param referenceName
-	 * @param referenceValues
-	 * @return
+	 * @param referenceName   A reference name, defined as a static on this class
+	 * @param referenceValues A list of values to fetch data for
+	 * @return The reference list data
 	 */
-	private CompletableFuture<Map<String, MRefList>> getTypes(String referenceName, Set<String> referenceValues) {
+	private List<MRefList> getTypes(String referenceName, Set<String> referenceValues) {
 		List<Object> parameters = new ArrayList<>();
 
 		String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
 		parameters.add(referenceName);
 
-		whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
-				+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
+		if (referenceValues != null) {
+			whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
+					+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
+		}
 
 		if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
 			// get payment type limits..
@@ -76,14 +98,12 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 			}
 		}
 
-		List<MRefList> types = new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
+		return new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
 				.addJoinClause("JOIN " + MReference.Table_Name + " ON " + MReference.Table_Name + "."
 						+ MReference.COLUMNNAME_AD_Reference_ID + "=" + MRefList.Table_Name + "."
 						+ MRefList.COLUMNNAME_AD_Reference_ID)
 				.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true)
 				.list();
-		return CompletableFuture.supplyAsync(() ->
-				types.stream().collect(Collectors.toMap(MRefList::getValue, ref -> ref)));
 	}
 
 	@Override

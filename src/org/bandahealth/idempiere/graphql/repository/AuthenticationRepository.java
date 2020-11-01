@@ -87,6 +87,8 @@ public class AuthenticationRepository {
 			try {
 				// generate session token
 				response.setToken(builder.sign(Algorithm.HMAC256(TokenUtils.getTokenSecret())));
+				// set username
+				response.setUsername(credentials.getUsername());
 				return response;
 			} catch (Exception e) {
 				throw new AdempiereException("Bad request");

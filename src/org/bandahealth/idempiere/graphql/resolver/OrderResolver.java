@@ -11,10 +11,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.OrderLineDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
-import org.bandahealth.idempiere.graphql.repository.BusinessPartnerRepository;
-import org.bandahealth.idempiere.graphql.repository.OrderLineRepository;
-import org.bandahealth.idempiere.graphql.repository.PaymentRepository;
-import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
 
@@ -67,7 +64,8 @@ public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLRes
 		final DataLoader<String, MRefList> referenceListReferralDataLoader =
 				environment.getDataLoaderRegistry()
 						.getDataLoader(ReferenceListDataLoader.REFERRAL_DATA_LOADER);
-		return referenceListReferralDataLoader.load(entity.getbh_referral());
+		return StringUtil.isNullOrEmpty(entity.getbh_referral()) ? null :
+				referenceListReferralDataLoader.load(entity.getbh_referral());
 	}
 
 	public CompletableFuture<OrderStatus> status(MOrder_BH entity, DataFetchingEnvironment environment) {

@@ -33,6 +33,16 @@ type Query {
   # Products
   items(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   services(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
+  # Product Categories
+  productCategories: [ProductCategory!]!
+  # Reference Lists
+  invoicePaymentTypes: [ReferenceList!]!
+  nhifRelationships: [ReferenceList!]!
+  nhifTypes: [ReferenceList!]!
+  orderPaymentTypes: [ReferenceList!]!
+  patientTypes: [ReferenceList!]!
+  productCategoryTypes: [ReferenceList!]!
+  referrals: [ReferenceList!]!
   # Storage on hand
   allStorageOnHand(filter: String, sort: String, page: Int, pageSize: Int): StorageOnHandConnection!
   # Users

@@ -4,6 +4,8 @@ import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.graphql.model.input.ProductCategoryInput;
 import org.compiere.util.Env;
 
+import java.util.List;
+
 public class ProductCategoryRepository extends BaseRepository<MProductCategory_BH, ProductCategoryInput> {
 	@Override
 	public MProductCategory_BH getModelInstance() {
@@ -13,5 +15,10 @@ public class ProductCategoryRepository extends BaseRepository<MProductCategory_B
 	@Override
 	public MProductCategory_BH save(ProductCategoryInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	public List<MProductCategory_BH> get() {
+		return getBaseQuery(MProductCategory_BH.COLUMNNAME_BH_Product_Category_Type + " IS NOT NULL")
+				.list();
 	}
 }

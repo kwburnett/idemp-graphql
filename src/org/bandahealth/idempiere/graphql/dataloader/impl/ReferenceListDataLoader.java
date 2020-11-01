@@ -21,6 +21,8 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	public static String NHIF_TYPE_DATA_LOADER = "referenceListNhifTypeDataLoader";
 	public static String NHIF_RELATIONSHIP_DATA_LOADER = "referenceListNhifRelationshipDataLoader";
 	public static String REFERENCE_LIST_BY_REFERENCE_DATA_LOADER = "referenceListByReferenceDataLoader";
+	public static String REFERENCE_LIST_BY_PRODUCT_CATEGORY_TYPE_DATA_LOADER =
+			"referenceListByProductCategoryTypeDataLoader";
 	private final ReferenceListRepository referenceListRepository;
 
 	public ReferenceListDataLoader() {
@@ -53,6 +55,8 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader(), getOptionsWithCache()));
 		registry.register(REFERENCE_LIST_BY_REFERENCE_DATA_LOADER,
 				DataLoader.newMappedDataLoader(getByReferenceBatchLoader(), getOptionsWithCache()));
+		registry.register(REFERENCE_LIST_BY_PRODUCT_CATEGORY_TYPE_DATA_LOADER,
+				DataLoader.newMappedDataLoader(getProductCategoryTypeBatchLoader(), getOptionsWithCache()));
 	}
 
 	private MappedBatchLoader<Integer, List<MRefList>> getByReferenceBatchLoader() {
@@ -82,5 +86,9 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 
 	private MappedBatchLoader<String, MRefList> getNhifRelationshipBatchLoader() {
 		return referenceListRepository::getNhifRelationship;
+	}
+
+	private MappedBatchLoader<String, MRefList> getProductCategoryTypeBatchLoader() {
+		return referenceListRepository::getProductCategoryType;
 	}
 }

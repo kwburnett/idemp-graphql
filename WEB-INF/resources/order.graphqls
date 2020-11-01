@@ -18,7 +18,7 @@ type Order {
   newVisit: Boolean
   visitNotes: String
   patientType: ReferenceList!
-  referral: ReferenceList!
+  referral: ReferenceList
   status: OrderStatus
   chiefComplaint: String
   temperature: String

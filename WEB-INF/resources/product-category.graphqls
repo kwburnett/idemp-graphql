@@ -2,12 +2,18 @@ type ProductCategory {
   id: ID!
   client: Client!
   organization: Organization!
+  isActive: Boolean!
+  created: String! @dateFormat
+  createdBy: User!
   name: String!
   value: String
+  description: String
+  productCategoryType: ReferenceList
 }
 
 input ProductCategoryInput {
   id: ID
   name: String
   value: String
+  isActive: Boolean
 }
