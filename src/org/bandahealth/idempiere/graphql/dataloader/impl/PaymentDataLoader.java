@@ -13,8 +13,8 @@ import java.util.List;
 
 public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentInput, PaymentRepository>
 		implements DataLoaderRegisterer {
-
 	public static String PAYMENT_DATA_LOADER = "paymentDataLoader";
+	public static String PAYMENT_BY_UUID_DATA_LOADER = "paymentByUuidDataLoader";
 	public static String PAYMENT_BY_ORDER_DATA_LOADER = "paymentByOrderDataLoader";
 	public static String PAYMENT_BY_BUSINESS_PARTNER_DATA_LOADER = "paymentByBusinessPartnerDataLoader";
 	private final PaymentRepository paymentRepository;
@@ -24,8 +24,13 @@ public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentInput,
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return PAYMENT_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return PAYMENT_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

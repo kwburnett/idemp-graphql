@@ -8,6 +8,7 @@ public class HomeScreenButtonDataLoader
 		extends BaseDataLoader<MHomeScreenButton, MHomeScreenButton, HomeScreenButtonRepository>
 		implements DataLoaderRegisterer {
 	public static final String HOME_SCREEN_BUTTON_DATA_LOADER = "homeScreenButtonDataLoader";
+	public static final String HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER = "homeScreenButtonByUuidDataLoader";
 	private final HomeScreenButtonRepository homeScreenButtonRepository;
 
 	public HomeScreenButtonDataLoader() {
@@ -15,8 +16,13 @@ public class HomeScreenButtonDataLoader
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return HOME_SCREEN_BUTTON_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

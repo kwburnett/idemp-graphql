@@ -12,8 +12,8 @@ import java.util.List;
 
 public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, LocatorRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String LOCATOR_DATA_LOADER = "locatorDataLoader";
+	public static final String LOCATOR_BY_UUID_DATA_LOADER = "locatorByUuidDataLoader";
 	public static final String LOCATOR_BY_WAREHOUSE_DATA_LOADER = "locatorByWarehouseDataLoader";
 	private final LocatorRepository locatorRepository;
 
@@ -29,8 +29,13 @@ public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, Locato
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return LOCATOR_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return LOCATOR_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

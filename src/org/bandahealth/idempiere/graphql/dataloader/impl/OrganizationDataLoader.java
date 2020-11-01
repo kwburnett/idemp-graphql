@@ -12,8 +12,8 @@ import java.util.List;
 
 public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, OrganizationRepository>
 		implements DataLoaderRegisterer {
-
 	public static String ORGANIZATION_DATA_LOADER = "organizationDataLoader";
+	public static String ORGANIZATION_BY_UUID_DATA_LOADER = "organizationByUuidDataLoader";
 	public static String ORGANIZATION_BY_CLIENT_DATA_LOADER = "organizationByClientDataLoader";
 	private final OrganizationRepository organizationRepository;
 
@@ -22,8 +22,13 @@ public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, Organizat
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return ORGANIZATION_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return ORGANIZATION_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

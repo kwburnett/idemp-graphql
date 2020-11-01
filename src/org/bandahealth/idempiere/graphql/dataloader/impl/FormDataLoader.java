@@ -6,8 +6,8 @@ import org.bandahealth.idempiere.graphql.repository.FormRepository;
 import org.compiere.model.MForm;
 
 public class FormDataLoader extends BaseDataLoader<MForm, MForm, FormRepository> implements DataLoaderRegisterer {
-
 	public static final String FORM_DATA_LOADER = "formDataLoader";
+	public static final String FORM_BY_UUID_DATA_LOADER = "formByUuidDataLoader";
 	private final FormRepository formRepository;
 
 	public FormDataLoader() {
@@ -15,8 +15,13 @@ public class FormDataLoader extends BaseDataLoader<MForm, MForm, FormRepository>
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return FORM_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return FORM_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

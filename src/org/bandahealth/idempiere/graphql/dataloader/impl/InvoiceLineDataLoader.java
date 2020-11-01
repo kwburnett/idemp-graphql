@@ -12,8 +12,8 @@ import java.util.List;
 
 public class InvoiceLineDataLoader extends BaseDataLoader<MInvoiceLine, InvoiceLineInput, InvoiceLineRepository>
 		implements DataLoaderRegisterer {
-
 	public static String INVOICE_LINE_DATA_LOADER = "invoiceLineDataLoader";
+	public static String INVOICE_LINE_BY_UUID_DATA_LOADER = "invoiceLineByUuidDataLoader";
 	public static String INVOICE_LINE_BY_INVOICE_DATA_LOADER = "invoiceLineByInvoiceDataLoader";
 	private final InvoiceLineRepository invoiceLineRepository;
 
@@ -22,8 +22,13 @@ public class InvoiceLineDataLoader extends BaseDataLoader<MInvoiceLine, InvoiceL
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return INVOICE_LINE_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return INVOICE_LINE_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

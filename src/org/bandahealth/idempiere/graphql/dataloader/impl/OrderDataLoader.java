@@ -13,8 +13,8 @@ import java.util.List;
 
 public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderInput, OrderRepository>
 		implements DataLoaderRegisterer {
-
 	public static String ORDER_DATA_LOADER = "orderDataLoader";
+	public static String ORDER_BY_UUID_DATA_LOADER = "orderByUuidDataLoader";
 	public static String SALES_ORDER_BY_BUSINESS_PARTNER_DATA_LOADER = "salesOrderByBusinessPartnerDataLoader";
 	private final OrderRepository orderRepository;
 
@@ -23,8 +23,13 @@ public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderInput, Order
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return ORDER_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return ORDER_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

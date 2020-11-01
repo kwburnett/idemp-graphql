@@ -12,8 +12,8 @@ import java.util.List;
 
 public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, WarehouseRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String WAREHOUSE_DATA_LOADER = "warehouseDataLoader";
+	public static final String WAREHOUSE_BY_UUID_DATA_LOADER = "warehouseByUuidDataLoader";
 	public static final String WAREHOUSE_BY_ORGANIZATION_DATA_LOADER = "warehouseByOrganizationDataLoader";
 	private final WarehouseRepository warehouseRepository;
 
@@ -22,8 +22,13 @@ public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, 
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return WAREHOUSE_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return WAREHOUSE_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

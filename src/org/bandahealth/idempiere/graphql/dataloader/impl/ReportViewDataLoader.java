@@ -7,8 +7,8 @@ import org.compiere.model.MReportView;
 
 public class ReportViewDataLoader extends BaseDataLoader<MReportView, MReportView, ReportViewRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String REPORT_VIEW_DATA_LOADER = "reportViewDataLoader";
+	public static final String REPORT_VIEW_BY_UUID_DATA_LOADER = "reportViewByUuidDataLoader";
 	private final ReportViewRepository reportViewRepository;
 
 	public ReportViewDataLoader() {
@@ -16,8 +16,13 @@ public class ReportViewDataLoader extends BaseDataLoader<MReportView, MReportVie
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return REPORT_VIEW_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return REPORT_VIEW_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

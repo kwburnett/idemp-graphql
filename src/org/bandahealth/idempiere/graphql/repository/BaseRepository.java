@@ -290,6 +290,18 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		return getBaseQuery(model.getUUIDColumnName() + " IN (" + whereClause + ")").list();
 	}
 
+	/**
+	 * Get an of entity by it's UUID
+	 *
+	 * @param uuids The UUIDs to search by
+	 * @return
+	 */
+	public CompletableFuture<Map<String, T>> getByUuidsCompletableFuture(Set<String> uuids) {
+		return CompletableFuture.supplyAsync(() -> getByUuids(new ArrayList<>(uuids)).stream().collect(
+				Collectors.toMap(entity -> entity.get_Value(entity.getUUIDColumnName()).toString(), entity -> entity))
+		);
+	}
+
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, DataFetchingEnvironment environment) {
 		return this.get(filterJson, sort, pagingInfo, null, null, null, environment);
 	}

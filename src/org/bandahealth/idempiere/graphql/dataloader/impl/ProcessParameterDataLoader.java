@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ProcessParameterDataLoader extends BaseDataLoader<MProcessPara, MProcessPara, ProcessParameterRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String PROCESS_PARAMETER_DATA_LOADER = "processParameterDataLoader";
+	public static final String PROCESS_PARAMETER_BY_UUID_DATA_LOADER = "processParameterByUuidDataLoader";
 	public static final String PROCESS_PARAMETER_BY_PROCESS_DATA_LOADER = "processParameterByProcessDataLoader";
 	private final ProcessParameterRepository processParameterRepository;
 
@@ -29,8 +29,13 @@ public class ProcessParameterDataLoader extends BaseDataLoader<MProcessPara, MPr
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return PROCESS_PARAMETER_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return PROCESS_PARAMETER_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

@@ -13,8 +13,8 @@ import java.util.List;
 
 public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, StorageOnHandInput, StorageOnHandRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String STORAGE_ON_HAND_DATA_LOADER = "storageOnHandDataLoader";
+	public static final String STORAGE_ON_HAND_BY_UUID_DATA_LOADER = "storageOnHandByUuidDataLoader";
 	public static final String STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER = "storageOnHandByProductDataLoader";
 	private final StorageOnHandRepository storageOnHandRepository;
 
@@ -30,8 +30,13 @@ public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, Stor
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return STORAGE_ON_HAND_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return STORAGE_ON_HAND_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

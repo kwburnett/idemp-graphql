@@ -29,6 +29,7 @@ public class BandaDataLoaderComposer {
 			add(new OrderLineDataLoader());
 			add(new OrganizationDataLoader());
 			add(new PaymentDataLoader());
+			add(new ProcessDataLoader());
 			add(new ProcessParameterDataLoader());
 			add(new ProductCategoryDataLoader());
 			add(new ProductDataLoader());

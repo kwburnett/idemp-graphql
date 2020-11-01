@@ -13,7 +13,6 @@ import java.util.List;
 
 public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceListInput, ReferenceListRepository>
 		implements DataLoaderRegisterer {
-
 	public static String PATIENT_TYPE_DATA_LOADER = "referenceListPatientTypeDataLoader";
 	public static String REFERRAL_DATA_LOADER = "referenceListReferralDataLoader";
 	public static String ORDER_PAYMENT_TYPE_DATA_LOADER = "referenceListOrderPaymentTypeDataLoader";
@@ -31,7 +30,12 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
+		return null;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
 		return null;
 	}
 

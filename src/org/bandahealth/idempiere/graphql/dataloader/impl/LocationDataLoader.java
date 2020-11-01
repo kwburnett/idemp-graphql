@@ -8,8 +8,8 @@ import org.compiere.model.MLocation;
 
 public class LocationDataLoader extends BaseDataLoader<MLocation, LocationInput, LocationRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String LOCATION_DATA_LOADER = "locationDataLoader";
+	public static final String LOCATION_BY_UUID_DATA_LOADER = "locationByUuidDataLoader";
 	private final LocationRepository locationRepository;
 
 	public LocationDataLoader() {
@@ -17,8 +17,13 @@ public class LocationDataLoader extends BaseDataLoader<MLocation, LocationInput,
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return LOCATION_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return LOCATION_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

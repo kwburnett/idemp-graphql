@@ -7,8 +7,8 @@ import org.compiere.model.MReference;
 
 public class ReferenceDataLoader extends BaseDataLoader<MReference, MReference, ReferenceRepository>
 		implements DataLoaderRegisterer {
-
 	public static final String REFERENCE_DATA_LOADER = "referenceDataLoader";
+	public static final String REFERENCE_BY_UUID_DATA_LOADER = "referenceByUuidDataLoader";
 	private final ReferenceRepository referenceRepository;
 
 	public ReferenceDataLoader() {
@@ -16,8 +16,13 @@ public class ReferenceDataLoader extends BaseDataLoader<MReference, MReference, 
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return REFERENCE_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return REFERENCE_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

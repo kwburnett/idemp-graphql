@@ -154,9 +154,9 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 			}
 
 			cache.delete(order.get_ID());
-
-			return getByUuid(order.getC_Order_UU());
-
+			MOrder_BH savedOrder = getByUuid(order.getC_Order_UU());
+			cache.set(savedOrder.getC_Order_UU(), savedOrder);
+			return savedOrder;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.severe(ex.getMessage());

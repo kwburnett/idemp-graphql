@@ -13,25 +13,32 @@ type Query {
   # Accounts
   accounts(filter: String, sort: String, page: Int, pageSize: Int): AccountConnection!
   # Business Partners
+  businessPartner(id: String!): BusinessPartner
   customers(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
   vendors(filter: String, sort: String, page: Int, pageSize: Int): BusinessPartnerConnection!
   # Charges
+  charge(id: String!): Charge
   expenseCategories(filter: String, sort: String, page: Int, pageSize: Int): ChargeConnection!
   # Home Screen Buttons
   homeScreenButtons: [HomeScreenButton!]
   # Invoices
   customerInvoices(filter: String, sort: String, page: Int, pageSize: Int): InvoiceConnection!
+  invoice(id: String!): Invoice
   vendorInvoices(filter: String, sort: String, page: Int, pageSize: Int): InvoiceConnection!
   # Orders
   purchaseOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
+  order(id: String!): Order
   salesOrders(filter: String, sort: String, page: Int, pageSize: Int): OrderConnection!
   # Payments
+  payment(id: String!): Payment
   serviceDebtPayments(filter: String, sort: String, page: Int, pageSize: Int): PaymentConnection!
   # Processes
   generateReport(processInfo: ProcessInfoInput!): String
+  process(id: String!): Process
   processes(filter: String, sort: String, page: Int, pageSize: Int): ProcessConnection!
   # Products
   items(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
+  product(id: String!): Product
   services(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Product Categories
   productCategories: [ProductCategory!]!

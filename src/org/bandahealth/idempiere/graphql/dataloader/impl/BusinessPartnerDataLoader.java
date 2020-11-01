@@ -10,6 +10,7 @@ public class BusinessPartnerDataLoader
 		implements DataLoaderRegisterer {
 
 	public static String BUSINESS_PARTNER_DATA_LOADER = "businessPartnerDataLoader";
+	public static String BUSINESS_PARTNER_BY_UUID_DATA_LOADER = "businessPartnerByUuidDataLoader";
 	private final BusinessPartnerRepository businessPartnerRepository;
 
 	public BusinessPartnerDataLoader() {
@@ -17,8 +18,13 @@ public class BusinessPartnerDataLoader
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return BUSINESS_PARTNER_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return BUSINESS_PARTNER_BY_UUID_DATA_LOADER;
 	}
 
 	@Override

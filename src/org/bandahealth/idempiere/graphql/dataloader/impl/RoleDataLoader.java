@@ -6,8 +6,8 @@ import org.bandahealth.idempiere.graphql.repository.RoleRepository;
 import org.compiere.model.MRole;
 
 public class RoleDataLoader extends BaseDataLoader<MRole, MRole, RoleRepository> implements DataLoaderRegisterer {
-
 	public static final String ROLE_DATA_LOADER = "roleDataLoader";
+	public static final String ROLE_BY_UUID_DATA_LOADER = "roleByUuidDataLoader";
 	private final RoleRepository roleRepository;
 
 	public RoleDataLoader() {
@@ -15,8 +15,13 @@ public class RoleDataLoader extends BaseDataLoader<MRole, MRole, RoleRepository>
 	}
 
 	@Override
-	protected String getDefaultDataLoaderName() {
+	protected String getDefaultByIdDataLoaderName() {
 		return ROLE_DATA_LOADER;
+	}
+
+	@Override
+	protected String getDefaultByUuidDataLoaderName() {
+		return ROLE_BY_UUID_DATA_LOADER;
 	}
 
 	@Override
