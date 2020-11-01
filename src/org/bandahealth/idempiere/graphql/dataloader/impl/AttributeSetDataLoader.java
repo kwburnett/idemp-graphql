@@ -8,7 +8,7 @@ import org.compiere.model.MAttributeSet;
 public class AttributeSetDataLoader extends BaseDataLoader<MAttributeSet, AttributeSetInput, AttributeSetRepository>
 		implements DataLoaderRegisterer {
 
-	public static final String ATTRIBUTE_SET_DATA_LOADER = "attributeSetDataLoader";
+	public static final String ATTRIBUTE_SET_BY_ID_DATA_LOADER = "attributeSetByIdDataLoader";
 	public static final String ATTRIBUTE_SET_BY_UUID_DATA_LOADER = "attributeSetByUuidDataLoader";
 	private final AttributeSetRepository attributeSetRepository;
 
@@ -16,12 +16,12 @@ public class AttributeSetDataLoader extends BaseDataLoader<MAttributeSet, Attrib
 		attributeSetRepository = new AttributeSetRepository();
 	}
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return ATTRIBUTE_SET_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return ATTRIBUTE_SET_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return ATTRIBUTE_SET_BY_UUID_DATA_LOADER;
 	}
 

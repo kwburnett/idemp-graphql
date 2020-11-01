@@ -11,7 +11,7 @@ import java.util.List;
 
 public class RoleIncludedDataLoader extends BaseDataLoader<MRoleIncluded, MRoleIncluded, RoleIncludedRepository>
 		implements DataLoaderRegisterer {
-	public static final String ROLE_INCLUDED_DATA_LOADER = "roleIncludedDataLoader";
+	public static final String ROLE_INCLUDED_BY_ID_DATA_LOADER = "roleIncludedByIdDataLoader";
 	public static final String ROLE_INCLUDED_BY_UUID_DATA_LOADER = "roleIncludedByUuidDataLoader";
 	public static final String ROLE_INCLUDED_BY_ROLE_DATA_LOADER = "roleIncludedByRoleDataLoader";
 	private final RoleIncludedRepository roleIncludedRepository;
@@ -21,12 +21,12 @@ public class RoleIncludedDataLoader extends BaseDataLoader<MRoleIncluded, MRoleI
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return ROLE_INCLUDED_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return ROLE_INCLUDED_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return ROLE_INCLUDED_BY_UUID_DATA_LOADER;
 	}
 

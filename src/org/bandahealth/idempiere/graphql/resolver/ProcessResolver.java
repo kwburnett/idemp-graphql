@@ -20,19 +20,19 @@ public class ProcessResolver extends BaseResolver<MProcess> implements GraphQLRe
 
 	public CompletableFuture<MForm> form(MProcess entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MForm> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(FormDataLoader.FORM_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(FormDataLoader.FORM_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getAD_Process_ID());
 	}
 
 	public CompletableFuture<MWorkflow> workflow(MProcess entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MWorkflow> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(WorkflowDataLoader.WORKFLOW_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(WorkflowDataLoader.WORKFLOW_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getAD_Workflow_ID());
 	}
 
 	public CompletableFuture<MReportView> reportView(MProcess entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MReportView> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ReportViewDataLoader.REPORT_VIEW_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ReportViewDataLoader.REPORT_VIEW_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getAD_ReportView_ID());
 	}
 

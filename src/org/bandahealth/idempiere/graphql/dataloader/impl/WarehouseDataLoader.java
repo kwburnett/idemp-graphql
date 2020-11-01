@@ -1,7 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.repository.WarehouseRepository;
 import org.compiere.model.MWarehouse;
 import org.dataloader.DataLoader;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, WarehouseRepository>
 		implements DataLoaderRegisterer {
-	public static final String WAREHOUSE_DATA_LOADER = "warehouseDataLoader";
+	public static final String WAREHOUSE_BY_ID_DATA_LOADER = "warehouseByIdDataLoader";
 	public static final String WAREHOUSE_BY_UUID_DATA_LOADER = "warehouseByUuidDataLoader";
 	public static final String WAREHOUSE_BY_ORGANIZATION_DATA_LOADER = "warehouseByOrganizationDataLoader";
 	private final WarehouseRepository warehouseRepository;
@@ -22,12 +21,12 @@ public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, 
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return WAREHOUSE_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return WAREHOUSE_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return WAREHOUSE_BY_UUID_DATA_LOADER;
 	}
 

@@ -1,7 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.repository.OrganizationRepository;
 import org.compiere.model.MOrg;
 import org.dataloader.DataLoader;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, OrganizationRepository>
 		implements DataLoaderRegisterer {
-	public static String ORGANIZATION_DATA_LOADER = "organizationDataLoader";
+	public static String ORGANIZATION_BY_ID_DATA_LOADER = "organizationByIdDataLoader";
 	public static String ORGANIZATION_BY_UUID_DATA_LOADER = "organizationByUuidDataLoader";
 	public static String ORGANIZATION_BY_CLIENT_DATA_LOADER = "organizationByClientDataLoader";
 	private final OrganizationRepository organizationRepository;
@@ -22,12 +21,12 @@ public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, Organizat
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return ORGANIZATION_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return ORGANIZATION_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return ORGANIZATION_BY_UUID_DATA_LOADER;
 	}
 

@@ -13,7 +13,7 @@ public class LocatorResolver extends BaseResolver<MLocator> implements GraphQLRe
 
 	public CompletableFuture<MWarehouse> warehouse(MLocator entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MWarehouse> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(WarehouseDataLoader.WAREHOUSE_DATA_LOADER);
+				.getDataLoader(WarehouseDataLoader.WAREHOUSE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_Warehouse_ID());
 	}
 }

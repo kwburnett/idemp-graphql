@@ -30,7 +30,7 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 	public CompletableFuture<MBPartner_BH> businessPartner(MPayment_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER);
+						.getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_BY_ID_DATA_LOADER);
 		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
@@ -88,13 +88,13 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 
 	public CompletableFuture<MOrder_BH> order(MPayment_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MOrder_BH> orderDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_BY_ID_DATA_LOADER);
 		return orderDataLoader.load(entity.getBH_C_Order_ID() == 0 ? entity.getC_Order_ID() : entity.getBH_C_Order_ID());
 	}
 
 	public CompletableFuture<MCharge_BH> charge(MPayment_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MCharge_BH> chargeDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_BY_ID_DATA_LOADER);
 		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 }

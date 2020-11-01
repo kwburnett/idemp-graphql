@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput, InvoiceRepository>
 		implements DataLoaderRegisterer {
-	public static String INVOICE_DATA_LOADER = "invoiceDataLoader";
+	public static String INVOICE_BY_ID_DATA_LOADER = "invoiceByIdDataLoader";
 	public static String INVOICE_BY_UUID_DATA_LOADER = "invoiceByUuidDataLoader";
 	public static String VENDOR_INVOICE_BY_BUSINESS_PARTNER_DATA_LOADER = "vendorInvoiceByBusinessPartnerDataLoader";
 	private final InvoiceRepository invoiceRepository;
@@ -29,12 +29,12 @@ public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput,
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return INVOICE_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return INVOICE_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return INVOICE_BY_UUID_DATA_LOADER;
 	}
 

@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class InvoiceResolver extends BaseResolver<MInvoice_BH> implements GraphQLResolver<MInvoice_BH> {
 	public CompletableFuture<MBPartner_BH> businessPartner(MInvoice_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getC_BPartner_ID());
 	}
 

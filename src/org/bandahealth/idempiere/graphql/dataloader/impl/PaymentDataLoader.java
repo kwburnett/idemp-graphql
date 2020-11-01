@@ -2,7 +2,6 @@ package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.base.model.MPayment_BH;
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.model.input.PaymentInput;
 import org.bandahealth.idempiere.graphql.repository.PaymentRepository;
 import org.dataloader.DataLoader;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentInput, PaymentRepository>
 		implements DataLoaderRegisterer {
-	public static String PAYMENT_DATA_LOADER = "paymentDataLoader";
+	public static String PAYMENT_BY_ID_DATA_LOADER = "paymentByIdDataLoader";
 	public static String PAYMENT_BY_UUID_DATA_LOADER = "paymentByUuidDataLoader";
 	public static String PAYMENT_BY_ORDER_DATA_LOADER = "paymentByOrderDataLoader";
 	public static String PAYMENT_BY_BUSINESS_PARTNER_DATA_LOADER = "paymentByBusinessPartnerDataLoader";
@@ -24,12 +23,12 @@ public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentInput,
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return PAYMENT_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return PAYMENT_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return PAYMENT_BY_UUID_DATA_LOADER;
 	}
 

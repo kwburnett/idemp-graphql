@@ -13,9 +13,9 @@ public class AttributeSetInstanceResolver extends BaseResolver<MAttributeSetInst
 		implements GraphQLResolver<MAttributeSetInstance> {
 
 	public CompletableFuture<MAttributeSet> attributeSet(MAttributeSetInstance entity,
-																											 DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MAttributeSet> attributeSetDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(AttributeSetDataLoader.ATTRIBUTE_SET_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(AttributeSetDataLoader.ATTRIBUTE_SET_BY_ID_DATA_LOADER);
 		return attributeSetDataLoader.load(entity.getM_AttributeSet_ID());
 	}
 }

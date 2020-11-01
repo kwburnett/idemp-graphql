@@ -32,7 +32,7 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 
 	public CompletableFuture<MLocation> location(MBPartner_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MLocation> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(LocationDataLoader.LOCATION_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(LocationDataLoader.LOCATION_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getBH_C_Location_ID());
 	}
 

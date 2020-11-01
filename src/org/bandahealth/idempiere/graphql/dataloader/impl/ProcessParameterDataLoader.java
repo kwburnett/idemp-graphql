@@ -1,7 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.repository.ProcessParameterRepository;
 import org.compiere.model.MProcessPara;
 import org.dataloader.DataLoader;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class ProcessParameterDataLoader extends BaseDataLoader<MProcessPara, MProcessPara, ProcessParameterRepository>
 		implements DataLoaderRegisterer {
-	public static final String PROCESS_PARAMETER_DATA_LOADER = "processParameterDataLoader";
+	public static final String PROCESS_PARAMETER_BY_ID_DATA_LOADER = "processParameterByIdDataLoader";
 	public static final String PROCESS_PARAMETER_BY_UUID_DATA_LOADER = "processParameterByUuidDataLoader";
 	public static final String PROCESS_PARAMETER_BY_PROCESS_DATA_LOADER = "processParameterByProcessDataLoader";
 	private final ProcessParameterRepository processParameterRepository;
@@ -29,12 +28,12 @@ public class ProcessParameterDataLoader extends BaseDataLoader<MProcessPara, MPr
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return PROCESS_PARAMETER_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return PROCESS_PARAMETER_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return PROCESS_PARAMETER_BY_UUID_DATA_LOADER;
 	}
 

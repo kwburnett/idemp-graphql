@@ -18,20 +18,20 @@ public class StorageOnHandResolver extends BaseResolver<MStorageOnHand> implemen
 
 	public CompletableFuture<MLocator> locator(MStorageOnHand entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MLocator> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(LocatorDataLoader.LOCATOR_DATA_LOADER);
+				.getDataLoader(LocatorDataLoader.LOCATOR_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_Locator_ID());
 	}
 
 	public CompletableFuture<MProduct_BH> product(MStorageOnHand entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProduct_BH> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(ProductDataLoader.PRODUCT_DATA_LOADER);
+				.getDataLoader(ProductDataLoader.PRODUCT_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_Product_ID());
 	}
 
 	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MStorageOnHand entity,
 			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MAttributeSetInstance> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_DATA_LOADER);
+				.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 

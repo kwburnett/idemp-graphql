@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class BaseResolver<T extends PO> {
 	public CompletableFuture<MClient> client(T entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MClient> clientDa =
-				environment.getDataLoaderRegistry().getDataLoader(ClientDataLoader.CLIENT_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ClientDataLoader.CLIENT_BY_ID_DATA_LOADER);
 		return clientDa.load(entity.getAD_Client_ID());
 	}
 
@@ -31,19 +31,19 @@ public class BaseResolver<T extends PO> {
 
 	public CompletableFuture<MOrg> organization(T entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MOrg> organizationDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrganizationDataLoader.ORGANIZATION_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(OrganizationDataLoader.ORGANIZATION_BY_ID_DATA_LOADER);
 		return organizationDataLoader.load(entity.getAD_Org_ID());
 	}
 
 	public CompletableFuture<MUser_BH> createdBy(T entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MUser_BH> userDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_BY_ID_DATA_LOADER);
 		return userDataLoader.load(entity.getCreatedBy());
 	}
 
 	public CompletableFuture<MUser_BH> updatedBy(T entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MUser_BH> userDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_BY_ID_DATA_LOADER);
 		return userDataLoader.load(entity.getUpdatedBy());
 	}
 

@@ -19,13 +19,13 @@ public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLR
 
 	public CompletableFuture<MElementValue> account(MCharge_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MElementValue> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(AccountDataLoader.ACCOUNT_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(AccountDataLoader.ACCOUNT_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getC_ElementValue_ID());
 	}
 
 	public CompletableFuture<MChargeType_BH> chargeType(MCharge_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MChargeType_BH> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(ChargeTypeDataLoader.CHARGE_TYPE_DATA_LOADER);
+				.getDataLoader(ChargeTypeDataLoader.CHARGE_TYPE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getC_ChargeType_ID());
 	}
 }

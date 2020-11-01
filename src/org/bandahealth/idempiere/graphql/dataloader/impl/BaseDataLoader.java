@@ -13,19 +13,19 @@ import java.lang.reflect.ParameterizedType;
 
 public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRepository<T, S>> {
 
-	protected abstract String getDefaultByIdDataLoaderName();
+	protected abstract String getByIdDataLoaderName();
 
-	protected abstract String getDefaultByUuidDataLoaderName();
+	protected abstract String getByUuidDataLoaderName();
 
 	protected abstract R getRepositoryInstance();
 
 	public void register(DataLoaderRegistry registry) {
-		if (!StringUtil.isNullOrEmpty(getDefaultByIdDataLoaderName())) {
-			registry.register(getDefaultByIdDataLoaderName(), DataLoader.newMappedDataLoader(getByIdBatchLoader(),
+		if (!StringUtil.isNullOrEmpty(getByIdDataLoaderName())) {
+			registry.register(getByIdDataLoaderName(), DataLoader.newMappedDataLoader(getByIdBatchLoader(),
 					getOptionsWithCache()));
 		}
-		if (!StringUtil.isNullOrEmpty(getDefaultByUuidDataLoaderName())) {
-			registry.register(getDefaultByUuidDataLoaderName(), DataLoader.newMappedDataLoader(getByUuidBatchLoader(),
+		if (!StringUtil.isNullOrEmpty(getByUuidDataLoaderName())) {
+			registry.register(getByUuidDataLoaderName(), DataLoader.newMappedDataLoader(getByUuidBatchLoader(),
 					getOptionsWithCache()));
 		}
 	}

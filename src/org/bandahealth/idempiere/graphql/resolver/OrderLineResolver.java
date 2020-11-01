@@ -18,13 +18,13 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 
 	public CompletableFuture<MCharge_BH> charge(MOrderLine_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MCharge_BH> chargeDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_BY_ID_DATA_LOADER);
 		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 
 	public CompletableFuture<MProduct_BH> product(MOrderLine_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProduct_BH> productDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_BY_ID_DATA_LOADER);
 		return productDataLoader.load(entity.getM_Product_ID());
 	}
 
@@ -50,15 +50,15 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 
 	public CompletableFuture<MOrder_BH> order(MOrderLine_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MOrder_BH> orderDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_BY_ID_DATA_LOADER);
 		return orderDataLoader.load(entity.getC_Order_ID());
 	}
 
 	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MOrderLine_BH entity,
-																																			 DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MAttributeSetInstance> attributeSetInstanceDataLoader =
 				environment.getDataLoaderRegistry()
-						.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_DATA_LOADER);
+						.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
 		return attributeSetInstanceDataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 }

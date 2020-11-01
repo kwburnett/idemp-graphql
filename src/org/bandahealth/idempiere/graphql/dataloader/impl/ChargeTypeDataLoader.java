@@ -7,7 +7,7 @@ import org.bandahealth.idempiere.graphql.repository.ChargeTypeRepository;
 
 public class ChargeTypeDataLoader extends BaseDataLoader<MChargeType_BH, ChargeTypeInput, ChargeTypeRepository>
 		implements DataLoaderRegisterer {
-	public static final String CHARGE_TYPE_DATA_LOADER = "chargeTypeDataLoader";
+	public static final String CHARGE_TYPE_BY_ID_DATA_LOADER = "chargeTypeByIdDataLoader";
 	public static final String CHARGE_TYPE_BY_UUID_DATA_LOADER = "chargeTypeByUuidDataLoader";
 	private final ChargeTypeRepository chargeTypeRepository;
 
@@ -16,12 +16,12 @@ public class ChargeTypeDataLoader extends BaseDataLoader<MChargeType_BH, ChargeT
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return CHARGE_TYPE_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return CHARGE_TYPE_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return CHARGE_TYPE_BY_UUID_DATA_LOADER;
 	}
 

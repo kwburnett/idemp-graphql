@@ -7,7 +7,7 @@ import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
 public class HomeScreenButtonDataLoader
 		extends BaseDataLoader<MHomeScreenButton, MHomeScreenButton, HomeScreenButtonRepository>
 		implements DataLoaderRegisterer {
-	public static final String HOME_SCREEN_BUTTON_DATA_LOADER = "homeScreenButtonDataLoader";
+	public static final String HOME_SCREEN_BUTTON_BY_ID_DATA_LOADER = "homeScreenButtonByIdDataLoader";
 	public static final String HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER = "homeScreenButtonByUuidDataLoader";
 	private final HomeScreenButtonRepository homeScreenButtonRepository;
 
@@ -16,12 +16,12 @@ public class HomeScreenButtonDataLoader
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return HOME_SCREEN_BUTTON_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return HOME_SCREEN_BUTTON_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER;
 	}
 

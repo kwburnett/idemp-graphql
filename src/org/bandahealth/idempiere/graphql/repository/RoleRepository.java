@@ -3,15 +3,12 @@ package org.bandahealth.idempiere.graphql.repository;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
-import org.bandahealth.idempiere.graphql.utils.BandaQuery;
 import org.compiere.model.MRole;
 import org.compiere.model.MRoleIncluded;
 import org.compiere.util.Env;
 import org.dataloader.DataLoader;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,7 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 
 	public CompletableFuture<List<MRole>> includedRoles(int roleId, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MRole> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(RoleDataLoader.ROLE_DATA_LOADER);
+				.getDataLoader(RoleDataLoader.ROLE_BY_ID_DATA_LOADER);
 		return rolesIncluded(roleId, environment).thenApply(rolesIncluded -> {
 			List<CompletableFuture<MRole>> roles = rolesIncluded.stream().map(roleIncluded -> dataLoader
 					.load(roleIncluded.getIncluded_Role_ID())).collect(Collectors.toList());

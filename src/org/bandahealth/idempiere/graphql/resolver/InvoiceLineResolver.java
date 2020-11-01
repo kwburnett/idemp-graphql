@@ -15,13 +15,13 @@ public class InvoiceLineResolver extends BaseResolver<MInvoiceLine> implements G
 
 	public CompletableFuture<MCharge_BH> charge(MInvoiceLine entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MCharge_BH> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getC_Charge_ID());
 	}
 
 	public CompletableFuture<MProduct_BH> product(MInvoiceLine entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProduct_BH> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_Product_ID());
 	}
 
@@ -39,14 +39,14 @@ public class InvoiceLineResolver extends BaseResolver<MInvoiceLine> implements G
 
 	public CompletableFuture<MInvoice_BH> invoice(MInvoiceLine entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MInvoice_BH> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(InvoiceDataLoader.INVOICE_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(InvoiceDataLoader.INVOICE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getC_Invoice_ID());
 	}
 
 	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MInvoiceLine entity,
 			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MAttributeSetInstance> dataLoader = environment.getDataLoaderRegistry()
-				.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_DATA_LOADER);
+				.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 }

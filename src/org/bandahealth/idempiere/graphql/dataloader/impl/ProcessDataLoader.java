@@ -7,7 +7,7 @@ import org.compiere.model.MProcess;
 
 public class ProcessDataLoader extends BaseDataLoader<MProcess, ProcessInput, ProcessRepository>
 		implements DataLoaderRegisterer {
-	public static final String PROCESS_DATA_LOADER = "processDataLoader";
+	public static final String PROCESS_BY_ID_DATA_LOADER = "processByIdDataLoader";
 	public static final String PROCESS_BY_UUID_DATA_LOADER = "processByUuidDataLoader";
 	private final ProcessRepository processRepository;
 
@@ -16,12 +16,12 @@ public class ProcessDataLoader extends BaseDataLoader<MProcess, ProcessInput, Pr
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return PROCESS_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return PROCESS_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return PROCESS_BY_UUID_DATA_LOADER;
 	}
 

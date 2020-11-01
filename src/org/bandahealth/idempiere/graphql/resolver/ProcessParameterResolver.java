@@ -17,7 +17,7 @@ public class ProcessParameterResolver extends BaseResolver<MProcessPara> impleme
 
 	public CompletableFuture<MReference> reference(MProcessPara entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MReference> dataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ReferenceDataLoader.REFERENCE_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ReferenceDataLoader.REFERENCE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getAD_Reference_ID());
 	}
 

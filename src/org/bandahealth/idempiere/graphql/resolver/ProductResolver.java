@@ -44,9 +44,9 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 	}
 
 	public CompletableFuture<MProductCategory_BH> productCategory(MProduct_BH entity,
-																																DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MProductCategory_BH> productCategoryDataLoader =
-				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_DATA_LOADER);
+				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_BY_ID_DATA_LOADER);
 		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());
 	}
 
@@ -58,7 +58,7 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 	}
 
 	public CompletableFuture<List<MStorageOnHand>> storageOnHand(MProduct_BH entity,
-																																	 DataFetchingEnvironment environment) {
+			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, List<MStorageOnHand>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(StorageOnHandDataLoader.STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER);
 		return dataLoader.load(entity.get_ID());

@@ -6,7 +6,7 @@ import org.compiere.model.MClient;
 
 public class ClientDataLoader extends BaseDataLoader<MClient, MClient, ClientRepository>
 		implements DataLoaderRegisterer {
-	public static String CLIENT_DATA_LOADER = "clientDataLoader";
+	public static String CLIENT_BY_ID_DATA_LOADER = "clientByIdDataLoader";
 	public static String CLIENT_BY_UUID_DATA_LOADER = "clientByUuidDataLoader";
 	private final ClientRepository clientRepository;
 
@@ -15,12 +15,12 @@ public class ClientDataLoader extends BaseDataLoader<MClient, MClient, ClientRep
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return CLIENT_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return CLIENT_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return CLIENT_BY_UUID_DATA_LOADER;
 	}
 

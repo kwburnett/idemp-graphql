@@ -2,7 +2,6 @@ package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.model.input.OrderInput;
 import org.bandahealth.idempiere.graphql.repository.OrderRepository;
 import org.dataloader.DataLoader;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderInput, OrderRepository>
 		implements DataLoaderRegisterer {
-	public static String ORDER_DATA_LOADER = "orderDataLoader";
+	public static String ORDER_BY_ID_DATA_LOADER = "orderByIdDataLoader";
 	public static String ORDER_BY_UUID_DATA_LOADER = "orderByUuidDataLoader";
 	public static String SALES_ORDER_BY_BUSINESS_PARTNER_DATA_LOADER = "salesOrderByBusinessPartnerDataLoader";
 	private final OrderRepository orderRepository;
@@ -23,12 +22,12 @@ public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderInput, Order
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return ORDER_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return ORDER_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return ORDER_BY_UUID_DATA_LOADER;
 	}
 

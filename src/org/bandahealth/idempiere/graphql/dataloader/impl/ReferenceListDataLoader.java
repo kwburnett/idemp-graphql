@@ -30,12 +30,12 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
+	protected String getByIdDataLoaderName() {
 		return null;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return null;
 	}
 

@@ -9,7 +9,7 @@ public class AttributeSetInstanceDataLoader
 		extends BaseDataLoader<MAttributeSetInstance, AttributeSetInstanceInput, AttributeSetInstanceRepository>
 		implements DataLoaderRegisterer {
 
-	public static final String ATTRIBUTE_SET_INSTANCE_DATA_LOADER = "attributeSetInstanceDataLoader";
+	public static final String ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER = "attributeSetInstanceByIdDataLoader";
 	public static final String ATTRIBUTE_SET_INSTANCE_BY_UUID_DATA_LOADER = "attributeSetInstanceByUuidDataLoader";
 	private final AttributeSetInstanceRepository attributeSetInstanceRepository;
 
@@ -18,12 +18,12 @@ public class AttributeSetInstanceDataLoader
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return ATTRIBUTE_SET_INSTANCE_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return ATTRIBUTE_SET_INSTANCE_BY_UUID_DATA_LOADER;
 	}
 

@@ -1,7 +1,6 @@
 package org.bandahealth.idempiere.graphql.dataloader.impl;
 
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.dataloader.impl.BaseDataLoader;
 import org.bandahealth.idempiere.graphql.model.input.StorageOnHandInput;
 import org.bandahealth.idempiere.graphql.repository.StorageOnHandRepository;
 import org.compiere.model.MStorageOnHand;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, StorageOnHandInput, StorageOnHandRepository>
 		implements DataLoaderRegisterer {
-	public static final String STORAGE_ON_HAND_DATA_LOADER = "storageOnHandDataLoader";
+	public static final String STORAGE_ON_HAND_BY_ID_DATA_LOADER = "storageOnHandByIdDataLoader";
 	public static final String STORAGE_ON_HAND_BY_UUID_DATA_LOADER = "storageOnHandByUuidDataLoader";
 	public static final String STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER = "storageOnHandByProductDataLoader";
 	private final StorageOnHandRepository storageOnHandRepository;
@@ -30,12 +29,12 @@ public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, Stor
 	}
 
 	@Override
-	protected String getDefaultByIdDataLoaderName() {
-		return STORAGE_ON_HAND_DATA_LOADER;
+	protected String getByIdDataLoaderName() {
+		return STORAGE_ON_HAND_BY_ID_DATA_LOADER;
 	}
 
 	@Override
-	protected String getDefaultByUuidDataLoaderName() {
+	protected String getByUuidDataLoaderName() {
 		return STORAGE_ON_HAND_BY_UUID_DATA_LOADER;
 	}
 
