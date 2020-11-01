@@ -393,9 +393,13 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				pagingInfo.setTotalCount(query.count());
 			}
 
-			// set pagination params
-			query = query.setPage(pagingInfo.getPageSize(), pagingInfo.getPage());
-			return new Connection<>(query.list(), pagingInfo);
+			List<T> results = new ArrayList<>();
+			if (QueryUtil.areResultsRequested(environment)) {
+				// set pagination params
+				query = query.setPage(pagingInfo.getPageSize(), pagingInfo.getPage());
+				results = query.list();
+			}
+			return new Connection<>(results, pagingInfo);
 		} catch (Exception ex) {
 			throw new AdempiereException(ex);
 		}

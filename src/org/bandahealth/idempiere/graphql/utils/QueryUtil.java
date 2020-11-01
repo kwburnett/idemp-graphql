@@ -30,11 +30,22 @@ public class QueryUtil {
 	/**
 	 * Determine if we need to fetch the total count (triggering another DB query) for the results
 	 *
-	 * @param environment The GraphQL environment
+	 * @param environment The GraphQL data-fetching environment
 	 * @return Whether the total count, in some for or fashion, was requested
 	 */
 	public static boolean isTotalCountRequested(DataFetchingEnvironment environment) {
 		return environment.getSelectionSet().contains("pagingInfo");
+	}
+
+	/**
+	 * Determine if we need to fetch the results list (triggering another DB query). If a query is just wanted the count,
+	 * results don't have to be fetched for that.
+	 *
+	 * @param environment The GraphQL data-fetching environment
+	 * @return Whether the results were requested
+	 */
+	public static boolean areResultsRequested(DataFetchingEnvironment environment) {
+		return environment.getSelectionSet().contains("results");
 	}
 
 	/**
