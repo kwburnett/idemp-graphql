@@ -123,13 +123,13 @@ public class AuthenticationFilter implements Filter {
 		response.setContentType("application/json");
 		String errorResponse = "{\"data\":{";
 		if (!paths.isEmpty()) {
-			errorResponse += paths.stream().reduce("", (accumulator, path) -> accumulator + path + ": null,");
+			errorResponse += paths.stream().map(path -> path + ": null").collect(Collectors.joining(","));
 		}
 		errorResponse += "},\"errors\":[{\"message\": \"" + errorMessage + "\"";
 		if (!paths.isEmpty()) {
 			errorResponse += ",\"paths\":[" + String.join(",", paths) + "]";
 		}
-		errorResponse += "}}";
+		errorResponse += "}]}";
 		response.getWriter().write(errorResponse);
 	}
 }

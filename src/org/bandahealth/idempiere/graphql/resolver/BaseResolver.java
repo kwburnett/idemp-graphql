@@ -26,7 +26,7 @@ public class BaseResolver<T extends PO> {
 	}
 
 	public String id(T entity) {
-		return entity.get_Value(entity.getUUIDColumnName()).toString();
+		return (String) entity.get_Value(entity.getUUIDColumnName());
 	}
 
 	public CompletableFuture<MOrg> organization(T entity, DataFetchingEnvironment environment) {

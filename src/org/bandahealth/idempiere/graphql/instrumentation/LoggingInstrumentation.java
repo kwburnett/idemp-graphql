@@ -16,7 +16,8 @@ public class LoggingInstrumentation extends SimpleInstrumentation {
 		return new SimpleInstrumentationContext<>(){
 			@Override
 			public void onCompleted(ExecutionResult result, Throwable t) {
-				logger.info(parameters.getQuery() + " execution time (ms): " + (System.currentTimeMillis() - startMillis));
+				logger.info(parameters.getQuery().replace("\r", "").replace("\n", "") +
+						" execution time (ms): " + (System.currentTimeMillis() - startMillis));
 			}
 		};
 	}

@@ -11,6 +11,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MRefList;
 import org.compiere.util.Env;
 import org.dataloader.DataLoader;
@@ -49,8 +50,8 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		final DataLoader<String, MRefList> dataLoader =
 				environment.getDataLoaderRegistry()
 						.getDataLoader(ReferenceListDataLoader.NHIF_TYPE_DATA_LOADER);
-		if (entity.getBH_NHIF_Type() == null) {
-			return CompletableFuture.supplyAsync(() -> new MRefList(Env.getCtx(), 0, null));
+		if (StringUtil.isNullOrEmpty(entity.getBH_NHIF_Type())) {
+			return null;
 		}
 		return dataLoader.load(entity.getBH_NHIF_Type());
 	}
@@ -59,6 +60,9 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 		final DataLoader<String, MRefList> dataLoader =
 				environment.getDataLoaderRegistry()
 						.getDataLoader(ReferenceListDataLoader.NHIF_RELATIONSHIP_DATA_LOADER);
+		if (StringUtil.isNullOrEmpty(entity.getbh_nhif_relationship())) {
+			return null;
+		}
 		return dataLoader.load(entity.getbh_nhif_relationship());
 	}
 
