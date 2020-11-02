@@ -6,6 +6,13 @@ import org.dataloader.CacheMap;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This is a wrapper for the Caffeine cache (or whichever is used) that implements the GraphQL Java interface. This
+ * allows us to cache whatever we'd like
+ *
+ * @param <U> The key type of the cache.
+ * @param <V> The value type of entities stored in the cache.
+ */
 public class BandaCache<U, V> implements CacheMap<U, V> {
 	private final Cache<U, V> cache;
 

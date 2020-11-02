@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This is the specific context where we can add our own properties. This will be available to every resolver.
+ */
 public class BandaGraphQLContext implements GraphQLServletContext {
 
 	private final int userId;

@@ -12,11 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
 import javax.websocket.server.HandshakeRequest;
 
+/**
+ * Responsible for building the Banda-specific context and initializing any needed data to be made available on the
+ * context.
+ */
 public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder {
 
-	CLogger logger = CLogger.getCLogger(BandaGraphQLContextBuilder.class);
-
 	private final BandaDataLoaderComposer bandaDataLoaderComposer;
+	CLogger logger = CLogger.getCLogger(BandaGraphQLContextBuilder.class);
 
 	public BandaGraphQLContextBuilder() {
 		logger.warning("Constructing GraphQL Context");
