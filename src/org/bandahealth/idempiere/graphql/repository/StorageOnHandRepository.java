@@ -109,7 +109,7 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	}
 
 	@Override
-	public MStorageOnHand save(StorageOnHandInput entity) {
+	public MStorageOnHand mapInputModelToModel(StorageOnHandInput entity) {
 		MStorageOnHand storageOnHand = getByUuid(entity.getM_StorageOnHand_UU());
 		if (storageOnHand == null) {
 			throw new AdempiereException("Storage entity not specified");

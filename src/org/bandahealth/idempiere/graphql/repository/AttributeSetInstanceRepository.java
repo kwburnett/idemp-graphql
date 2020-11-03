@@ -22,7 +22,7 @@ public class AttributeSetInstanceRepository extends BaseRepository<MAttributeSet
 	}
 
 	@Override
-	public MAttributeSetInstance save(AttributeSetInstanceInput entity) {
+	public MAttributeSetInstance mapInputModelToModel(AttributeSetInstanceInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

@@ -16,7 +16,7 @@ public class AttributeSetRepository extends BaseRepository<MAttributeSet, Attrib
 	}
 
 	@Override
-	public MAttributeSet save(AttributeSetInput entity) {
+	public MAttributeSet mapInputModelToModel(AttributeSetInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

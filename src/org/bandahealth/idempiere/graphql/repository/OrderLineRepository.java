@@ -41,7 +41,8 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 		});
 	}
 
-	public MOrderLine_BH save(OrderLineInput entity) {
+	@Override
+	public MOrderLine_BH mapInputModelToModel(OrderLineInput entity) {
 		MOrderLine_BH orderLine = getByUuid(entity.getC_OrderLine_UU());
 		if (orderLine == null) {
 			orderLine = new MOrderLine_BH(Env.getCtx(), 0, null);
@@ -74,10 +75,6 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 		ModelUtil.setPropertyIfPresent(entity.getBH_Expiration(), orderLine::setBH_Expiration);
 		ModelUtil.setPropertyIfPresent(entity.getBH_Instructions(), orderLine::setBH_Instructions);
 		ModelUtil.setPropertyIfPresent(entity.isActive(), orderLine::setIsActive);
-
-		orderLine.saveEx();
-
-		cache.delete(orderLine.get_ID());
 
 		return orderLine;
 	}

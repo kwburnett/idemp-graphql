@@ -4,6 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MProcessPara;
 import org.compiere.model.MRefList;
 import org.compiere.model.MReference;
@@ -26,7 +27,8 @@ public class ProcessParameterResolver extends BaseResolver<MProcessPara> impleme
 				.getDataLoader(ReferenceListDataLoader.REFERENCE_LIST_BY_REFERENCE_DATA_LOADER);
 		CompletableFuture<List<MRefList>> referenceValues = dataLoader.load(entity.getAD_Reference_Value_ID());
 		return reference(entity, environment).thenCombine(referenceValues, (reference, referenceList) -> {
-			if (reference.getName().equalsIgnoreCase("List")) {
+			if (reference != null && !StringUtil.isNullOrEmpty(reference.getName()) &&
+					reference.getName().equalsIgnoreCase("List")) {
 				return referenceList;
 			}
 			return new ArrayList<>();

@@ -39,7 +39,8 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 		});
 	}
 
-	public MInvoiceLine save(InvoiceLineInput entity) {
+	@Override
+	public MInvoiceLine mapInputModelToModel(InvoiceLineInput entity) {
 		MInvoiceLine invoiceLine = getByUuid(entity.getC_InvoiceLine_UU());
 		if (invoiceLine == null) {
 			invoiceLine = new InvoiceLineInput();
@@ -71,10 +72,6 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 		ModelUtil.setPropertyIfPresent(entity.getM_AttributeSetInstance_ID(), invoiceLine::setM_AttributeSetInstance_ID);
 		ModelUtil.setPropertyIfPresent(entity.isActive(), invoiceLine::setIsActive);
 		ModelUtil.setPropertyIfPresent(entity.getDescription(), invoiceLine::setDescription);
-
-		invoiceLine.saveEx();
-
-		cache.delete(invoiceLine.get_ID());
 
 		return invoiceLine;
 	}

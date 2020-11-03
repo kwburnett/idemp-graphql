@@ -4,6 +4,7 @@ import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.apache.commons.io.FileUtils;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
+import org.bandahealth.idempiere.base.model.MPayment_BH;
 import org.bandahealth.idempiere.base.process.ExpenseProcess;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
@@ -47,6 +48,8 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	public static final String STOCK_DISCREPANCY_REPORT = "Stock Discrepancy Report";
 	public static final String DONOR_FUND_REPORT = "Donor Fund Report";
 	public static final String DEBT_PAYMENT_RECEIPT = "Debt Payment Receipt";
+	public static final String PAYMENT_TRAIL_REPORT = "Payment Trail report";
+	public static final String DIAGNOSIS_REPORT = "Diagnosis Report";
 
 	public final static String PROCESSING_MESSAGE = "Processing Transaction";
 
@@ -147,6 +150,20 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 			if (referenceForParameter.getName().equalsIgnoreCase("Date")) {
 				parameter = DateUtil.parseDate(processInfoParameter.getParameter().toString());
 			}
+			// Until we update reports to use UUIDs, we have to do this bad stuff
+			if (processParameter.getName().toLowerCase().endsWith("id")) {
+				if (process.getName().equalsIgnoreCase(THERMAL_RECEIPT_REPORT)) {
+					MOrder_BH order = new Query(Env.getCtx(), MOrder_BH.Table_Name,
+							MOrder_BH.COLUMNNAME_C_Order_UU + "=?", null)
+							.setParameters(parameter.toString()).first();
+					parameter = BigDecimal.valueOf(order.get_ID());
+				} else if (process.getName().equalsIgnoreCase(DEBT_PAYMENT_RECEIPT)) {
+					MPayment_BH payment = new Query(Env.getCtx(), MPayment_BH.Table_Name,
+							MPayment_BH.COLUMNNAME_C_Payment_UU + "=?", null)
+							.setParameters(parameter.toString()).first();
+					parameter = BigDecimal.valueOf(payment.get_ID());
+				}
+			}
 			// Create a new process info parameter with the name fetched from MProcessParam
 			processedInfoParameters.add(new ProcessInfoParameter(
 					processParametersByUuidMap.get(processInfoParameter.getProcessParameter().getAD_Process_Para_UU()).getName(),
@@ -198,6 +215,8 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 			add(STOCK_DISCREPANCY_REPORT);
 			add(DONOR_FUND_REPORT);
 			add(DEBT_PAYMENT_RECEIPT);
+			add(PAYMENT_TRAIL_REPORT);
+			add(DIAGNOSIS_REPORT);
 		}};
 
 		String reportNameList = reportNames.stream().map(reportName -> "'" + reportName + "'")
@@ -329,7 +348,7 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	}
 
 	@Override
-	public MProcess save(ProcessInput entity) {
+	public MProcess mapInputModelToModel(ProcessInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

@@ -9,6 +9,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MLocation;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
@@ -47,6 +48,9 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	public CompletableFuture<MRefList> nhifRelationship(MBPartner_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ReferenceListDataLoader.NHIF_RELATIONSHIP_DATA_LOADER);
+		if (StringUtil.isNullOrEmpty(entity.getbh_nhif_relationship())) {
+			return null;
+		}
 		return dataLoader.load(entity.getbh_nhif_relationship());
 	}
 
@@ -61,6 +65,9 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	public CompletableFuture<MRefList> nhifType(MBPartner_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ReferenceListDataLoader.NHIF_TYPE_DATA_LOADER);
+		if (StringUtil.isNullOrEmpty(entity.getBH_NHIF_Type())) {
+			return null;
+		}
 		return dataLoader.load(entity.getBH_NHIF_Type());
 	}
 

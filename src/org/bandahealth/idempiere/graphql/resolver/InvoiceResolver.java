@@ -4,6 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.*;
 import org.bandahealth.idempiere.graphql.dataloader.impl.*;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
@@ -35,6 +36,9 @@ public class InvoiceResolver extends BaseResolver<MInvoice_BH> implements GraphQ
 	public CompletableFuture<MRefList> paymentType(MInvoice_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<String, MRefList> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(ReferenceListDataLoader.INVOICE_PAYMENT_TYPE_DATA_LOADER);
+		if (StringUtil.isNullOrEmpty(entity.getPaymentRule())) {
+			return null;
+		}
 		return dataLoader.load(entity.getPaymentRule());
 	}
 }

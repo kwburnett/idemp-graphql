@@ -23,7 +23,6 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 
 	private final InvoiceLineRepository invoiceLineRepository;
 	private final BusinessPartnerRepository businessPartnerRepository;
-	private final PaymentRepository paymentRepository;
 	private final ProcessRepository processRepository;
 
 	private final String businessPartnerJoin = "JOIN " + MBPartner_BH.Table_Name + " ON " + MBPartner_BH.Table_Name +
@@ -33,7 +32,6 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 	public InvoiceRepository() {
 		invoiceLineRepository = new InvoiceLineRepository();
 		businessPartnerRepository = new BusinessPartnerRepository();
-		paymentRepository = new PaymentRepository();
 		processRepository = new ProcessRepository();
 	}
 
@@ -66,7 +64,8 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 		return new InvoiceInput();
 	}
 
-	public MInvoice_BH save(InvoiceInput entity) {
+	@Override
+	public MInvoice_BH mapInputModelToModel(InvoiceInput entity) {
 		try {
 			MInvoice_BH invoice = getByUuid(entity.getC_Invoice_UU());
 			if (invoice == null) {
@@ -99,31 +98,31 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 				invoice.setC_DocTypeTarget_ID(apInvoiceId);
 			}
 
-			invoice.saveEx();
-
-			List<String> invoiceLineUuidsToKeep = new ArrayList<>();
-			// persist product/service/charge invoice lines
-			List<InvoiceLineInput> invoiceLines = entity.getInvoiceLines();
-			if (invoiceLines != null && !invoiceLines.isEmpty()) {
-				for (InvoiceLineInput invoiceLine : invoiceLines) {
-					invoiceLine.setC_Invoice_ID(invoice.get_ID());
-					invoiceLineUuidsToKeep.add(invoiceLineRepository.save(invoiceLine).getC_InvoiceLine_UU());
-				}
-			}
-
-			// delete invoice lines not in request
-			invoiceLineRepository.deleteByInvoice(invoice.get_ID(), invoiceLineUuidsToKeep);
-
-			cache.delete(invoice.get_ID());
-
-			return getByUuid(invoice.getC_Invoice_UU());
-
+			return invoice;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.severe(ex.getMessage());
 
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}
+	}
+
+	@Override
+	public MInvoice_BH afterSave(InvoiceInput inputEntity, MInvoice_BH entity) {
+		List<String> invoiceLineUuidsToKeep = new ArrayList<>();
+		// persist product/service/charge invoice lines
+		List<InvoiceLineInput> invoiceLines = inputEntity.getInvoiceLines();
+		if (invoiceLines != null && !invoiceLines.isEmpty()) {
+			for (InvoiceLineInput invoiceLine : invoiceLines) {
+				invoiceLine.setC_Invoice_ID(entity.get_ID());
+				invoiceLineUuidsToKeep.add(invoiceLineRepository.save(invoiceLine).getC_InvoiceLine_UU());
+			}
+		}
+
+		// delete invoice lines not in request
+		invoiceLineRepository.deleteByInvoice(entity.get_ID(), invoiceLineUuidsToKeep);
+
+		return entity;
 	}
 
 	public MInvoice_BH saveCustomerInvoice(InvoiceInput entity) {

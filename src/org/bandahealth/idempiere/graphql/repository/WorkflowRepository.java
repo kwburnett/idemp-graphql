@@ -10,7 +10,7 @@ public class WorkflowRepository extends BaseRepository<MWorkflow, MWorkflow> {
 	}
 
 	@Override
-	public MWorkflow save(MWorkflow entity) {
+	public MWorkflow mapInputModelToModel(MWorkflow entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

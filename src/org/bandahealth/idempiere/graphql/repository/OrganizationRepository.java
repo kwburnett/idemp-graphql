@@ -11,7 +11,7 @@ public class OrganizationRepository extends BaseRepository<MOrg, MOrg> {
 	}
 
 	@Override
-	public MOrg save(MOrg entity) {
+	public MOrg mapInputModelToModel(MOrg entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

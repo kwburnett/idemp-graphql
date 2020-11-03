@@ -10,7 +10,7 @@ public class ChargeTypeRepository extends BaseRepository<MChargeType_BH, ChargeT
 	}
 
 	@Override
-	public MChargeType_BH save(ChargeTypeInput entity) {
+	public MChargeType_BH mapInputModelToModel(ChargeTypeInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

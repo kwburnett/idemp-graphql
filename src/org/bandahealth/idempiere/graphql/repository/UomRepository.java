@@ -10,7 +10,7 @@ public class UomRepository extends BaseRepository<MUOM, MUOM> {
 	}
 
 	@Override
-	public MUOM save(MUOM entity) {
+	public MUOM mapInputModelToModel(MUOM entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

@@ -14,12 +14,17 @@ public class ReferenceRepository extends BaseRepository<MReference, MReference> 
 	}
 
 	@Override
-	public MReference save(MReference entity) {
+	public MReference mapInputModelToModel(MReference entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	public List<MReference> getByUuids(List<String> uuids) {
 		return getBaseQuery(MReference.COLUMNNAME_AD_Reference_UU + " IN (" +
 				uuids.stream().map(uuid -> "'" + uuid + "'").collect(Collectors.joining(","))).list();
+	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
 	}
 }

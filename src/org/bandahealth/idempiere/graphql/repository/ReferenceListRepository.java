@@ -112,7 +112,12 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 	}
 
 	@Override
-	public MRefList save(ReferenceListInput entity) {
+	public MRefList mapInputModelToModel(ReferenceListInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
 	}
 }

@@ -10,7 +10,7 @@ public class WarehouseRepository extends BaseRepository<MWarehouse, MWarehouse> 
 	}
 
 	@Override
-	public MWarehouse save(MWarehouse entity) {
+	public MWarehouse mapInputModelToModel(MWarehouse entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

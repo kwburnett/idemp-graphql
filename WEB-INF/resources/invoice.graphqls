@@ -12,7 +12,7 @@ type Invoice {
   isExpense: Boolean
   description: String
   invoiceLines: [InvoiceLine!]
-  paymentType: ReferenceList!
+  paymentType: ReferenceList
   # iDempiere's DocStatus i.e Drafted, InProgress, Completed, Voided etc
   docStatus: ReferenceList!
 }

@@ -10,7 +10,7 @@ public class LocatorRepository extends BaseRepository<MLocator, MLocator> {
 	}
 
 	@Override
-	public MLocator save(MLocator entity) {
+	public MLocator mapInputModelToModel(MLocator entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

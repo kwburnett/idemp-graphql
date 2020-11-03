@@ -10,7 +10,7 @@ public class FormRepository extends BaseRepository<MForm, MForm> {
 	}
 
 	@Override
-	public MForm save(MForm entity) {
+	public MForm mapInputModelToModel(MForm entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

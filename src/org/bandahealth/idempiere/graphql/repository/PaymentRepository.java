@@ -50,7 +50,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	}
 
 	@Override
-	public MPayment_BH save(PaymentInput entity) {
+	public MPayment_BH mapInputModelToModel(PaymentInput entity) {
 		MPayment_BH payment = getByUuid(entity.getC_Payment_UU());
 		if (payment == null) {
 			payment = getModelInstance();
@@ -112,11 +112,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		ModelUtil.setPropertyIfPresent(entity.getDateTrx(), payment::setDateTrx);
 		ModelUtil.setPropertyIfPresent(entity.isActive(), payment::setIsActive);
 
-		payment.saveEx();
-
-		cache.delete(payment.get_ID());
-
-		return getByUuid(payment.getC_Payment_UU());
+		return payment;
 	}
 
 	public Connection<MPayment_BH> getServiceDebtPayments(String filterJson, String sort, PagingInfo pagingInfo,

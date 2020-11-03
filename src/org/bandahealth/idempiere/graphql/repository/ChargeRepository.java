@@ -31,7 +31,7 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 	}
 
 	@Override
-	public MCharge_BH save(ChargeInput entity) {
+	public MCharge_BH mapInputModelToModel(ChargeInput entity) {
 		try {
 			MCharge_BH charge = getByUuid(entity.getC_Charge_UU());
 			if (charge == null) {
@@ -53,12 +53,7 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 				charge.setC_ChargeType_ID(entity.getChargeType().getC_ChargeType_ID());
 			}
 
-			charge.saveEx();
-
-			cache.delete(charge.get_ID());
-
-			return getByUuid(charge.getC_Charge_UU());
-
+			return charge;
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}

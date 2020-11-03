@@ -65,7 +65,8 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		return new MOrder_BH(Env.getCtx(), 0, null);
 	}
 
-	public MOrder_BH save(OrderInput entity) {
+	@Override
+	public MOrder_BH mapInputModelToModel(OrderInput entity) {
 		try {
 			MOrder_BH order = getByUuid(entity.getC_Order_UU());
 			if (order == null) {
@@ -119,50 +120,50 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 				order.setC_DocTypeTarget_ID(getPurchaseOrderDocumentTypeId());
 			}
 
-			order.saveEx();
-
-			List<String> orderLineUuidsToKeep = new ArrayList<>();
-			// persist product/service/charge order lines
-			List<OrderLineInput> orderLines = entity.getOrderLines();
-			if (orderLines != null && !orderLines.isEmpty()) {
-				for (OrderLineInput orderLine : orderLines) {
-					orderLine.setC_Order_ID(order.get_ID());
-					orderLineUuidsToKeep.add(orderLineRepository.save(orderLine).getC_OrderLine_UU());
-				}
-			}
-
-			// delete order lines not in request
-			orderLineRepository.deleteByOrder(order.get_ID(), orderLineUuidsToKeep);
-
-			// Handle payments for sales orders
-			if (order.isSOTrx()) {
-				// any post save operation
-				List<String> paymentUuidsToKeep = new ArrayList<>();
-				List<PaymentInput> payments = entity.getPayments();
-				if (payments != null && entity.isSOTrx()) {
-					for (PaymentInput payment : entity.getPayments()) {
-						payment.setC_Order_ID(order.get_ID());
-						if (businessPartner != null) {
-							payment.setC_BPartner_ID(businessPartner.getC_BPartner_ID());
-						}
-						paymentUuidsToKeep.add(paymentRepository.save(payment).getC_Payment_UU());
-					}
-				}
-
-				// delete payment lines not in request
-				paymentRepository.deleteByOrder(order.get_ID(), paymentUuidsToKeep);
-			}
-
-			cache.delete(order.get_ID());
-			MOrder_BH savedOrder = getByUuid(order.getC_Order_UU());
-			cache.set(savedOrder.getC_Order_UU(), savedOrder);
-			return savedOrder;
+			return order;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			logger.severe(ex.getMessage());
 
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}
+	}
+
+	@Override
+	public MOrder_BH afterSave(OrderInput inputEntity, MOrder_BH entity) {
+		List<String> orderLineUuidsToKeep = new ArrayList<>();
+		// persist product/service/charge order lines
+		List<OrderLineInput> orderLines = inputEntity.getOrderLines();
+		if (orderLines != null && !orderLines.isEmpty()) {
+			for (OrderLineInput orderLine : orderLines) {
+				orderLine.setC_Order_ID(entity.get_ID());
+				orderLineUuidsToKeep.add(orderLineRepository.save(orderLine).getC_OrderLine_UU());
+			}
+		}
+
+		// delete order lines not in request
+		orderLineRepository.deleteByOrder(entity.get_ID(), orderLineUuidsToKeep);
+
+		// Handle payments for sales orders
+		if (entity.isSOTrx()) {
+			// any post save operation
+			List<String> paymentUuidsToKeep = new ArrayList<>();
+			List<PaymentInput> payments = inputEntity.getPayments();
+			if (payments != null && inputEntity.isSOTrx()) {
+				for (PaymentInput payment : inputEntity.getPayments()) {
+					payment.setC_Order_ID(entity.get_ID());
+					if (entity.getC_BPartner_ID() > 0) {
+						payment.setC_BPartner_ID(entity.getC_BPartner_ID());
+					}
+					paymentUuidsToKeep.add(paymentRepository.save(payment).getC_Payment_UU());
+				}
+			}
+
+			// delete payment lines not in request
+			paymentRepository.deleteByOrder(entity.get_ID(), paymentUuidsToKeep);
+		}
+
+		return entity;
 	}
 
 	public MOrder_BH saveSalesOrder(OrderInput entity) {

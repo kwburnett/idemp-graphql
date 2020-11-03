@@ -13,7 +13,7 @@ public class ProductCategoryRepository extends BaseRepository<MProductCategory_B
 	}
 
 	@Override
-	public MProductCategory_BH save(ProductCategoryInput entity) {
+	public MProductCategory_BH mapInputModelToModel(ProductCategoryInput entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

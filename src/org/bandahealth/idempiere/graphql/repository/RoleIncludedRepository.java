@@ -10,7 +10,7 @@ public class RoleIncludedRepository extends BaseRepository<MRoleIncluded, MRoleI
 	}
 
 	@Override
-	public MRoleIncluded save(MRoleIncluded entity) {
+	public MRoleIncluded mapInputModelToModel(MRoleIncluded entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

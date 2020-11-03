@@ -21,7 +21,7 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 	}
 
 	@Override
-	public MRole save(MRole entity) {
+	public MRole mapInputModelToModel(MRole entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

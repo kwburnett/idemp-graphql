@@ -10,7 +10,12 @@ public class ProcessParameterRepository extends BaseRepository<MProcessPara, MPr
 	}
 
 	@Override
-	public MProcessPara save(MProcessPara entity) {
+	public MProcessPara mapInputModelToModel(MProcessPara entity) {
 		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
 	}
 }

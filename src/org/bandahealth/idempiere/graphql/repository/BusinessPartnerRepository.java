@@ -44,7 +44,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 	}
 
 	@Override
-	public MBPartner_BH save(BusinessPartnerInput entity) {
+	public MBPartner_BH mapInputModelToModel(BusinessPartnerInput entity) {
 		try {
 			MBPartner_BH businessPartner = getByUuid(entity.getC_BPartner_UU());
 			if (businessPartner == null) {
@@ -79,11 +79,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 			ModelUtil.setPropertyIfPresent(entity.getBH_Local_PatientID(), businessPartner::setBH_Local_PatientID);
 			ModelUtil.setPropertyIfPresent(entity.isActive(), businessPartner::setIsActive);
 
-			businessPartner.saveEx();
-
-			cache.delete(businessPartner.get_ID());
-
-			return getByUuid(businessPartner.getC_BPartner_UU());
+			return businessPartner;
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}

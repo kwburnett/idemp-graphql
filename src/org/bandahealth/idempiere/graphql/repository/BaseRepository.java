@@ -19,6 +19,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * The base repository that holds logic common to all repositories.
+ *
+ * @param <T> The iDempiere model that is used for DB interactions.
+ * @param <S> The input model for updates, if the iDempiere model itself isn't used.
+ */
 public abstract class BaseRepository<T extends PO, S extends T> {
 
 	public final BandaCache<Object, Object> cache;
@@ -33,7 +39,58 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 
 	public abstract T getModelInstance();
 
-	public abstract T save(S entity);
+	/**
+	 * This method can be overridden, but it maps entities, saves them, updates the cache, and returns the updated DB
+	 * entity.
+	 *
+	 * @param inputEntity The input model to save.
+	 * @return The updated DB model.
+	 */
+	public T save(S inputEntity) {
+		T updatedEntity = mapInputModelToModel(inputEntity);
+		updatedEntity.saveEx();
+		updatedEntity = getByUuid((String) updatedEntity.get_Value(updatedEntity.getUUIDColumnName()));
+		afterSave(inputEntity, updatedEntity);
+		updateCacheAfterSave(updatedEntity);
+		return updatedEntity;
+	}
+
+	/**
+	 * Map the input entity to the DB entity. Usually for field mapping.
+	 *
+	 * @param entity The input entity to eventually be saved.
+	 * @return A mapped DB entity ready to be saved
+	 */
+	public abstract T mapInputModelToModel(S entity);
+
+	/**
+	 * Handle any after-save logic, such as saving dependent entities.
+	 *
+	 * @param inputEntity The original entity that was passed in to be saved.
+	 * @param entity      The saved DB entity.
+	 * @return The updated entity, if any updates were needed.
+	 */
+	public T afterSave(S inputEntity, T entity) {
+		return null;
+	}
+
+	/**
+	 * This method handles dealing with items stored in the cache for this entity. For the getById methods, the entity
+	 * is stored by the UUID. For the resolver methods, the entity is stored by it's DB ID. So, they both need to be
+	 * cleared and updated.
+	 *
+	 * @param entity The updated and saved entity to the DB.
+	 */
+	public void updateCacheAfterSave(T entity) {
+		// Only update things if they exist already so the cache doesn't become too full with unnecessary objects
+		if (cache.containsKey(entity.get_ID())) {
+			cache.set(entity.get_ID(), entity);
+		}
+		Object uuid = entity.get_Value(entity.getUUIDColumnName());
+		if (cache.containsKey(uuid)) {
+			cache.set(uuid, entity);
+		}
+	}
 
 	/**
 	 * Override this in child classes if the client ID in the context should not be added by default

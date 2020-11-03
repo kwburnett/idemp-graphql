@@ -24,7 +24,7 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 	}
 
 	@Override
-	public MHomeScreenButton save(MHomeScreenButton entity) {
+	public MHomeScreenButton mapInputModelToModel(MHomeScreenButton entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

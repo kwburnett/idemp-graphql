@@ -13,7 +13,7 @@ public class UserRepository extends BaseRepository<MUser_BH, MUser_BH> {
 	}
 
 	@Override
-	public MUser_BH save(MUser_BH entity) {
+	public MUser_BH mapInputModelToModel(MUser_BH entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

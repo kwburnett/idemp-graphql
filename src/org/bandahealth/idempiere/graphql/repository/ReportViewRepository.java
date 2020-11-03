@@ -10,7 +10,7 @@ public class ReportViewRepository extends BaseRepository<MReportView, MReportVie
 	}
 
 	@Override
-	public MReportView save(MReportView entity) {
+	public MReportView mapInputModelToModel(MReportView entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

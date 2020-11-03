@@ -25,11 +25,28 @@ public class AccountRepository extends BaseRepository<MElementValue, AccountInpu
 			ModelUtil.setPropertyIfPresent(entity.isActiva(), account::setIsActive);
 
 			account.saveEx();
+			MElementValue savedAccount = getByUuid(account.getC_ElementValue_UU());
+			updateCacheAfterSave(savedAccount);
 
-			cache.delete(account.get_ID());
+			return savedAccount;
+		} catch (Exception ex) {
+			throw new AdempiereException(ex.getLocalizedMessage());
+		}
+	}
 
-			return getByUuid(account.getC_ElementValue_UU());
+	@Override
+	public MElementValue mapInputModelToModel(AccountInput entity) {
+		try {
+			MElementValue account = getByUuid(entity.getC_ElementValue_UU());
+			if (account == null) {
+				account = getModelInstance();
+			}
 
+			ModelUtil.setPropertyIfPresent(entity.getName(), account::setName);
+			ModelUtil.setPropertyIfPresent(entity.getDescription(), account::setDescription);
+			ModelUtil.setPropertyIfPresent(entity.isActiva(), account::setIsActive);
+
+			return account;
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}

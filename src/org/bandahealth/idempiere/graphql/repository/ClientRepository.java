@@ -11,7 +11,7 @@ public class ClientRepository extends BaseRepository<MClient, MClient> {
 	}
 
 	@Override
-	public MClient save(MClient entity) {
+	public MClient mapInputModelToModel(MClient entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

@@ -75,7 +75,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	}
 
 	@Override
-	public MProduct_BH save(ProductInput entity) {
+	public MProduct_BH mapInputModelToModel(ProductInput entity) {
 		try {
 			MProduct_BH product = getByUuid(entity.getM_Product_UU());
 			if (product == null) {
@@ -127,11 +127,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 
 			product.setIsActive(entity.isActive());
 
-			product.saveEx();
-
-			cache.delete(product.get_ID());
-
-			return getByUuid(product.getM_Product_UU());
+			return product;
 		} catch (Exception ex) {
 			throw new AdempiereException(ex.getLocalizedMessage());
 		}
