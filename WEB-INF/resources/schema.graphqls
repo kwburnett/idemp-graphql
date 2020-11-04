@@ -11,6 +11,7 @@ type PagingInfo {
 
 type Query {
   # Accounts
+  account(id: String!): Account!
   accounts(filter: String, sort: String, page: Int, pageSize: Int): AccountConnection!
   # Business Partners
   businessPartner(id: String!): BusinessPartner
