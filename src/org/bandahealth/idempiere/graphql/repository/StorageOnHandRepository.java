@@ -135,8 +135,8 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 		// query to improve performance
 		boolean wasGuaranteeDateClauseMoved = false;
 		int numberOfParametersAfterGuaranteeDate = 0;
-		if (additionalWhereClause.toLowerCase().contains((MAttributeSetInstance.Table_Name + "." +
-				MAttributeSetInstance.COLUMNNAME_GuaranteeDate).toLowerCase())) {
+		if (additionalWhereClause != null && additionalWhereClause.toLowerCase().contains(
+				(MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_GuaranteeDate).toLowerCase())) {
 			wasGuaranteeDateClauseMoved = true;
 			int indexOfAliasForGuaranteeDate = additionalWhereClause.toLowerCase().indexOf(
 					(MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_GuaranteeDate).toLowerCase());
