@@ -30,6 +30,11 @@ public class ProductQuery implements GraphQLQueryResolver {
 		return productRepository.getItems(filter, sort, new PagingInfo(page, pageSize), environment);
 	}
 
+	public Connection<MProduct_BH> products(String filter, String sort, int page, int pageSize,
+			DataFetchingEnvironment environment) {
+		return productRepository.get(filter, sort, new PagingInfo(page, pageSize), environment);
+	}
+
 	public Connection<MProduct_BH> services(String filter, String sort, int page, int pageSize,
 			DataFetchingEnvironment environment) {
 		return productRepository.getServices(filter, sort, new PagingInfo(page, pageSize), environment);

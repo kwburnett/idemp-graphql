@@ -46,6 +46,8 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 			MStorageOnHand.COLUMNNAME_M_StorageOnHand_UU,
 			MStorageOnHand.COLUMNNAME_DateMaterialPolicy
 	);
+	private final String unmodifiedTableAlias = "usoh";
+	private final String modifiedTableAlias = "msoh";
 	/**
 	 * This generates a query like the following:
 	 * SELECT
@@ -79,7 +81,7 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	 * AND groupsoh.m_locator_id = soh.m_locator_id
 	 * AND groupsoh.m_attributesetinstance_id = soh.m_attributesetinstance_id
 	 */
-	private static final String tableQuery = "SELECT " + UNMODIFIED_COLUMNS.stream().map(unmodifiedColumn ->
+	private final String tableQuery = "SELECT " + UNMODIFIED_COLUMNS.stream().map(unmodifiedColumn ->
 			"usoh." + unmodifiedColumn).collect(Collectors.joining(",")) + "," + MODIFIED_COLUMNS.keySet().stream()
 			.map(modifiedColumnName -> "msoh." + modifiedColumnName).collect(Collectors.joining(",")) + " FROM " +
 			MStorageOnHand.Table_Name + " usoh INNER JOIN (SELECT " +
@@ -128,7 +130,31 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 				.collect(Collectors.joining(","))).append(",").append(MODIFIED_COLUMNS.keySet().stream()
 				.map(modifiedColumn -> MStorageOnHand.Table_Name + "." + modifiedColumn)
 				.collect(Collectors.joining(",")));
-		String sqlFromAndJoin = " FROM (" + tableQuery + ") AS " + MStorageOnHand.Table_Name + getDefaultJoinClause();
+		StringBuilder sqlFromAndJoin = new StringBuilder(" FROM (").append(tableQuery);
+		// If there is anything dealing with guarantee date in the where clause, it should be moved into this table
+		// query to improve performance
+		boolean wasGuaranteeDateClauseMoved = false;
+		int numberOfParametersAfterGuaranteeDate = 0;
+		if (additionalWhereClause.toLowerCase().contains((MAttributeSetInstance.Table_Name + "." +
+				MAttributeSetInstance.COLUMNNAME_GuaranteeDate).toLowerCase())) {
+			wasGuaranteeDateClauseMoved = true;
+			int indexOfAliasForGuaranteeDate = additionalWhereClause.toLowerCase().indexOf(
+					(MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_GuaranteeDate).toLowerCase());
+			int indexOfEndOfGuaranteeDateClause = additionalWhereClause.indexOf("?", indexOfAliasForGuaranteeDate) + 1;
+			String guaranteeDateWhereClause = additionalWhereClause.substring(indexOfAliasForGuaranteeDate,
+					indexOfEndOfGuaranteeDateClause);
+			int indexToSearchForParametersFrom = indexOfEndOfGuaranteeDateClause;
+			while (additionalWhereClause.indexOf("?", indexToSearchForParametersFrom) > -1) {
+				indexToSearchForParametersFrom = additionalWhereClause.indexOf("?", indexToSearchForParametersFrom) + 1;
+				numberOfParametersAfterGuaranteeDate++;
+			}
+			// Replace the condition we pulled out to just be
+			additionalWhereClause = additionalWhereClause.replace(guaranteeDateWhereClause, "1=1");
+			int indexOfAliasSeparator = guaranteeDateWhereClause.indexOf(".");
+			sqlFromAndJoin.append(" WHERE ").append(modifiedTableAlias)
+					.append(guaranteeDateWhereClause.substring(indexOfAliasSeparator));
+		}
+		sqlFromAndJoin.append(") AS ").append(MStorageOnHand.Table_Name).append(getDefaultJoinClause());
 
 		// Since the JOIN clause was added, add any parameters
 		final List<Object> parametersToUse = new ArrayList<>();
@@ -160,6 +186,15 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 					parametersToUse.add(parameter);
 				}
 			});
+		}
+
+		// Now we might need to move some parameters around
+		if (wasGuaranteeDateClauseMoved) {
+			// Remove the parameter from the list
+			Object guaranteeDateParameter = parametersToUse.remove(parametersToUse.size() - 1
+					- numberOfParametersAfterGuaranteeDate);
+			// Add it to the front of the list, since it'll be first before even any JOIN clause parameters
+			parametersToUse.add(0, guaranteeDateParameter);
 		}
 
 		String sqlFromJoinAndWhereClause = sqlFromAndJoin + sqlWhere.toString();

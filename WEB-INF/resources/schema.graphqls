@@ -40,6 +40,7 @@ type Query {
   # Products
   items(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   product(id: String!): Product
+  products(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection
   services(filter: String, sort: String, page: Int, pageSize: Int): ProductConnection!
   # Product Categories
   productCategories: [ProductCategory!]!
