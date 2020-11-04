@@ -52,6 +52,8 @@ public class FilterUtil {
 	 * "$ntext": text exclusion filter value
 	 * "$null": column is null filter value
 	 * "$nnull": column is not null filter value
+	 * "$sw": text search starts with
+	 * "$nsw": text search not starts with
 	 * }
 	 * }
 	 * NOTE: ID columns (i.e. ones that end in _ID) are not allowed to be filtered and will be skipped
@@ -346,6 +348,14 @@ public class FilterUtil {
 					case "$ntext":
 						whereClause.append("LOWER(").append(dbColumnName).append(")").append(negate ? " " : " NOT ")
 								.append("LIKE '%").append(filterValue.toString().toLowerCase()).append("%'");
+						break;
+					case "$sw":
+						whereClause.append("LOWER(").append(dbColumnName).append(")").append(negate ? " NOT " : " ")
+								.append("LIKE '").append(filterValue.toString().toLowerCase()).append("%'");
+						break;
+					case "$nsw":
+						whereClause.append("LOWER(").append(dbColumnName).append(")").append(negate ? " " : " NOT ")
+								.append("LIKE '").append(filterValue.toString().toLowerCase()).append("%'");
 						break;
 					case "$null":
 						whereClause.append(dbColumnName).append(" IS").append(negate ? " NOT " : " ").append("NULL");
