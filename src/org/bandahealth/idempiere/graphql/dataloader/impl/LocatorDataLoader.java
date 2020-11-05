@@ -42,7 +42,7 @@ public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, Locato
 		return locatorRepository;
 	}
 
-	private MappedBatchLoader<Integer, List<MLocator>> getByWarehouseBatchLoader() {
+	private MappedBatchLoader<String, List<MLocator>> getByWarehouseBatchLoader() {
 		return keys -> locatorRepository.getGroupsByIdsCompletableFuture(MLocator::getM_Warehouse_ID,
 				MLocator.COLUMNNAME_M_Warehouse_ID, keys);
 	}

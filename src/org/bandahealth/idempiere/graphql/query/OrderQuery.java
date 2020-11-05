@@ -20,7 +20,7 @@ public class OrderQuery implements GraphQLQueryResolver {
 		orderRepository = new OrderRepository();
 	}
 
-	public CompletableFuture<MOrder_BH> order(String id,	DataFetchingEnvironment environment) {
+	public CompletableFuture<MOrder_BH> order(String id, DataFetchingEnvironment environment) {
 		final DataLoader<String, MOrder_BH> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(OrderDataLoader.ORDER_BY_UUID_DATA_LOADER);
 		return dataLoader.load(id);

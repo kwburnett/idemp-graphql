@@ -43,8 +43,8 @@ public class OrderDataLoader extends BaseDataLoader<MOrder_BH, OrderInput, Order
 				DataLoader.newMappedDataLoader(getSalesOrderByBusinessPartnerBatchLoader(), getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MOrder_BH>> getSalesOrderByBusinessPartnerBatchLoader() {
-		return keys -> orderRepository.getGroupsByIdsCompletableFuture(MOrder_BH::getC_BPartner_ID, MOrder_BH.COLUMNNAME_C_BPartner_ID,
-				keys);
+	private MappedBatchLoader<String, List<MOrder_BH>> getSalesOrderByBusinessPartnerBatchLoader() {
+		return keys -> orderRepository.getGroupsByIdsCompletableFuture(MOrder_BH::getC_BPartner_ID,
+				MOrder_BH.COLUMNNAME_C_BPartner_ID, keys);
 	}
 }

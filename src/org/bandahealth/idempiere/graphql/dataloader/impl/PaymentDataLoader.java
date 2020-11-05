@@ -46,11 +46,11 @@ public class PaymentDataLoader extends BaseDataLoader<MPayment_BH, PaymentInput,
 				.newMappedDataLoader(getByBusinessPartnerBatchLoader(), getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MPayment_BH>> getBatchLoader() {
+	private MappedBatchLoader<String, List<MPayment_BH>> getBatchLoader() {
 		return paymentRepository::getByOrderIds;
 	}
 
-	private MappedBatchLoader<Integer, List<MPayment_BH>> getByBusinessPartnerBatchLoader() {
+	private MappedBatchLoader<String, List<MPayment_BH>> getByBusinessPartnerBatchLoader() {
 		return keys -> paymentRepository.getGroupsByIdsCompletableFuture(MPayment_BH::getC_BPartner_ID,
 				MPayment_BH.COLUMNNAME_C_BPartner_ID, keys);
 	}

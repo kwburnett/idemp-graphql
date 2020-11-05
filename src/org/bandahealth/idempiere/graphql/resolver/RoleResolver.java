@@ -6,6 +6,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.RoleDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
 import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
 import org.bandahealth.idempiere.graphql.repository.RoleRepository;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MRole;
 import org.compiere.model.MRoleIncluded;
 import org.dataloader.DataLoader;
@@ -36,8 +37,8 @@ public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver
 	}
 
 	private CompletableFuture<List<MRoleIncluded>> rolesIncluded(MRole entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MRoleIncluded>> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<String, List<MRoleIncluded>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(RoleIncludedDataLoader.ROLE_INCLUDED_BY_ROLE_DATA_LOADER);
-		return dataLoader.load(entity.getAD_Role_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Role_ID()));
 	}
 }

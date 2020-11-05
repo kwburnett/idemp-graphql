@@ -9,6 +9,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MLocation;
 import org.compiere.model.MRefList;
@@ -32,9 +33,9 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	}
 
 	public CompletableFuture<MLocation> location(MBPartner_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MLocation> dataLoader =
+		final DataLoader<String, MLocation> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(LocationDataLoader.LOCATION_BY_ID_DATA_LOADER);
-		return dataLoader.load(entity.getBH_C_Location_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getBH_C_Location_ID()));
 	}
 
 	public String gender(MBPartner_BH entity) {
@@ -92,9 +93,9 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	}
 
 	public CompletableFuture<List<MOrder_BH>> salesOrders(MBPartner_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MOrder_BH>> dataLoader =
+		final DataLoader<String, List<MOrder_BH>> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.SALES_ORDER_BY_BUSINESS_PARTNER_DATA_LOADER);
-		return dataLoader.load(entity.getC_BPartner_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getC_BPartner_ID()));
 	}
 
 	public CompletableFuture<Integer> totalVisits(MBPartner_BH entity, DataFetchingEnvironment environment) {
@@ -108,8 +109,8 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	}
 
 	public CompletableFuture<List<MPayment_BH>> payments(MBPartner_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MPayment_BH>> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<String, List<MPayment_BH>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(PaymentDataLoader.PAYMENT_BY_BUSINESS_PARTNER_DATA_LOADER);
-		return dataLoader.load(entity.getC_BPartner_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getC_BPartner_ID()));
 	}
 }

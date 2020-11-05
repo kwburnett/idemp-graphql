@@ -6,6 +6,7 @@ import org.bandahealth.idempiere.base.model.MProductCategory_BH;
 import org.bandahealth.idempiere.base.model.MProduct_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ProductCategoryDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.StorageOnHandDataLoader;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;
 
@@ -45,9 +46,9 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 
 	public CompletableFuture<MProductCategory_BH> productCategory(MProduct_BH entity,
 			DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MProductCategory_BH> productCategoryDataLoader =
+		final DataLoader<String, MProductCategory_BH> productCategoryDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_BY_ID_DATA_LOADER);
-		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());
+		return productCategoryDataLoader.load(ModelUtil.getModelKey(entity, entity.getM_Product_Category_ID()));
 	}
 
 	public CompletableFuture<BigDecimal> totalQuantity(MProduct_BH entity, DataFetchingEnvironment environment) {
@@ -59,8 +60,8 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 
 	public CompletableFuture<List<MStorageOnHand>> storageOnHand(MProduct_BH entity,
 			DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MStorageOnHand>> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<String, List<MStorageOnHand>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(StorageOnHandDataLoader.STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER);
-		return dataLoader.load(entity.get_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.get_ID()));
 	}
 }

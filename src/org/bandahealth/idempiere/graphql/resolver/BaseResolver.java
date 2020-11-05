@@ -6,6 +6,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.ClientDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrganizationDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.UserDataLoader;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MClient;
 import org.compiere.model.MOrg;
 import org.compiere.model.MRefList;
@@ -20,9 +21,9 @@ import java.util.concurrent.CompletableFuture;
  */
 public class BaseResolver<T extends PO> {
 	public CompletableFuture<MClient> client(T entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MClient> clientDa =
+		final DataLoader<String, MClient> clientDa =
 				environment.getDataLoaderRegistry().getDataLoader(ClientDataLoader.CLIENT_BY_ID_DATA_LOADER);
-		return clientDa.load(entity.getAD_Client_ID());
+		return clientDa.load(ModelUtil.getModelKey(entity, entity.getAD_Client_ID()));
 	}
 
 	public String id(T entity) {
@@ -30,21 +31,21 @@ public class BaseResolver<T extends PO> {
 	}
 
 	public CompletableFuture<MOrg> organization(T entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MOrg> organizationDataLoader =
+		final DataLoader<String, MOrg> organizationDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(OrganizationDataLoader.ORGANIZATION_BY_ID_DATA_LOADER);
-		return organizationDataLoader.load(entity.getAD_Org_ID());
+		return organizationDataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Org_ID()));
 	}
 
 	public CompletableFuture<MUser_BH> createdBy(T entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MUser_BH> userDataLoader =
+		final DataLoader<String, MUser_BH> userDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_BY_ID_DATA_LOADER);
-		return userDataLoader.load(entity.getCreatedBy());
+		return userDataLoader.load(ModelUtil.getModelKey(entity, entity.getCreatedBy()));
 	}
 
 	public CompletableFuture<MUser_BH> updatedBy(T entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MUser_BH> userDataLoader =
+		final DataLoader<String, MUser_BH> userDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(UserDataLoader.USER_BY_ID_DATA_LOADER);
-		return userDataLoader.load(entity.getUpdatedBy());
+		return userDataLoader.load(ModelUtil.getModelKey(entity, entity.getUpdatedBy()));
 	}
 
 	public CompletableFuture<MRefList> docStatus(T entity, DataFetchingEnvironment environment) {

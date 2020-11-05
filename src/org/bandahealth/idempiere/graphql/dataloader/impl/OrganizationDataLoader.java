@@ -42,7 +42,8 @@ public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, Organizat
 				DataLoader.newMappedDataLoader(getOrganizationByClientBatchLoader(), getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MOrg>> getOrganizationByClientBatchLoader() {
-		return keys -> organizationRepository.getGroupsByIdsCompletableFuture(MOrg::getAD_Client_ID, MOrg.COLUMNNAME_AD_Client_ID, keys);
+	private MappedBatchLoader<String, List<MOrg>> getOrganizationByClientBatchLoader() {
+		return keys -> organizationRepository.getGroupsByIdsCompletableFuture(MOrg::getAD_Client_ID,
+				MOrg.COLUMNNAME_AD_Client_ID, keys);
 	}
 }

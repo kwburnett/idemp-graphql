@@ -43,7 +43,7 @@ public class InvoiceLineDataLoader extends BaseDataLoader<MInvoiceLine, InvoiceL
 				getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MInvoiceLine>> getByInvoiceBatchLoader() {
+	private MappedBatchLoader<String, List<MInvoiceLine>> getByInvoiceBatchLoader() {
 		return keys -> invoiceLineRepository.getGroupsByIdsCompletableFuture(MInvoiceLine::getC_Invoice_ID,
 				MInvoiceLine.COLUMNNAME_C_Invoice_ID, keys);
 	}

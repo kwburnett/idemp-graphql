@@ -4,6 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MProcessPara;
 import org.compiere.model.MRefList;
@@ -17,15 +18,16 @@ import java.util.concurrent.CompletableFuture;
 public class ProcessParameterResolver extends BaseResolver<MProcessPara> implements GraphQLResolver<MProcessPara> {
 
 	public CompletableFuture<MReference> reference(MProcessPara entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MReference> dataLoader =
+		final DataLoader<String, MReference> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ReferenceDataLoader.REFERENCE_BY_ID_DATA_LOADER);
-		return dataLoader.load(entity.getAD_Reference_ID());
+		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Reference_ID()));
 	}
 
 	public CompletableFuture<List<MRefList>> referenceValue(MProcessPara entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MRefList>> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<String, List<MRefList>> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(ReferenceListDataLoader.REFERENCE_LIST_BY_REFERENCE_DATA_LOADER);
-		CompletableFuture<List<MRefList>> referenceValues = dataLoader.load(entity.getAD_Reference_Value_ID());
+		CompletableFuture<List<MRefList>> referenceValues = dataLoader
+				.load(ModelUtil.getModelKey(entity, entity.getAD_Reference_Value_ID()));
 		return reference(entity, environment).thenCombine(referenceValues, (reference, referenceList) -> {
 			if (reference != null && !StringUtil.isNullOrEmpty(reference.getName()) &&
 					reference.getName().equalsIgnoreCase("List")) {

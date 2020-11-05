@@ -35,8 +35,9 @@ public class CacheFactory {
 	private BandaCache<Object, Object> createCache(Class<?> clazz) {
 		// Create a default cache
 		Cache<Object, Object> cacheToUse = Caffeine.newBuilder()
-				.expireAfterWrite(DEFAULT_CACHE_TIMEOUT_IN_MINUTES, TimeUnit.MINUTES).maximumSize(DEFAULT_CACHE_MAX_SIZE).build();
-		;
+				.expireAfterWrite(DEFAULT_CACHE_TIMEOUT_IN_MINUTES, TimeUnit.MINUTES).maximumSize(DEFAULT_CACHE_MAX_SIZE)
+				.build();
+
 		if (clazz.getName().equalsIgnoreCase(MRefList.class.getName())) {
 			cacheToUse = Caffeine.newBuilder().expireAfterWrite(Long.MAX_VALUE, TimeUnit.DAYS)
 					.maximumSize(DEFAULT_CACHE_MAX_SIZE).build();

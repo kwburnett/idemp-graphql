@@ -46,27 +46,26 @@ public class ReferenceListDataLoader extends BaseDataLoader<MRefList, ReferenceL
 
 	@Override
 	public void register(DataLoaderRegistry registry) {
-		registry.register(PATIENT_TYPE_DATA_LOADER, DataLoader.newMappedDataLoader(getPatientTypeBatchLoader(),
-				getOptionsWithCache()));
-		registry.register(REFERRAL_DATA_LOADER, DataLoader.newMappedDataLoader(getReferralBatchLoader(),
-				getOptionsWithCache()));
+		// Don't use the cache in any of these since we fetch value by strings that aren't unique
+		registry.register(PATIENT_TYPE_DATA_LOADER, DataLoader.newMappedDataLoader(getPatientTypeBatchLoader()));
+		registry.register(REFERRAL_DATA_LOADER, DataLoader.newMappedDataLoader(getReferralBatchLoader()));
 		registry.register(ORDER_PAYMENT_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getOrderPaymentTypeBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getOrderPaymentTypeBatchLoader()));
 		registry.register(INVOICE_PAYMENT_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getInvoicePaymentTypeBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getInvoicePaymentTypeBatchLoader()));
 		registry.register(NHIF_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getNhifTypeBatchLoader()));
 		registry.register(NHIF_RELATIONSHIP_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getNhifRelationshipBatchLoader()));
 		registry.register(REFERENCE_LIST_BY_REFERENCE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getByReferenceBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getByReferenceBatchLoader()));
 		registry.register(REFERENCE_LIST_BY_PRODUCT_CATEGORY_TYPE_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getProductCategoryTypeBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getProductCategoryTypeBatchLoader()));
 		registry.register(REFERENCE_LIST_BY_DOCUMENT_STATUS_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getDocumentStatusTypeBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getDocumentStatusTypeBatchLoader()));
 	}
 
-	private MappedBatchLoader<Integer, List<MRefList>> getByReferenceBatchLoader() {
+	private MappedBatchLoader<String, List<MRefList>> getByReferenceBatchLoader() {
 		return keys -> referenceListRepository.getGroupsByIdsCompletableFuture(MRefList::getAD_Reference_ID,
 				MRefList.COLUMNNAME_AD_Reference_ID, keys);
 	}

@@ -42,7 +42,7 @@ public class RoleIncludedDataLoader extends BaseDataLoader<MRoleIncluded, MRoleI
 				getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MRoleIncluded>> getByRoleBatchLoader() {
+	private MappedBatchLoader<String, List<MRoleIncluded>> getByRoleBatchLoader() {
 		return keys -> roleIncludedRepository.getGroupsByIdsCompletableFuture(MRoleIncluded::getAD_Role_ID,
 				MRoleIncluded.COLUMNNAME_AD_Role_ID, keys);
 	}

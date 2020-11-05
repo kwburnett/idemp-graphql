@@ -32,8 +32,10 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		businessPartnerRepository = new BusinessPartnerRepository();
 	}
 
-	public CompletableFuture<Map<Integer, List<MPayment_BH>>> getByOrderIds(Set<Integer> orderIds) {
+	public CompletableFuture<Map<String, List<MPayment_BH>>> getByOrderIds(Set<String> orderIdKeys) {
 		List<Object> parameters = new ArrayList<>();
+		String modelName = ModelUtil.getModelFromKey(orderIdKeys.iterator().next());
+		Set<Integer> orderIds = orderIdKeys.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet());
 		QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		List<MPayment_BH> payments = getBaseQuery(MPayment_BH.COLUMNNAME_C_Order_ID + " IN (" +
@@ -41,7 +43,8 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 				.setOnlyActiveRecords(true).list();
 		return CompletableFuture.supplyAsync(() ->
 				payments.stream().collect(Collectors.groupingBy(payment ->
-						payment.getC_Order_ID() == 0 ? payment.getBH_C_Order_ID() : payment.getC_Order_ID())));
+						ModelUtil.getModelKey(modelName,
+								payment.getC_Order_ID() == 0 ? payment.getBH_C_Order_ID() : payment.getC_Order_ID()))));
 	}
 
 	@Override

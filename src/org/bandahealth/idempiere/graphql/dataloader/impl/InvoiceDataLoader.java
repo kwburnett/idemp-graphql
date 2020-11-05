@@ -43,7 +43,7 @@ public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput,
 		return invoiceRepository;
 	}
 
-	private MappedBatchLoader<Integer, List<MInvoice_BH>> getVendorInvoiceByBusinessPartnerBatchLoader() {
+	private MappedBatchLoader<String, List<MInvoice_BH>> getVendorInvoiceByBusinessPartnerBatchLoader() {
 		return keys -> invoiceRepository.getGroupsByIdsCompletableFuture(MInvoice_BH::getC_BPartner_ID,
 				MInvoice_BH.COLUMNNAME_C_BPartner_ID, keys);
 	}

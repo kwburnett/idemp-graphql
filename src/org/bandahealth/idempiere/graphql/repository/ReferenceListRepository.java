@@ -79,31 +79,40 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 	 * @return The reference list data
 	 */
 	private List<MRefList> getTypes(String referenceName, Set<String> referenceValues) {
-		List<Object> parameters = new ArrayList<>();
+		List<MRefList> cachedValues = (List<MRefList>) cache.get(referenceName);
+		if (cachedValues == null) {
+			List<Object> parameters = new ArrayList<>();
 
-		String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
-		parameters.add(referenceName);
+			String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
+			parameters.add(referenceName);
 
-		if (referenceValues != null) {
-			whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
-					+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
-		}
-
-		if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
-			// get payment type limits..
-			MValRule valRule = new Query(Env.getCtx(), MValRule.Table_Name, MValRule.COLUMNNAME_Name + "=?", null)
-					.setParameters(PAYMENT_TYPE_LIMIT).setOnlyActiveRecords(true).setNoVirtualColumn(true).first();
-			if (valRule != null) {
-				whereClause += " AND " + valRule.getCode();
+			if (referenceValues != null) {
+				whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
+						+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
 			}
-		}
 
-		return new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
-				.addJoinClause("JOIN " + MReference.Table_Name + " ON " + MReference.Table_Name + "."
-						+ MReference.COLUMNNAME_AD_Reference_ID + "=" + MRefList.Table_Name + "."
-						+ MRefList.COLUMNNAME_AD_Reference_ID)
-				.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true)
-				.list();
+			if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
+				// get payment type limits..
+				MValRule valRule = new Query(Env.getCtx(), MValRule.Table_Name, MValRule.COLUMNNAME_Name + "=?", null)
+						.setParameters(PAYMENT_TYPE_LIMIT).setOnlyActiveRecords(true).setNoVirtualColumn(true).first();
+				if (valRule != null) {
+					whereClause += " AND " + valRule.getCode();
+				}
+			}
+
+			cachedValues = new Query(Env.getCtx(), MRefList.Table_Name, whereClause, null)
+					.addJoinClause("JOIN " + MReference.Table_Name + " ON " + MReference.Table_Name + "."
+							+ MReference.COLUMNNAME_AD_Reference_ID + "=" + MRefList.Table_Name + "."
+							+ MRefList.COLUMNNAME_AD_Reference_ID)
+					.setParameters(parameters).setOnlyActiveRecords(true).setNoVirtualColumn(true)
+					.list();
+			cache.set(referenceName, cachedValues);
+		}
+		if (referenceValues == null) {
+			return cachedValues;
+		}
+		return cachedValues.stream().filter(referenceList -> referenceValues.contains(referenceList.getValue()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

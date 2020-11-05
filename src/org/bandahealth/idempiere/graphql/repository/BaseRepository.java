@@ -30,6 +30,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	public final BandaCache<Object, Object> cache;
 	protected final CLogger logger;
 	protected final String PURCHASE_ORDER = "Purchase Order";
+	protected final T modelInstance = getModelInstance();
 
 	public BaseRepository() {
 		Class<?> childClass = ((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
@@ -84,11 +85,13 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	public void updateCacheAfterSave(T entity) {
 		// Only update things if they exist already so the cache doesn't become too full with unnecessary objects
 		if (cache.containsKey(entity.get_ID())) {
-			cache.set(entity.get_ID(), entity);
+			// The data loader likes entities stored as CompletableFutures, so store them that way
+			cache.set(entity.get_ID(), CompletableFuture.supplyAsync(() -> entity));
 		}
 		Object uuid = entity.get_Value(entity.getUUIDColumnName());
 		if (cache.containsKey(uuid)) {
-			cache.set(uuid, entity);
+			// The data loader likes entities stored as CompletableFutures, so store them that way
+			cache.set(uuid, CompletableFuture.supplyAsync(() -> entity));
 		}
 	}
 
@@ -168,7 +171,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			whereClause = getDefaultWhereClause() + whereClause;
 		}
 		// Set up the query
-		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
+		Query query = new Query(Env.getCtx(), modelInstance.get_TableName(), whereClause, null)
 				.setNoVirtualColumn(true);
 		// If we should use the client ID in the context, add it
 		if (shouldUseContextClientId()) {
@@ -266,9 +269,14 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param ids              The IDs to search by
 	 * @return
 	 */
-	public CompletableFuture<Map<Integer, List<T>>> getGroupsByIdsCompletableFuture(
-			Function<T, Integer> groupingFunction, String columnToSearch, Set<Integer> ids) {
-		return CompletableFuture.supplyAsync(() -> getGroupsByIds(groupingFunction, columnToSearch, ids));
+	public CompletableFuture<Map<String, List<T>>> getGroupsByIdsCompletableFuture(
+			Function<T, Integer> groupingFunction, String columnToSearch, Set<String> ids) {
+		String modelName = ModelUtil.getModelFromKey(ids.iterator().next());
+		return CompletableFuture.supplyAsync(() -> getGroupsByIds(
+				groupingFunction, columnToSearch, ids.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet())
+		).entrySet().stream().collect(
+				Collectors.toMap(entrySet -> ModelUtil.getModelKey(modelName, entrySet.getKey()), Map.Entry::getValue))
+		);
 	}
 
 	/**
@@ -281,11 +289,10 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 */
 	public Map<Integer, List<T>> getGroupsByIds(
 			Function<T, Integer> groupingFunction, String columnToSearch, Set<Integer> ids) {
-		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
 		if (!QueryUtil.doesTableAliasExistOnColumn(columnToSearch)) {
-			columnToSearch = model.get_TableName() + "." + columnToSearch;
+			columnToSearch = modelInstance.get_TableName() + "." + columnToSearch;
 		}
 		BandaQuery<T> query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters)
 				.setOnlyActiveRecords(true);
@@ -294,8 +301,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	public T getById(int id) {
-		T model = getModelInstance();
-		return getBaseQuery(model.get_TableName() + "." + model.get_TableName() + "_ID=?", id).first();
+		return getBaseQuery(modelInstance.get_TableName() + "." + modelInstance.get_TableName() +
+				"_ID=?", id).first();
 	}
 
 	/**
@@ -305,11 +312,10 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @return
 	 */
 	public Map<Integer, T> getByIds(Set<Integer> ids) {
-		T model = getModelInstance();
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<T> models = getBaseQuery(model.get_TableName() + "." + model.get_TableName() + "_ID IN (" +
-				whereCondition + ")", parameters).list();
+		List<T> models = getBaseQuery(modelInstance.get_TableName() + "." +
+				modelInstance.get_TableName() + "_ID IN (" + whereCondition + ")", parameters).list();
 		return models.stream().collect(Collectors.toMap(T::get_ID, m -> m));
 	}
 
@@ -319,8 +325,12 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param ids The IDs to search by
 	 * @return
 	 */
-	public CompletableFuture<Map<Integer, T>> getByIdsCompletableFuture(Set<Integer> ids) {
-		return CompletableFuture.supplyAsync(() -> getByIds(ids));
+	public CompletableFuture<Map<String, T>> getByIdsCompletableFuture(Set<String> ids) {
+		String modelName = ModelUtil.getModelFromKey(ids.iterator().next());
+		return CompletableFuture.supplyAsync(() -> getByIds(
+				ids.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet())
+		).entrySet().stream()
+				.collect(Collectors.toMap(value -> ModelUtil.getModelKey(modelName, value.getKey()), Map.Entry::getValue)));
 	}
 
 	/**
@@ -330,8 +340,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @return
 	 */
 	public T getByUuid(String uuid) {
-		T model = getModelInstance();
-		return getBaseQuery(model.getUUIDColumnName() + "=?", uuid).first();
+		return getBaseQuery(modelInstance.getUUIDColumnName() + "=?", uuid).first();
 	}
 
 	/**
@@ -341,10 +350,9 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @return
 	 */
 	public List<T> getByUuids(List<String> uuids) {
-		T model = getModelInstance();
 		String whereClause = uuids.stream().filter(uuid -> !StringUtil.isNullOrEmpty(uuid)).map(uuid -> "'" + uuid + "'")
 				.collect(Collectors.joining(","));
-		return getBaseQuery(model.getUUIDColumnName() + " IN (" + whereClause + ")").list();
+		return getBaseQuery(modelInstance.getUUIDColumnName() + " IN (" + whereClause + ")").list();
 	}
 
 	/**
@@ -385,7 +393,6 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			if (parameters == null) {
 				parameters = new ArrayList<>();
 			}
-			T modelInstance = getModelInstance();
 
 			String filterWhereClause = FilterUtil.getWhereClauseFromFilter(modelInstance, filterJson, parameters);
 			if (StringUtil.isNullOrEmpty(whereClause)) {

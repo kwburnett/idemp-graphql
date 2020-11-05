@@ -43,8 +43,8 @@ public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLine
 				getOptionsWithCache()));
 	}
 
-	private MappedBatchLoader<Integer, List<MOrderLine_BH>> getBatchLoader() {
-		return keys -> orderLineRepository.getGroupsByIdsCompletableFuture(MOrderLine_BH::getC_Order_ID, MOrderLine_BH.COLUMNNAME_C_Order_ID,
-				keys);
+	private MappedBatchLoader<String, List<MOrderLine_BH>> getBatchLoader() {
+		return keys -> orderLineRepository.getGroupsByIdsCompletableFuture(MOrderLine_BH::getC_Order_ID,
+				MOrderLine_BH.COLUMNNAME_C_Order_ID, keys);
 	}
 }

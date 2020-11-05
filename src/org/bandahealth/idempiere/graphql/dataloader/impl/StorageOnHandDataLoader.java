@@ -43,7 +43,7 @@ public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, Stor
 		return storageOnHandRepository;
 	}
 
-	private MappedBatchLoader<Integer, List<MStorageOnHand>> getByProductBatchLoader() {
+	private MappedBatchLoader<String, List<MStorageOnHand>> getByProductBatchLoader() {
 		return keys -> storageOnHandRepository.getGroupsByIdsCompletableFuture(MStorageOnHand::getM_Product_ID,
 				MStorageOnHand.COLUMNNAME_M_Product_ID, keys);
 	}

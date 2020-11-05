@@ -191,6 +191,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 
 		processRepository.runOrderProcess(order.get_ID());
 		cache.delete(order.get_ID());
+		cache.delete(uuid);
 		businessPartnerRepository.cache.delete(order.getC_BPartner_ID());
 
 		return CompletableFuture.supplyAsync(() -> getByUuid(order.getC_Order_UU()));

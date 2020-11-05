@@ -150,6 +150,7 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 
 		processRepository.runExpenseProcess(invoice.get_ID(), false);
 		cache.delete(invoice.get_ID());
+		cache.delete(uuid);
 		businessPartnerRepository.cache.delete(invoice.getC_BPartner_ID());
 
 		return CompletableFuture.supplyAsync(() -> getByUuid(invoice.getC_Invoice_UU()));

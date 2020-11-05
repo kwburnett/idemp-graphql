@@ -11,6 +11,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.OrderLineDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.PaymentDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.model.OrderStatus;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MRefList;
 import org.dataloader.DataLoader;
@@ -20,21 +21,21 @@ import java.util.concurrent.CompletableFuture;
 
 public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLResolver<MOrder_BH> {
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
+		final DataLoader<String, MBPartner_BH> businessPartnerDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_BY_ID_DATA_LOADER);
-		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
+		return businessPartnerDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_BPartner_ID()));
 	}
 
 	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MOrderLine_BH>> orderLineDataLoader =
+		final DataLoader<String, List<MOrderLine_BH>> orderLineDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(OrderLineDataLoader.ORDER_LINE_BY_ORDER_DATA_LOADER);
-		return orderLineDataLoader.load(entity.getC_Order_ID());
+		return orderLineDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_Order_ID()));
 	}
 
 	public CompletableFuture<List<MPayment_BH>> payments(MOrder_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MPayment_BH>> paymentDataLoader =
+		final DataLoader<String, List<MPayment_BH>> paymentDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(PaymentDataLoader.PAYMENT_BY_ORDER_DATA_LOADER);
-		return paymentDataLoader.load(entity.getC_Order_ID());
+		return paymentDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_Order_ID()));
 	}
 
 	public boolean isSalesTransaction(MOrder_BH entity) {

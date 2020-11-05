@@ -4,6 +4,7 @@ import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MUser_BH;
 import org.bandahealth.idempiere.graphql.dataloader.impl.WarehouseDataLoader;
+import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MOrg;
 import org.compiere.model.MRole;
 import org.compiere.model.MWarehouse;
@@ -17,9 +18,9 @@ import java.util.concurrent.CompletableFuture;
 public class OrganizationResolver extends BaseResolver<MOrg> implements GraphQLResolver<MOrg> {
 
 	public CompletableFuture<List<MWarehouse>> warehouses(MOrg entity, DataFetchingEnvironment environment) {
-		final DataLoader<Integer, List<MWarehouse>> warehousesByOrgDataLoader =
+		final DataLoader<String, List<MWarehouse>> warehousesByOrgDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(WarehouseDataLoader.WAREHOUSE_BY_ORGANIZATION_DATA_LOADER);
-		return warehousesByOrgDataLoader.load(entity.getAD_Org_ID());
+		return warehousesByOrgDataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Org_ID()));
 	}
 
 	public List<MRole> roles(MOrg entity) {
