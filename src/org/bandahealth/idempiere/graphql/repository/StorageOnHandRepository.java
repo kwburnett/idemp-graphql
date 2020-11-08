@@ -106,7 +106,7 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	}
 
 	@Override
-	public MStorageOnHand getModelInstance() {
+	protected MStorageOnHand createModelInstance() {
 		return new StorageOnHandInput();
 	}
 

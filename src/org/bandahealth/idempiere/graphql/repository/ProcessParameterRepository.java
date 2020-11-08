@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class ProcessParameterRepository extends BaseRepository<MProcessPara, MProcessPara> {
 	@Override
-	public MProcessPara getModelInstance() {
+	protected MProcessPara createModelInstance() {
 		return new MProcessPara(Env.getCtx(), 0, null);
 	}
 

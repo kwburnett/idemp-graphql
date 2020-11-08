@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 public class UserRepository extends BaseRepository<MUser_BH, MUser_BH> {
 	@Override
-	public MUser_BH getModelInstance() {
+	protected MUser_BH createModelInstance() {
 		return new MUser_BH(Env.getCtx(), 0, null);
 	}
 

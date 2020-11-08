@@ -7,7 +7,7 @@ import org.compiere.util.Env;
 
 public class LocationRepository extends BaseRepository<MLocation, LocationInput> {
 	@Override
-	public MLocation getModelInstance() {
+	protected MLocation createModelInstance() {
 		return new MLocation(Env.getCtx(), 0, null);
 	}
 
@@ -15,7 +15,7 @@ public class LocationRepository extends BaseRepository<MLocation, LocationInput>
 	public MLocation mapInputModelToModel(LocationInput entity) {
 		MLocation location = getByUuid(entity.getC_Location_UU());
 		if (location == null) {
-			location = getModelInstance();
+			location = createModelInstance();
 		}
 		ModelUtil.setPropertyIfPresent(entity.getAddress1(), location::setAddress1);
 		return location;

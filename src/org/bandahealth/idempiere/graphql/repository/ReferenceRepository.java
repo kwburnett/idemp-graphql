@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class ReferenceRepository extends BaseRepository<MReference, MReference> {
 	@Override
-	public MReference getModelInstance() {
+	protected MReference createModelInstance() {
 		return new MReference(Env.getCtx(), 0, null);
 	}
 

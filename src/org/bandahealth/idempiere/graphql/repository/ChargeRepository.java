@@ -26,7 +26,7 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 	}
 
 	@Override
-	public MCharge_BH getModelInstance() {
+	protected MCharge_BH createModelInstance() {
 		return new MCharge_BH(Env.getCtx(), 0, null);
 	}
 
@@ -35,7 +35,7 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 		try {
 			MCharge_BH charge = getByUuid(entity.getC_Charge_UU());
 			if (charge == null) {
-				charge = getModelInstance();
+				charge = createModelInstance();
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getName(), charge::setName);

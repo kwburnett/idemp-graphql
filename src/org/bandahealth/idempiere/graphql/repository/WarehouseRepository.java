@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class WarehouseRepository extends BaseRepository<MWarehouse, MWarehouse> {
 	@Override
-	public MWarehouse getModelInstance() {
+	protected MWarehouse createModelInstance() {
 		return new MWarehouse(Env.getCtx(), 0, null);
 	}
 

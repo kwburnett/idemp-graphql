@@ -8,7 +8,7 @@ import org.compiere.util.Env;
 
 public class AccountRepository extends BaseRepository<MElementValue, AccountInput> {
 	@Override
-	public MElementValue getModelInstance() {
+	protected MElementValue createModelInstance() {
 		return new MElementValue(Env.getCtx(), 0, null);
 	}
 
@@ -17,7 +17,7 @@ public class AccountRepository extends BaseRepository<MElementValue, AccountInpu
 		try {
 			MElementValue account = getByUuid(entity.getC_ElementValue_UU());
 			if (account == null) {
-				account = getModelInstance();
+				account = createModelInstance();
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getName(), account::setName);
@@ -39,7 +39,7 @@ public class AccountRepository extends BaseRepository<MElementValue, AccountInpu
 		try {
 			MElementValue account = getByUuid(entity.getC_ElementValue_UU());
 			if (account == null) {
-				account = getModelInstance();
+				account = createModelInstance();
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getName(), account::setName);

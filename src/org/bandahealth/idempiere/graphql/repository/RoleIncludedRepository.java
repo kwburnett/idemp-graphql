@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class RoleIncludedRepository extends BaseRepository<MRoleIncluded, MRoleIncluded> {
 	@Override
-	public MRoleIncluded getModelInstance() {
+	protected MRoleIncluded createModelInstance() {
 		return new MRoleIncluded(Env.getCtx(), 0, null);
 	}
 

@@ -61,7 +61,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	}
 
 	@Override
-	public MOrder_BH getModelInstance() {
+	protected MOrder_BH createModelInstance() {
 		return new MOrder_BH(Env.getCtx(), 0, null);
 	}
 
@@ -70,7 +70,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		try {
 			MOrder_BH order = getByUuid(entity.getC_Order_UU());
 			if (order == null) {
-				order = getModelInstance();
+				order = createModelInstance();
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getDateOrdered(), order::setDateOrdered);

@@ -17,7 +17,7 @@ public class AttributeSetInstanceRepository extends BaseRepository<MAttributeSet
 	}
 
 	@Override
-	public MAttributeSetInstance getModelInstance() {
+	protected MAttributeSetInstance createModelInstance() {
 		return new MAttributeSetInstance(Env.getCtx(), 0, null);
 	}
 

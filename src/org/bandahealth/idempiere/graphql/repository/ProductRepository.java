@@ -34,7 +34,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	}
 
 	@Override
-	public MProduct_BH getModelInstance() {
+	protected MProduct_BH createModelInstance() {
 		return new MProduct_BH(Env.getCtx(), 0, null);
 	}
 
@@ -79,7 +79,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		try {
 			MProduct_BH product = getByUuid(entity.getM_Product_UU());
 			if (product == null) {
-				product = getModelInstance();
+				product = createModelInstance();
 				product.setProductType(MProduct_BH.PRODUCTTYPE_Item);
 
 				// set default uom (unit of measure).

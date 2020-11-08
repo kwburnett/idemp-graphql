@@ -30,7 +30,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	public final BandaCache<Object, Object> cache;
 	protected final CLogger logger;
 	protected final String PURCHASE_ORDER = "Purchase Order";
-	protected final T modelInstance = getModelInstance();
+	private T modelInstance;
 
 	public BaseRepository() {
 		Class<?> childClass = ((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
@@ -38,7 +38,14 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		logger = CLogger.getCLogger(childClass);
 	}
 
-	public abstract T getModelInstance();
+	public T getModelInstance() {
+		if (modelInstance == null) {
+			modelInstance = createModelInstance();
+		}
+		return modelInstance;
+	}
+
+	protected abstract T createModelInstance();
 
 	/**
 	 * This method can be overridden, but it maps entities, saves them, updates the cache, and returns the updated DB
@@ -171,7 +178,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			whereClause = getDefaultWhereClause() + whereClause;
 		}
 		// Set up the query
-		Query query = new Query(Env.getCtx(), modelInstance.get_TableName(), whereClause, null)
+		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
 				.setNoVirtualColumn(true);
 		// If we should use the client ID in the context, add it
 		if (shouldUseContextClientId()) {
@@ -292,7 +299,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
 		if (!QueryUtil.doesTableAliasExistOnColumn(columnToSearch)) {
-			columnToSearch = modelInstance.get_TableName() + "." + columnToSearch;
+			columnToSearch = getModelInstance().get_TableName() + "." + columnToSearch;
 		}
 		BandaQuery<T> query = getBaseQuery(columnToSearch + " IN (" + whereCondition + ")", parameters)
 				.setOnlyActiveRecords(true);
@@ -301,8 +308,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	public T getById(int id) {
-		return getBaseQuery(modelInstance.get_TableName() + "." + modelInstance.get_TableName() +
-				"_ID=?", id).first();
+		return getBaseQuery(getModelInstance().get_TableName() + "." +
+				getModelInstance().get_TableName() + "_ID=?", id).first();
 	}
 
 	/**
@@ -314,8 +321,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	public Map<Integer, T> getByIds(Set<Integer> ids) {
 		List<Object> parameters = new ArrayList<>();
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(ids, parameters);
-		List<T> models = getBaseQuery(modelInstance.get_TableName() + "." +
-				modelInstance.get_TableName() + "_ID IN (" + whereCondition + ")", parameters).list();
+		List<T> models = getBaseQuery(getModelInstance().get_TableName() + "." +
+				getModelInstance().get_TableName() + "_ID IN (" + whereCondition + ")", parameters).list();
 		return models.stream().collect(Collectors.toMap(T::get_ID, m -> m));
 	}
 
@@ -340,7 +347,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @return
 	 */
 	public T getByUuid(String uuid) {
-		return getBaseQuery(modelInstance.getUUIDColumnName() + "=?", uuid).first();
+		return getBaseQuery(getModelInstance().getUUIDColumnName() + "=?", uuid).first();
 	}
 
 	/**
@@ -352,7 +359,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	public List<T> getByUuids(List<String> uuids) {
 		String whereClause = uuids.stream().filter(uuid -> !StringUtil.isNullOrEmpty(uuid)).map(uuid -> "'" + uuid + "'")
 				.collect(Collectors.joining(","));
-		return getBaseQuery(modelInstance.getUUIDColumnName() + " IN (" + whereClause + ")").list();
+		return getBaseQuery(getModelInstance().getUUIDColumnName() + " IN (" + whereClause + ")").list();
 	}
 
 	/**
@@ -394,7 +401,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				parameters = new ArrayList<>();
 			}
 
-			String filterWhereClause = FilterUtil.getWhereClauseFromFilter(modelInstance, filterJson, parameters);
+			String filterWhereClause = FilterUtil.getWhereClauseFromFilter(getModelInstance(), filterJson, parameters);
 			if (StringUtil.isNullOrEmpty(whereClause)) {
 				whereClause = filterWhereClause;
 			} else {
@@ -447,7 +454,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				query.addJoinClause(dynamicJoinClause.toString().trim());
 			}
 
-			String orderBy = SortUtil.getOrderByClauseFromSort(modelInstance, sortJson);
+			String orderBy = SortUtil.getOrderByClauseFromSort(getModelInstance(), sortJson);
 			if (orderBy != null) {
 				query = query.setOrderBy(orderBy);
 			}

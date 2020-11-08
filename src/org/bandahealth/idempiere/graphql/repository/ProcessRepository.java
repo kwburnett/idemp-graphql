@@ -343,7 +343,7 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	}
 
 	@Override
-	public MProcess getModelInstance() {
+	protected MProcess createModelInstance() {
 		return new ProcessInput();
 	}
 

@@ -21,7 +21,7 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 	}
 
 	@Override
-	public MInvoiceLine getModelInstance() {
+	protected MInvoiceLine createModelInstance() {
 		return new InvoiceLineInput();
 	}
 

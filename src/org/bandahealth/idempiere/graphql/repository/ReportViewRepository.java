@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class ReportViewRepository extends BaseRepository<MReportView, MReportView> {
 	@Override
-	public MReportView getModelInstance() {
+	protected MReportView createModelInstance() {
 		return new MReportView(Env.getCtx(), 0, null);
 	}
 

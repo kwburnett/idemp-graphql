@@ -48,7 +48,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	}
 
 	@Override
-	public MPayment_BH getModelInstance() {
+	protected MPayment_BH createModelInstance() {
 		return new MPayment_BH(Env.getCtx(), 0, null);
 	}
 
@@ -56,7 +56,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	public MPayment_BH mapInputModelToModel(PaymentInput entity) {
 		MPayment_BH payment = getByUuid(entity.getC_Payment_UU());
 		if (payment == null) {
-			payment = getModelInstance();
+			payment = createModelInstance();
 		}
 
 		if (entity.getC_Order_ID() > 0) {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProductCategoryRepository extends BaseRepository<MProductCategory_BH, ProductCategoryInput> {
 	@Override
-	public MProductCategory_BH getModelInstance() {
+	protected MProductCategory_BH createModelInstance() {
 		return new MProductCategory_BH(Env.getCtx(), 0, null);
 	}
 

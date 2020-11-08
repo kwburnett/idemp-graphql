@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class LocatorRepository extends BaseRepository<MLocator, MLocator> {
 	@Override
-	public MLocator getModelInstance() {
+	protected MLocator createModelInstance() {
 		return new MLocator(Env.getCtx(), 0, null);
 	}
 

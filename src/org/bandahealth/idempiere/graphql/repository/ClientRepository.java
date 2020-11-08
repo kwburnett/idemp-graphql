@@ -6,7 +6,7 @@ import org.compiere.util.Env;
 public class ClientRepository extends BaseRepository<MClient, MClient> {
 
 	@Override
-	public MClient getModelInstance() {
+	protected MClient createModelInstance() {
 		return new MClient(Env.getCtx(), 0, null);
 	}
 

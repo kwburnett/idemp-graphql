@@ -39,7 +39,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 	}
 
 	@Override
-	public MBPartner_BH getModelInstance() {
+	protected MBPartner_BH createModelInstance() {
 		return new MBPartner_BH(Env.getCtx(), 0, null);
 	}
 
@@ -48,7 +48,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 		try {
 			MBPartner_BH businessPartner = getByUuid(entity.getC_BPartner_UU());
 			if (businessPartner == null) {
-				businessPartner = getModelInstance();
+				businessPartner = createModelInstance();
 			}
 
 			businessPartner.setBH_IsPatient(entity.isBH_IsPatient());

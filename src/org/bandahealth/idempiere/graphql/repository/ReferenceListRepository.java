@@ -86,11 +86,6 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 			String whereClause = MReference.Table_Name + "." + MReference.COLUMNNAME_Name + "=? ";
 			parameters.add(referenceName);
 
-			if (referenceValues != null) {
-				whereClause += " AND " + MRefList.COLUMNNAME_Value + " IN ("
-						+ QueryUtil.getWhereClauseAndSetParametersForSet(referenceValues, parameters) + ")";
-			}
-
 			if (referenceName.equalsIgnoreCase(ORDER_PAYMENT_TYPE)) {
 				// get payment type limits..
 				MValRule valRule = new Query(Env.getCtx(), MValRule.Table_Name, MValRule.COLUMNNAME_Name + "=?", null)
@@ -116,7 +111,7 @@ public class ReferenceListRepository extends BaseRepository<MRefList, ReferenceL
 	}
 
 	@Override
-	public MRefList getModelInstance() {
+	protected MRefList createModelInstance() {
 		return new MRefList(Env.getCtx(), 0, null);
 	}
 

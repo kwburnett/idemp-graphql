@@ -17,7 +17,7 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 	private static final String ALL_SUBROLES_INCLUDED = "BandaGo Admin";
 
 	@Override
-	public MRole getModelInstance() {
+	protected MRole createModelInstance() {
 		return new MRole(Env.getCtx(), 0, null);
 	}
 

@@ -60,7 +60,7 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 	}
 
 	@Override
-	public MInvoice_BH getModelInstance() {
+	protected MInvoice_BH createModelInstance() {
 		return new InvoiceInput();
 	}
 
@@ -69,7 +69,7 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 		try {
 			MInvoice_BH invoice = getByUuid(entity.getC_Invoice_UU());
 			if (invoice == null) {
-				invoice = getModelInstance();
+				invoice = createModelInstance();
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getDateInvoiced(), invoice::setDateInvoiced);

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AttributeSetRepository extends BaseRepository<MAttributeSet, AttributeSetInput> {
 	@Override
-	public MAttributeSet getModelInstance() {
+	protected MAttributeSet createModelInstance() {
 		return new MAttributeSet(Env.getCtx(), 0, null);
 	}
 

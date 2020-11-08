@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class UomRepository extends BaseRepository<MUOM, MUOM> {
 	@Override
-	public MUOM getModelInstance() {
+	protected MUOM createModelInstance() {
 		return new MUOM(Env.getCtx(), 0, null);
 	}
 

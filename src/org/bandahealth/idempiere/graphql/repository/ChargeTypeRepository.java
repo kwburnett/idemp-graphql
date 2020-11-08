@@ -5,7 +5,7 @@ import org.bandahealth.idempiere.graphql.model.input.ChargeTypeInput;
 
 public class ChargeTypeRepository extends BaseRepository<MChargeType_BH, ChargeTypeInput> {
 	@Override
-	public MChargeType_BH getModelInstance() {
+	protected MChargeType_BH createModelInstance() {
 		return new ChargeTypeInput();
 	}
 

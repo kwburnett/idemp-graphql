@@ -19,7 +19,7 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 	}
 
 	@Override
-	public MHomeScreenButton getModelInstance() {
+	protected MHomeScreenButton createModelInstance() {
 		return new MHomeScreenButton(Env.getCtx(), 0, null);
 	}
 

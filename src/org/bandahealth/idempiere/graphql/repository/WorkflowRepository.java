@@ -5,7 +5,7 @@ import org.compiere.wf.MWorkflow;
 
 public class WorkflowRepository extends BaseRepository<MWorkflow, MWorkflow> {
 	@Override
-	public MWorkflow getModelInstance() {
+	protected MWorkflow createModelInstance() {
 		return new MWorkflow(Env.getCtx(), 0, null);
 	}
 

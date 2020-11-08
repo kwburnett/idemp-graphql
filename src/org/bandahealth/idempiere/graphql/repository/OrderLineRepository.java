@@ -22,7 +22,7 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 	}
 
 	@Override
-	public MOrderLine_BH getModelInstance() {
+	protected MOrderLine_BH createModelInstance() {
 		return new MOrderLine_BH(Env.getCtx(), 0, null);
 	}
 

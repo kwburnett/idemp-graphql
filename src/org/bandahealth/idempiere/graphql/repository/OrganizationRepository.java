@@ -6,7 +6,7 @@ import org.compiere.util.Env;
 public class OrganizationRepository extends BaseRepository<MOrg, MOrg> {
 
 	@Override
-	public MOrg getModelInstance() {
+	protected MOrg createModelInstance() {
 		return new MOrg(Env.getCtx(), 0, null);
 	}
 

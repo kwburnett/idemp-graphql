@@ -5,7 +5,7 @@ import org.compiere.util.Env;
 
 public class FormRepository extends BaseRepository<MForm, MForm> {
 	@Override
-	public MForm getModelInstance() {
+	protected MForm createModelInstance() {
 		return new MForm(Env.getCtx(), 0, null);
 	}
 
