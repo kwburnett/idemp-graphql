@@ -27,6 +27,10 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	private final UomRepository uomRepository;
 	private final StorageOnHandRepository storageOnHandRepository;
 
+	private final String productCategoryJoin = " JOIN " + MProductCategory_BH.Table_Name + " ON " +
+			MProductCategory_BH.Table_Name + "." + MProductCategory_BH.COLUMNNAME_M_Product_Category_ID + "=" +
+			MProduct_BH.Table_Name + "." + MProduct_BH.COLUMNNAME_M_Product_Category_ID;
+
 	public ProductRepository() {
 		productCategoryRepository = new ProductCategoryRepository();
 		uomRepository = new UomRepository();
@@ -44,7 +48,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		parameters.add(MProduct_BH.PRODUCTTYPE_Item);
 
 		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
-				environment);
+				productCategoryJoin, environment);
 	}
 
 	public Connection<MProduct_BH> getServices(String filterJson, String sort, PagingInfo pagingInfo,
@@ -53,7 +57,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		parameters.add(MProduct_BH.PRODUCTTYPE_Service);
 
 		return super.get(filterJson, sort, pagingInfo, MProduct_BH.COLUMNNAME_ProductType + " = ?", parameters,
-				environment);
+				productCategoryJoin, environment);
 	}
 
 	@Override
