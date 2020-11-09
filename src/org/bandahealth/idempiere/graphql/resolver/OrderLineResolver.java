@@ -7,7 +7,6 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.AttributeSetInstanceDat
 import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ProductDataLoader;
-import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MAttributeSetInstance;
 import org.dataloader.DataLoader;
 
@@ -18,15 +17,15 @@ import java.util.concurrent.CompletableFuture;
 public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements GraphQLResolver<MOrderLine_BH> {
 
 	public CompletableFuture<MCharge_BH> charge(MOrderLine_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MCharge_BH> dataLoader =
+		final DataLoader<Integer, MCharge_BH> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getC_Charge_ID()));
+		return dataLoader.load(entity.getC_Charge_ID());
 	}
 
 	public CompletableFuture<MProduct_BH> product(MOrderLine_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MProduct_BH> dataLoader =
+		final DataLoader<Integer, MProduct_BH> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ProductDataLoader.PRODUCT_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getM_Product_ID()));
+		return dataLoader.load(entity.getM_Product_ID());
 	}
 
 	public BigDecimal price(MOrderLine_BH entity) {
@@ -50,15 +49,15 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 	}
 
 	public CompletableFuture<MOrder_BH> order(MOrderLine_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MOrder_BH> dataLoader =
+		final DataLoader<Integer, MOrder_BH> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getC_Order_ID()));
+		return dataLoader.load(entity.getC_Order_ID());
 	}
 
 	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MOrderLine_BH entity,
 			DataFetchingEnvironment environment) {
-		final DataLoader<String, MAttributeSetInstance> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<Integer, MAttributeSetInstance> dataLoader = environment.getDataLoaderRegistry()
 						.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getM_AttributeSetInstance_ID()));
+		return dataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 }

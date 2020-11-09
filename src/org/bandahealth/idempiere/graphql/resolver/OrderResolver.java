@@ -21,9 +21,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLResolver<MOrder_BH> {
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MBPartner_BH> businessPartnerDataLoader =
+		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_BY_ID_DATA_LOADER);
-		return businessPartnerDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_BPartner_ID()));
+		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public CompletableFuture<List<MOrderLine_BH>> orderLines(MOrder_BH entity, DataFetchingEnvironment environment) {

@@ -11,10 +11,8 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.OrderDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.repository.ReferenceListRepository;
-import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MRefList;
-import org.compiere.util.Env;
 import org.dataloader.DataLoader;
 
 import java.math.BigDecimal;
@@ -30,10 +28,10 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 	}
 
 	public CompletableFuture<MBPartner_BH> businessPartner(MPayment_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MBPartner_BH> businessPartnerDataLoader =
+		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =
 				environment.getDataLoaderRegistry()
 						.getDataLoader(BusinessPartnerDataLoader.BUSINESS_PARTNER_BY_ID_DATA_LOADER);
-		return businessPartnerDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_BPartner_ID()));
+		return businessPartnerDataLoader.load(entity.getC_BPartner_ID());
 	}
 
 	public BigDecimal payAmount(MPayment_BH entity) {
@@ -92,15 +90,14 @@ public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQ
 	}
 
 	public CompletableFuture<MOrder_BH> order(MPayment_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MOrder_BH> orderDataLoader =
+		final DataLoader<Integer, MOrder_BH> orderDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(OrderDataLoader.ORDER_BY_ID_DATA_LOADER);
-		return orderDataLoader.load(ModelUtil
-				.getModelKey(entity, entity.getBH_C_Order_ID() == 0 ? entity.getC_Order_ID() : entity.getBH_C_Order_ID()));
+		return orderDataLoader.load(entity.getBH_C_Order_ID() == 0 ? entity.getC_Order_ID() : entity.getBH_C_Order_ID());
 	}
 
 	public CompletableFuture<MCharge_BH> charge(MPayment_BH entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MCharge_BH> chargeDataLoader =
+		final DataLoader<Integer, MCharge_BH> chargeDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ChargeDataLoader.CHARGE_BY_ID_DATA_LOADER);
-		return chargeDataLoader.load(ModelUtil.getModelKey(entity, entity.getC_Charge_ID()));
+		return chargeDataLoader.load(entity.getC_Charge_ID());
 	}
 }

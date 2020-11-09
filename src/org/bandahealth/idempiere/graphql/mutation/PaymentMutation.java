@@ -5,6 +5,8 @@ import org.bandahealth.idempiere.base.model.MPayment_BH;
 import org.bandahealth.idempiere.graphql.model.input.PaymentInput;
 import org.bandahealth.idempiere.graphql.repository.PaymentRepository;
 
+import java.util.concurrent.CompletableFuture;
+
 public class PaymentMutation implements GraphQLMutationResolver {
 	private final PaymentRepository paymentRepository;
 
@@ -12,7 +14,15 @@ public class PaymentMutation implements GraphQLMutationResolver {
 		paymentRepository = new PaymentRepository();
 	}
 
-	public MPayment_BH saveServiceDebtPayment(PaymentInput payment) {
-		return paymentRepository.save(payment);
+	public CompletableFuture<MPayment_BH> saveServiceDebtPayment(PaymentInput payment, Boolean shouldProcess) {
+		MPayment_BH savedPayment = paymentRepository.save(payment);
+		if (shouldProcess) {
+			return paymentRepository.process(savedPayment.getC_Payment_UU());
+		}
+		return CompletableFuture.supplyAsync(() -> savedPayment);
+	}
+
+	public CompletableFuture<MPayment_BH> processPayment(String id) {
+		return paymentRepository.process(id);
 	}
 }

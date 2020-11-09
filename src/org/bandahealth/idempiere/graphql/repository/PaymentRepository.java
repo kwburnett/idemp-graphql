@@ -13,6 +13,7 @@ import org.compiere.model.MAcctSchema;
 import org.compiere.model.MBankAccount;
 import org.compiere.model.MCurrency;
 import org.compiere.model.Query;
+import org.compiere.process.DocAction;
 import org.compiere.util.Env;
 
 import java.math.BigDecimal;
@@ -143,6 +144,24 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		List<MPayment_BH> payments = new Query(Env.getCtx(), MPayment_BH.Table_Name, whereClause, null)
 				.setParameters(orderId, orderId).setClient_ID().list();
 		payments.forEach(payment -> payment.deleteEx(false));
+	}
+
+	public CompletableFuture<MPayment_BH> process(String uuid) {
+		MPayment_BH payment = getByUuid(uuid);
+		if (payment == null) {
+			logger.severe("No payment with uuid = " + uuid);
+			return null;
+		}
+
+		payment.processIt(DocAction.ACTION_Complete);
+
+		return CompletableFuture.supplyAsync(() -> getByUuid(uuid));
+	}
+
+	@Override
+	public void updateCacheAfterSave(MPayment_BH entity) {
+		super.updateCacheAfterSave(entity);
+		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID()));
 	}
 
 	/**

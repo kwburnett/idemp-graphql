@@ -20,21 +20,21 @@ import java.util.concurrent.CompletableFuture;
 public class ProcessResolver extends BaseResolver<MProcess> implements GraphQLResolver<MProcess> {
 
 	public CompletableFuture<MForm> form(MProcess entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MForm> dataLoader =
+		final DataLoader<Integer, MForm> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(FormDataLoader.FORM_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Process_ID()));
+		return dataLoader.load(entity.getAD_Process_ID());
 	}
 
 	public CompletableFuture<MWorkflow> workflow(MProcess entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MWorkflow> dataLoader =
+		final DataLoader<Integer, MWorkflow> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(WorkflowDataLoader.WORKFLOW_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Workflow_ID()));
+		return dataLoader.load(entity.getAD_Workflow_ID());
 	}
 
 	public CompletableFuture<MReportView> reportView(MProcess entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MReportView> dataLoader =
+		final DataLoader<Integer, MReportView> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ReportViewDataLoader.REPORT_VIEW_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_ReportView_ID()));
+		return dataLoader.load(entity.getAD_ReportView_ID());
 	}
 
 	public CompletableFuture<List<MProcessPara>> parameters(MProcess entity, DataFetchingEnvironment environment) {

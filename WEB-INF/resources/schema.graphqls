@@ -77,7 +77,8 @@ type Mutation {
   savePurchaseOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   saveSalesOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   # Payments
-  saveServiceDebtPayment(payment: PaymentInput!): Payment!
+  processPayment(id: String!): Payment!
+  saveServiceDebtPayment(payment: PaymentInput!, shouldProcess: Boolean = true): Payment!
   # Products
   saveItem(product: ProductInput): Product!
   saveService(product: ProductInput): Product!

@@ -46,9 +46,9 @@ public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQ
 
 	public CompletableFuture<MProductCategory_BH> productCategory(MProduct_BH entity,
 			DataFetchingEnvironment environment) {
-		final DataLoader<String, MProductCategory_BH> productCategoryDataLoader =
+		final DataLoader<Integer, MProductCategory_BH> productCategoryDataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ProductCategoryDataLoader.PRODUCT_CATEGORY_BY_ID_DATA_LOADER);
-		return productCategoryDataLoader.load(ModelUtil.getModelKey(entity, entity.getM_Product_Category_ID()));
+		return productCategoryDataLoader.load(entity.getM_Product_Category_ID());
 	}
 
 	public CompletableFuture<BigDecimal> totalQuantity(MProduct_BH entity, DataFetchingEnvironment environment) {

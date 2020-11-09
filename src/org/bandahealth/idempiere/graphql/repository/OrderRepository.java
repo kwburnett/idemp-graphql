@@ -3,7 +3,6 @@ package org.bandahealth.idempiere.graphql.repository;
 import graphql.schema.DataFetchingEnvironment;
 import org.adempiere.exceptions.AdempiereException;
 import org.bandahealth.idempiere.base.model.MBPartner_BH;
-import org.bandahealth.idempiere.base.model.MOrderLine_BH;
 import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
@@ -20,7 +19,6 @@ import org.compiere.util.Env;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 
@@ -40,6 +38,12 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		businessPartnerRepository = new BusinessPartnerRepository();
 		paymentRepository = new PaymentRepository();
 		processRepository = new ProcessRepository();
+	}
+
+	@Override
+	public void updateCacheAfterSave(MOrder_BH entity) {
+		super.updateCacheAfterSave(entity);
+		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID()));
 	}
 
 	public Connection<MOrder_BH> getPurchaseOrders(String filter, String sort, PagingInfo pagingInfo,

@@ -32,11 +32,11 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 	}
 
 	public CompletableFuture<List<MRole>> includedRoles(int roleId, DataFetchingEnvironment environment) {
-		final DataLoader<String, MRole> dataLoader = environment.getDataLoaderRegistry()
+		final DataLoader<Integer, MRole> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(RoleDataLoader.ROLE_BY_ID_DATA_LOADER);
 		return rolesIncluded(roleId, environment).thenApply(rolesIncluded -> {
 			List<CompletableFuture<MRole>> roles = rolesIncluded.stream().map(roleIncluded -> dataLoader
-					.load(ModelUtil.getModelKey(MRole.Table_Name, roleIncluded.getIncluded_Role_ID())))
+					.load(roleIncluded.getIncluded_Role_ID()))
 					.collect(Collectors.toList());
 			// Limitation of Java that this has to be called here
 			dataLoader.dispatch();
