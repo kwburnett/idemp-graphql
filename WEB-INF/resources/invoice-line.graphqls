@@ -5,6 +5,7 @@ type InvoiceLine {
   isActive: Boolean!
   created: String @dateFormat
   createdBy: User!
+  description: String
   charge: Charge
   invoice: Invoice!
   product: Product
@@ -17,6 +18,7 @@ type InvoiceLine {
 input InvoiceLineInput {
   id: ID
   isActive: Boolean
+  description: String
   charge: ChargeInput
   product: ProductInput
   price: Float

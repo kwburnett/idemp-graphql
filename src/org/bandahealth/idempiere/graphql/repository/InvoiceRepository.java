@@ -76,6 +76,7 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 			ModelUtil.setPropertyIfPresent(entity.getDescription(), invoice::setDescription);
 
 			invoice.setIsActive(entity.isActive());
+			invoice.setIsSOTrx(entity.isSOTrx());
 			invoice.setIsApproved(true);
 			invoice.setDocAction(MInvoice_BH.DOCACTION_Complete);
 			invoice.setPaymentRule(entity.getPaymentRule());
@@ -127,11 +128,13 @@ public class InvoiceRepository extends BaseRepository<MInvoice_BH, InvoiceInput>
 
 	public MInvoice_BH saveCustomerInvoice(InvoiceInput entity) {
 		entity.setIsSOTrx(true);
+		entity.setBH_IsExpense(false);
 		return save(entity);
 	}
 
 	public MInvoice_BH saveVendorInvoice(InvoiceInput entity) {
 		entity.setIsSOTrx(false);
+		entity.setBH_IsExpense(true);
 		return save(entity);
 	}
 

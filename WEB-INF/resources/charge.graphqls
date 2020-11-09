@@ -19,7 +19,7 @@ type ChargeConnection {
 
 input ChargeInput {
   id: ID
-  isActive: Boolean!
+  isActive: Boolean
   description: String
   name: String
   isLocked: Boolean

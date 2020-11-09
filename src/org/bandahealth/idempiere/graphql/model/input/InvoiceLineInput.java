@@ -1,5 +1,6 @@
 package org.bandahealth.idempiere.graphql.model.input;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
 import org.compiere.util.Env;
@@ -8,6 +9,14 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.Properties;
 
+/**
+ * This class is meant to handle the input for invoice lines. The following properties are ignored because, when
+ * the JSON parser tries to get to them (through MInvoiceLine), it gets incorrect mappings for MProduct, which will
+ * throw a mapping exception for conflicting setters of MProduct.setResource. So, they are excluded (because they
+ * currently aren't needed). To leverage them, define a custom getter/setter in this class to choose which models
+ * to return.
+ */
+@JsonIgnoreProperties({"shipLine", "orderLine"})
 public class InvoiceLineInput extends MInvoiceLine {
 
 	private ChargeInput charge;

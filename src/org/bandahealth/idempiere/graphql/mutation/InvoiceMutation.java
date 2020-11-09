@@ -18,19 +18,19 @@ public class InvoiceMutation implements GraphQLMutationResolver {
 	}
 
 	public CompletableFuture<MInvoice_BH> saveCustomerInvoice(InvoiceInput invoice, boolean shouldProcess) {
-		MInvoice_BH savedOrder = invoiceRepository.saveCustomerInvoice(invoice);
+		MInvoice_BH savedInvoice = invoiceRepository.saveCustomerInvoice(invoice);
 		if (shouldProcess) {
-			return invoiceRepository.process(savedOrder.getC_Invoice_UU());
+			return invoiceRepository.process(savedInvoice.getC_Invoice_UU());
 		}
-		return CompletableFuture.supplyAsync(() -> savedOrder);
+		return CompletableFuture.supplyAsync(() -> savedInvoice);
 	}
 
 	public CompletableFuture<MInvoice_BH> saveVendorInvoice(InvoiceInput invoice, boolean shouldProcess) {
-		MInvoice_BH savedOrder = invoiceRepository.saveVendorInvoice(invoice);
+		MInvoice_BH savedInvoice = invoiceRepository.saveVendorInvoice(invoice);
 		if (shouldProcess) {
-			return invoiceRepository.process(savedOrder.getC_Invoice_UU());
+			return invoiceRepository.process(savedInvoice.getC_Invoice_UU());
 		}
-		return CompletableFuture.supplyAsync(() -> savedOrder);
+		return CompletableFuture.supplyAsync(() -> savedInvoice);
 	}
 
 	public CompletableFuture<MInvoice_BH> processInvoice(String id) {
