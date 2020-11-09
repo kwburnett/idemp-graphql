@@ -90,16 +90,21 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param entity The updated and saved entity to the DB.
 	 */
 	public void updateCacheAfterSave(T entity) {
-		// Only update things if they exist already so the cache doesn't become too full with unnecessary objects
-		if (cache.containsKey(entity.get_ID())) {
-			// The data loader likes entities stored as CompletableFutures, so store them that way
-			cache.set(entity.get_ID(), CompletableFuture.supplyAsync(() -> entity));
-		}
-		Object uuid = entity.get_Value(entity.getUUIDColumnName());
-		if (cache.containsKey(uuid)) {
-			// The data loader likes entities stored as CompletableFutures, so store them that way
-			cache.set(uuid, CompletableFuture.supplyAsync(() -> entity));
-		}
+		// Just remove the entities from the cache to let them be reloaded later. This is helpful for when certain entities
+		// are processed
+		cache.delete(entity.get_ID());
+		cache.delete(entity.get_Value(entity.getUUIDColumnName()));
+		// TODO: Use the below in the future, if it's useful
+//		// Only update things if they exist already so the cache doesn't become too full with unnecessary objects
+//		if (cache.containsKey(entity.get_ID())) {
+//			// The data loader likes entities stored as CompletableFutures, so store them that way
+//			cache.set(entity.get_ID(), CompletableFuture.supplyAsync(() -> entity));
+//		}
+//		Object uuid = entity.get_Value(entity.getUUIDColumnName());
+//		if (cache.containsKey(uuid)) {
+//			// The data loader likes entities stored as CompletableFutures, so store them that way
+//			cache.set(uuid, CompletableFuture.supplyAsync(() -> entity));
+//		}
 	}
 
 	/**
