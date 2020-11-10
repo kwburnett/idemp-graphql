@@ -2,6 +2,12 @@ package org.bandahealth.idempiere.graphql.model;
 
 import java.util.List;
 
+/**
+ * Whenever pagination is used, the GraphQL standard is to use a connection. This is the Java implementation of that
+ * class that is used for the list responses.
+ *
+ * @param <T> The entity being returned to the UI
+ */
 public class Connection<T> {
 
 	private List<T> results;

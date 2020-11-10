@@ -6,6 +6,9 @@ import org.compiere.model.MClient;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The authentication response returned from the methods that are for signing in.
+ */
 public class AuthenticationResponse {
 	private String token;
 	private MUser_BH user;

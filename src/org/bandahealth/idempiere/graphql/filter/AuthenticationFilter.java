@@ -33,6 +33,9 @@ public class AuthenticationFilter implements Filter {
 
 	private final String ERROR_UNAUTHORIZED = "Unauthorized";
 	private final String ERROR_INTERNAL_SERVER_ERROR = "Internal Server Error";
+	/**
+	 * These are the queries that can be used without authentication
+	 */
 	private final List<String> ALLOWABLE_UNAUTHENTICATED_QUERIES = new ArrayList<String>() {{
 		add("signIn");
 		add("changePassword");
@@ -40,10 +43,21 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		// Intentionally left blank
 	}
 
+	/**
+	 * This performs the actual filtering of the requests
+	 *
+	 * @param request  The passed-in request
+	 * @param response The response to leverage
+	 * @param chain    The passed-in filter chain
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
 		HttpServletRequestWrapper bandaRequest = new BandaServletRequestWrapper(request);
 		String requestQuery = bandaRequest.getParameter("query");
 		// If the query parameter didn't come through, try to pull it from the body
@@ -100,6 +114,7 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void destroy() {
+		// Intentionally left blank
 	}
 
 	/**

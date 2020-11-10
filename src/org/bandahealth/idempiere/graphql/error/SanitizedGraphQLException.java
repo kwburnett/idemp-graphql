@@ -8,6 +8,10 @@ import org.adempiere.exceptions.AdempiereException;
 
 import java.util.Arrays;
 
+/**
+ * This allows us to return whatever exception that is thrown by the GraphQL plug-in, but to only return the message
+ * of the error and nothing else to the application
+ */
 public class SanitizedGraphQLException extends ExceptionWhileDataFetching {
 	public SanitizedGraphQLException(ExecutionPath path, Throwable exception, SourceLocation sourceLocation) {
 		super(path, exception, sourceLocation);

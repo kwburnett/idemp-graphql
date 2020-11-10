@@ -18,10 +18,9 @@ public class DateFormatDirective implements SchemaDirectiveWiring {
 	public GraphQLFieldDefinition onField(SchemaDirectiveWiringEnvironment<GraphQLFieldDefinition> environment) {
 		GraphQLFieldDefinition field = environment.getElement();
 		GraphQLFieldsContainer parentType = environment.getFieldsContainer();
-		//
-		// DataFetcherFactories.wrapDataFetcher is a helper to wrap data fetchers so that CompletionStage is handled correctly
-		// along with POJOs
-		//
+
+		// DataFetcherFactories.wrapDataFetcher is a helper to wrap data fetchers so that CompletionStage is handled
+		// correctly along with POJOs
 		DataFetcher originalFetcher = environment.getCodeRegistry().getDataFetcher(parentType, field);
 		DataFetcher dataFetcher = DataFetcherFactories.wrapDataFetcher(originalFetcher, ((dataFetchingEnvironment, value) -> {
 			String format = dataFetchingEnvironment.getArgument(DATE_FORMAT_DIRECTIVE_FORMAT_ARGUMENT_NAME);
@@ -31,11 +30,9 @@ public class DateFormatDirective implements SchemaDirectiveWiring {
 			return value;
 		}));
 
-		//
-		// This will extend the field by adding a new "format" argument to it for the date formatting
-		// which allows clients to opt into that as well as wrapping the base data fetcher so it
-		// performs the formatting over top of the base values.
-		//
+		// This will extend the field by adding a new "format" argument to it for the date formatting which allows clients
+		// to opt into that as well as wrapping the base data fetcher so it performs the formatting over top of the base
+		// values.
 		FieldCoordinates coordinates = FieldCoordinates.coordinates(parentType, field);
 		environment.getCodeRegistry().dataFetcher(coordinates, dataFetcher);
 

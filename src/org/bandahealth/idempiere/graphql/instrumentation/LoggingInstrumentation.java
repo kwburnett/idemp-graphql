@@ -8,13 +8,18 @@ import graphql.execution.instrumentation.parameters.InstrumentationExecutionPara
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.util.CLogger;
 
+/**
+ * This is a custom logging implementation that captures pertinent information about a GraphQL query and can log it
+ * or do whatever else is needed. To see a bigger example, look here:
+ * https://www.graphql-java.com/documentation/v15/instrumentation/
+ */
 public class LoggingInstrumentation extends SimpleInstrumentation {
 	private final CLogger logger = CLogger.getCLogger(LoggingInstrumentation.class);
 
 	@Override
 	public InstrumentationContext<ExecutionResult> beginExecution(InstrumentationExecutionParameters parameters) {
 		long startMillis = System.currentTimeMillis();
-		return new SimpleInstrumentationContext<>(){
+		return new SimpleInstrumentationContext<>() {
 			@Override
 			public void onCompleted(ExecutionResult result, Throwable t) {
 				logger.info(StringUtil.stripNewLines(parameters.getQuery()) + " execution time (ms): " +

@@ -1,5 +1,8 @@
 package org.bandahealth.idempiere.graphql.model;
 
+/**
+ * A model to help with pagination and paging data.
+ */
 public class PagingInfo {
 
 	private int page;

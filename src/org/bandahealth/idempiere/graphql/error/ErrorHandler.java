@@ -8,6 +8,9 @@ import org.adempiere.exceptions.AdempiereException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The custom error handler to use with all GraphQL queries
+ */
 public class ErrorHandler extends DefaultGraphQLErrorHandler {
 	@Override
 	protected List<GraphQLError> filterGraphQLErrors(List<GraphQLError> errors) {

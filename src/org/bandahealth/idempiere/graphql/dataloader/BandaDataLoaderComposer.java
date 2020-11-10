@@ -6,8 +6,14 @@ import org.dataloader.DataLoaderRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for containing all data loaders that need to be registered for each query. It holds a list
+ * of available data loaders and, when a new query comes in, it registers them for that query.
+ */
 public class BandaDataLoaderComposer {
-
+	/**
+	 * This list of data loaders available for each query.
+	 */
 	private final List<DataLoaderRegisterer> dataLoaders;
 
 	public BandaDataLoaderComposer() {
@@ -45,6 +51,12 @@ public class BandaDataLoaderComposer {
 		}};
 	}
 
+	/**
+	 * This method adds the data loaders when a new request comes in. Note, this is not a static method so hot-swaps
+	 * will work if code changes are made to the data loaders.
+	 *
+	 * @param registry The registry object that can register each data loader
+	 */
 	public void addDataLoaders(DataLoaderRegistry registry) {
 		dataLoaders.forEach(dataLoader -> dataLoader.register(registry));
 	}
