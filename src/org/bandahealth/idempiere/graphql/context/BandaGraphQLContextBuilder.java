@@ -21,13 +21,18 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 	private final BandaDataLoaderComposer bandaDataLoaderComposer;
 	CLogger logger = CLogger.getCLogger(BandaGraphQLContextBuilder.class);
 
+	/**
+	 * Called each request to create a context constructor to be used by requests (called in requests via
+	 * `(DataFetchingEnvironment) environment.getContext()`).
+	 */
 	public BandaGraphQLContextBuilder() {
 		logger.warning("Constructing GraphQL Context");
 		bandaDataLoaderComposer = new BandaDataLoaderComposer();
 	}
 
 	/**
-	 * By the time this context builder is invoked, the user is already authorized due to the filter
+	 * By the time this context builder is invoked, the user is already authorized due to the filter. This is the
+	 * constructor used for GET/POST requests to GraphQL.
 	 *
 	 * @param httpServletRequest
 	 * @param httpServletResponse
@@ -42,16 +47,36 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 		return new BandaGraphQLContext(context, userId);
 	}
 
+	/**
+	 * This is the constructor used for Subscriptions, of which there aren't currently any. If any are needed,
+	 * this method can be updated to construct a context for those sessions.
+	 *
+	 * @param session          The session object passed by GraphQL.
+	 * @param handshakeRequest The handshake request passed by GraphQL
+	 * @return IllegalStateException - not implemented now
+	 */
 	@Override
 	public GraphQLContext build(Session session, HandshakeRequest handshakeRequest) {
 		throw new IllegalStateException("Unavailable");
 	}
 
+	/**
+	 * Not leveraged because, if any app-specific properties are needed on the context, they cannot be read from the
+	 * request. However, if we're leveraging iDempiere's Env.ctx, we could pull from there without data from the request.
+	 *
+	 * @return IllegalStateException - not implemented now
+	 */
 	@Override
 	public GraphQLContext build() {
 		throw new IllegalStateException("Unavailable");
 	}
 
+	/**
+	 * This is where all data loaders are added to the registry for this query. They are added per query, though
+	 * the cache can be used to persist data/storage between queries.
+	 *
+	 * @return The DataLoaderRegistry for this request.
+	 */
 	private DataLoaderRegistry buildDataLoaderRegistry() {
 		logger.warning("building data registry");
 		DataLoaderRegistry registry = new DataLoaderRegistry();

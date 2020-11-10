@@ -12,13 +12,23 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * This is the specific context where we can add our own properties. This will be available to every resolver.
+ * This is the specific context where we can add our own properties. This will be available to every resolver via
+ * the DataFetchingEnvironment argument passed to each resolver as the last argument (from it, call
+ * `environment.getContext()`).
  */
 public class BandaGraphQLContext implements GraphQLServletContext {
 
 	private final int userId;
 	private final GraphQLServletContext context;
 
+	/**
+	 * Add any properties that should be available on the context. We may not need any if we leverage Env.getCtx()
+	 * everywhere.
+	 *
+	 * @param context The GraphQLServletContext created each request, containing the response/request/session, data loader
+	 *                registry, etc.
+	 * @param userId  The user ID of the user making the request.
+	 */
 	public BandaGraphQLContext(GraphQLServletContext context, int userId) {
 		this.context = context;
 		this.userId = userId;

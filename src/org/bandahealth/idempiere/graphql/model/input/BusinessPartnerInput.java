@@ -87,20 +87,12 @@ public class BusinessPartnerInput extends MBPartner_BH {
 		this.setBH_EMail(email);
 	}
 
-	public void setNhifRelationship(String nhifRelationship) {
-		this.setbh_nhif_relationship(nhifRelationship);
-	}
-
 	public void setNhifMemberName(String nhifMemberName) {
 		this.setbh_nhif_member_name(nhifMemberName);
 	}
 
 	public void setNhifNumber(String nhifNumber) {
 		this.setNHIF_Number(nhifNumber);
-	}
-
-	public void setNhifType(String nhifType) {
-		this.setBH_NHIF_Type(nhifType);
 	}
 
 	public void setNationalId(String nationalId) {
