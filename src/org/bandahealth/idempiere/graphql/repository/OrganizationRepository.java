@@ -14,4 +14,9 @@ public class OrganizationRepository extends BaseRepository<MOrg, MOrg> {
 	public MOrg mapInputModelToModel(MOrg entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
+	}
 }

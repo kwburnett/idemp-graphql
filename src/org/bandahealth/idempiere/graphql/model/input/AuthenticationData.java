@@ -6,10 +6,10 @@ public class AuthenticationData {
 	private String newPassword;
 	private String securityQuestion;
 	private String answer;
-	private Integer clientId;
-	private Integer roleId;
-	private Integer organizationId;
-	private Integer warehouseId;
+	private String clientId;
+	private String roleId;
+	private String organizationId;
+	private String warehouseId;
 
 	public String getUsername() {
 		return username;
@@ -35,35 +35,35 @@ public class AuthenticationData {
 		this.newPassword = newPassword;
 	}
 
-	public Integer getClientId() {
+	public String getClientId() {
 		return clientId;
 	}
 
-	public void setClientId(Integer adClientId) {
+	public void setClientId(String adClientId) {
 		this.clientId = adClientId;
 	}
 
-	public Integer getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Integer adRoleId) {
+	public void setRoleId(String adRoleId) {
 		this.roleId = adRoleId;
 	}
 
-	public Integer getOrganizationId() {
+	public String getOrganizationId() {
 		return organizationId;
 	}
 
-	public void setOrganizationId(Integer adOrganizationId) {
+	public void setOrganizationId(String adOrganizationId) {
 		this.organizationId = adOrganizationId;
 	}
 
-	public Integer getWarehouseId() {
+	public String getWarehouseId() {
 		return warehouseId;
 	}
 
-	public void setWarehouseId(Integer adWarehouseId) {
+	public void setWarehouseId(String adWarehouseId) {
 		this.warehouseId = adWarehouseId;
 	}
 

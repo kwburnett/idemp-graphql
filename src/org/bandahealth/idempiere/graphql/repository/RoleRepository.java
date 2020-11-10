@@ -9,6 +9,7 @@ import org.compiere.model.MRoleIncluded;
 import org.compiere.util.Env;
 import org.dataloader.DataLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -35,6 +36,9 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 		final DataLoader<Integer, MRole> dataLoader = environment.getDataLoaderRegistry()
 				.getDataLoader(RoleDataLoader.ROLE_BY_ID_DATA_LOADER);
 		return rolesIncluded(roleId, environment).thenApply(rolesIncluded -> {
+			if (rolesIncluded == null) {
+				return new ArrayList<>();
+			}
 			List<CompletableFuture<MRole>> roles = rolesIncluded.stream().map(roleIncluded -> dataLoader
 					.load(roleIncluded.getIncluded_Role_ID()))
 					.collect(Collectors.toList());

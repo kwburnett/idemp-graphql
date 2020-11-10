@@ -73,6 +73,7 @@ type Mutation {
   saveCustomerInvoice(invoice: InvoiceInput!, shouldProcess: Boolean = true): Invoice!
   saveVendorInvoice(invoice: InvoiceInput!, shouldProcess: Boolean = true): Invoice!
   # Orders
+  deleteOrder(id: String!): Boolean!
   processOrder(id: String!): Order!
   savePurchaseOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!
   saveSalesOrder(order: OrderInput!, shouldProcess: Boolean = true): Order!

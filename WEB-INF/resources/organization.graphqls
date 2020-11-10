@@ -2,6 +2,6 @@ type Organization {
   id: ID!
   client: Client!
   name: String!
-  warehouses: [Warehouse!]!
+  warehouses: [Warehouse!]
   roles: [Role!]!
 }

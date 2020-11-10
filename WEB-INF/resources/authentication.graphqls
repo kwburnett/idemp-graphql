@@ -3,7 +3,7 @@ type AuthenticationResponse {
   username: String
   clients: [Client!]!
   user: User
-  roleId: Int!
+  roleId: String!
   needsToResetPassword: Boolean!
   securityQuestions: [String!]
 }
@@ -14,8 +14,8 @@ input AuthenticationData {
   newPassword: String
   securityQuestion: String
   answer: String
-  clientId: Int
-  roleId: Int
-  organizationId: Int
-  warehouseId: Int
+  clientId: String
+  roleId: String
+  organizationId: String
+  warehouseId: String
 }

@@ -5,6 +5,7 @@ import graphql.execution.instrumentation.InstrumentationContext;
 import graphql.execution.instrumentation.SimpleInstrumentation;
 import graphql.execution.instrumentation.SimpleInstrumentationContext;
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters;
+import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.util.CLogger;
 
 public class LoggingInstrumentation extends SimpleInstrumentation {
@@ -16,8 +17,8 @@ public class LoggingInstrumentation extends SimpleInstrumentation {
 		return new SimpleInstrumentationContext<>(){
 			@Override
 			public void onCompleted(ExecutionResult result, Throwable t) {
-				logger.info(parameters.getQuery().replace("\r", "").replace("\n", "") +
-						" execution time (ms): " + (System.currentTimeMillis() - startMillis));
+				logger.info(StringUtil.stripNewLines(parameters.getQuery()) + " execution time (ms): " +
+						(System.currentTimeMillis() - startMillis));
 			}
 		};
 	}

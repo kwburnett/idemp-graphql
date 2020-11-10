@@ -14,4 +14,9 @@ public class ClientRepository extends BaseRepository<MClient, MClient> {
 	public MClient mapInputModelToModel(MClient entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
+	}
 }

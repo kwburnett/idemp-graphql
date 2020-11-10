@@ -35,4 +35,8 @@ public class OrderMutation implements GraphQLMutationResolver {
 	public CompletableFuture<MOrder_BH> processOrder(String id) {
 		return orderRepository.process(id);
 	}
+
+	public CompletableFuture<Boolean> deleteOrder(String id) {
+		return orderRepository.delete(id);
+	}
 }

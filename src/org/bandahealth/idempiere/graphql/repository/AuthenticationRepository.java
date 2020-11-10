@@ -17,6 +17,7 @@ import org.compiere.model.MOrg;
 import org.compiere.model.MRole;
 import org.compiere.model.MUser;
 import org.compiere.model.MWarehouse;
+import org.compiere.model.Query;
 import org.compiere.util.Env;
 import org.compiere.util.KeyNamePair;
 import org.compiere.util.Login;
@@ -208,35 +209,44 @@ public class AuthenticationRepository {
 	 * @param credentials
 	 * @param builder
 	 */
-	private void changeLoginProperties(AuthenticationData credentials, JWTCreator.Builder builder, AuthenticationResponse response) {
+	private void changeLoginProperties(AuthenticationData credentials, JWTCreator.Builder builder,
+			AuthenticationResponse response) {
 		// set client id
 		if (credentials.getClientId() != null) {
-			org.compiere.model.MClient client = org.compiere.model.MClient.get(Env.getCtx(), credentials.getClientId());
+			MClient client = new Query(Env.getCtx(), MClient.Table_Name, MClient.COLUMNNAME_AD_Client_UU + "=?",
+					null).setParameters(credentials.getClientId()).first();
 			if (client != null) {
-				response.getClients().add(new MClient(Env.getCtx(), credentials.getClientId(), null));
+				response.getClients().add(client);
 
-				Env.setContext(Env.getCtx(), Env.AD_CLIENT_ID, credentials.getClientId());
-				builder.withClaim(LoginClaims.AD_Client_ID.name(), credentials.getClientId());
+				Env.setContext(Env.getCtx(), Env.AD_CLIENT_ID, client.getAD_Client_ID());
+				builder.withClaim(LoginClaims.AD_Client_ID.name(), client.getAD_Client_ID());
 			}
 		}
 
 		// set role
 		if (credentials.getRoleId() != null) {
-			Env.setContext(Env.getCtx(), Env.AD_ROLE_ID, credentials.getRoleId());
-			builder.withClaim(LoginClaims.AD_Role_ID.name(), credentials.getRoleId());
+			MRole role = new Query(Env.getCtx(), MRole.Table_Name, MRole.COLUMNNAME_AD_Role_UU + "=?", null)
+					.setParameters(credentials.getRoleId()).first();
+			Env.setContext(Env.getCtx(), Env.AD_ROLE_ID, role.getAD_Role_ID());
+			builder.withClaim(LoginClaims.AD_Role_ID.name(), role.getAD_Role_ID());
 			response.setRoleId(credentials.getRoleId());
 		}
 
 		// check organization
 		if (credentials.getOrganizationId() != null) {
-			Env.setContext(Env.getCtx(), Env.AD_ORG_ID, credentials.getOrganizationId());
-			builder.withClaim(LoginClaims.AD_Org_ID.name(), credentials.getOrganizationId());
+			MOrg organization = new Query(Env.getCtx(), MOrg.Table_Name, MOrg.COLUMNNAME_AD_Org_UU + "=?",
+					null).setParameters(credentials.getOrganizationId()).first();
+			Env.setContext(Env.getCtx(), Env.AD_ORG_ID, organization.getAD_Org_ID());
+			builder.withClaim(LoginClaims.AD_Org_ID.name(), organization.getAD_Org_ID());
 		}
 
 		// check warehouse
 		if (credentials.getWarehouseId() != null) {
-			Env.setContext(Env.getCtx(), Env.M_WAREHOUSE_ID, credentials.getWarehouseId());
-			builder.withClaim(LoginClaims.M_Warehouse_ID.name(), credentials.getWarehouseId());
+			MWarehouse warehouse = new Query(Env.getCtx(), MWarehouse.Table_Name,
+					MWarehouse.COLUMNNAME_M_Warehouse_UU + "=?", null)
+					.setParameters(credentials.getWarehouseId()).first();
+			Env.setContext(Env.getCtx(), Env.M_WAREHOUSE_ID, warehouse.get_ID());
+			builder.withClaim(LoginClaims.M_Warehouse_ID.name(), warehouse.get_ID());
 		}
 
 	}
@@ -275,7 +285,7 @@ public class AuthenticationRepository {
 					MRole role = roles[0];
 					Env.setContext(Env.getCtx(), Env.AD_ROLE_ID, role.getAD_Role_ID());
 					builder.withClaim(LoginClaims.AD_Role_ID.name(), role.getAD_Role_ID());
-					response.setRoleId(role.getAD_Role_ID());
+					response.setRoleId(role.getAD_Role_UU());
 				}
 
 				MWarehouse[] warehouses = MWarehouse.getForOrg(Env.getCtx(), org.getAD_Org_ID());

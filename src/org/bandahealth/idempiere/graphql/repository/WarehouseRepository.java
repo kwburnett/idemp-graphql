@@ -13,4 +13,9 @@ public class WarehouseRepository extends BaseRepository<MWarehouse, MWarehouse> 
 	public MWarehouse mapInputModelToModel(MWarehouse entity) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
+
+	@Override
+	protected boolean shouldUseContextClientId() {
+		return false;
+	}
 }

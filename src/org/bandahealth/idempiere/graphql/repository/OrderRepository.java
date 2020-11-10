@@ -12,6 +12,7 @@ import org.bandahealth.idempiere.graphql.model.input.PaymentInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MDocType;
+import org.compiere.model.MOrder;
 import org.compiere.model.Query;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
@@ -216,5 +217,18 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		}
 
 		return 0;
+	}
+
+	public CompletableFuture<Boolean> delete(String id) {
+		try {
+			MOrder order = getByUuid(id);
+			if (order.isComplete()) {
+				throw new AdempiereException("Order is already completed");
+			} else {
+				return CompletableFuture.supplyAsync(() -> order.delete(false));
+			}
+		} catch (Exception ex) {
+			throw new AdempiereException(ex.getLocalizedMessage());
+		}
 	}
 }

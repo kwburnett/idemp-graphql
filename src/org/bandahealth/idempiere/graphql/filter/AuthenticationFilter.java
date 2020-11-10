@@ -2,6 +2,7 @@ package org.bandahealth.idempiere.graphql.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,9 +115,10 @@ public class AuthenticationFilter implements Filter {
 		if (!StringUtil.isNullOrEmpty(requestQuery)) {
 			try {
 				// Try to get the requested queries so they can be returned in the error
-				paths.add("\"" + requestQuery.replace("mutation", "")
+				paths.add("\"" + Arrays.stream(StringUtil.stripNewLines(requestQuery).replace("mutation", "")
 						.replace(":", " ").replace("(", " ").replace("{", " ")
-						.split(" ")[1] + "\"");
+						.replace("$", " ").replace("!", " ").replace("query", "")
+						.split(" ")).filter(s -> !StringUtil.isNullOrEmpty(s)).findFirst().orElse("unknown") + "\"");
 			} catch (Exception ignore) {
 			}
 		}

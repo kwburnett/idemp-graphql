@@ -11,7 +11,7 @@ public class AuthenticationResponse {
 	private MUser_BH user;
 	private String username;
 	private List<MClient> clients = new ArrayList<>();
-	private int roleId;
+	private String roleId;
 	private boolean needsToResetPassword;
 	private List<String> securityQuestions;
 
@@ -47,11 +47,11 @@ public class AuthenticationResponse {
 		this.username = username;
 	}
 
-	public int getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 

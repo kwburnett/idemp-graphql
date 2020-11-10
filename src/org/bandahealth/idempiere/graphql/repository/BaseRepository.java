@@ -182,7 +182,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			// To ensure the parameters are added correctly, we'll assume passed-in parameters are added last
 			whereClause = getDefaultWhereClause() + whereClause;
 		}
-		// Set up the query
+		// Set up the query. Also, we don't want virtual columns because those were used in GO and greatly slow down
+		// queries. If they're needed, the query should be written in the repositories as a column/JOIN
 		Query query = new Query(Env.getCtx(), getModelInstance().get_TableName(), whereClause, null)
 				.setNoVirtualColumn(true);
 		// If we should use the client ID in the context, add it
