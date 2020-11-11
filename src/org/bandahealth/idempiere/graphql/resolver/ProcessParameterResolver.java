@@ -18,9 +18,9 @@ import java.util.concurrent.CompletableFuture;
 public class ProcessParameterResolver extends BaseResolver<MProcessPara> implements GraphQLResolver<MProcessPara> {
 
 	public CompletableFuture<MReference> reference(MProcessPara entity, DataFetchingEnvironment environment) {
-		final DataLoader<String, MReference> dataLoader =
+		final DataLoader<Integer, MReference> dataLoader =
 				environment.getDataLoaderRegistry().getDataLoader(ReferenceDataLoader.REFERENCE_BY_ID_DATA_LOADER);
-		return dataLoader.load(ModelUtil.getModelKey(entity, entity.getAD_Reference_ID()));
+		return dataLoader.load(entity.getAD_Reference_ID());
 	}
 
 	public CompletableFuture<List<MRefList>> referenceValue(MProcessPara entity, DataFetchingEnvironment environment) {

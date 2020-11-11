@@ -107,6 +107,7 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	}
 
 	public String generateReport(ProcessInfoInput processInfoInput, Properties idempiereContext) {
+		Env.setCtx(idempiereContext);
 		MProcess process = getByUuid(processInfoInput.getProcess().getAD_Process_UU(), idempiereContext);
 
 		if (process == null) {
