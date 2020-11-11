@@ -88,10 +88,9 @@ public class AuthenticationFilter implements Filter {
 		// consume JWT i.e. execute signature validation
 		if (authHeaderVal != null && authHeaderVal.startsWith("Bearer")) {
 			try {
-				Properties idempiereContext = Env.getCtx();
-				AuthenticationUtil.validate(authHeaderVal.split(" ")[1], idempiereContext);
-				if (Util.isEmpty(Env.getContext(idempiereContext, Env.AD_USER_ID))
-						|| Util.isEmpty(Env.getContext(idempiereContext, Env.AD_ROLE_ID))) {
+				AuthenticationUtil.validate(authHeaderVal.split(" ")[1], Env.getCtx());
+				if (Util.isEmpty(Env.getContext(Env.getCtx(), Env.AD_USER_ID))
+						|| Util.isEmpty(Env.getContext(Env.getCtx(), Env.AD_ROLE_ID))) {
 					abortRequest(requestQuery, response, ERROR_UNAUTHORIZED);
 					return;
 				}
