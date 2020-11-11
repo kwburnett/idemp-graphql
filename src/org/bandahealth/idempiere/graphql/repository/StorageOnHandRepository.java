@@ -24,13 +24,12 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 			MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Locator_ID,
 			MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_GuaranteeDate
 	);
-	private static final String COLUMNSELECT_QtyOnHand = "SUM(" + MStorageOnHand.Table_Name + "." +
+	public static final String COLUMNSELECT_QtyOnHand = "SUM(" + MStorageOnHand.Table_Name + "." +
 			MStorageOnHand.COLUMNNAME_QtyOnHand + ")";
 	private static final String COLUMNSELECT_M_AttributeSetInstance_ID = "MAX(" + MStorageOnHand.Table_Name + "." +
 			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + ")";
 	public static final Map<String, String> MODIFIED_COLUMNS = new HashMap<>() {{
 		put(MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID, COLUMNSELECT_M_AttributeSetInstance_ID);
-		put(MStorageOnHand.COLUMNNAME_QtyOnHand, COLUMNSELECT_QtyOnHand);
 	}};
 	private static final List<String> UNMODIFIED_COLUMNS = Arrays.asList(
 			MStorageOnHand.COLUMNNAME_AD_Client_ID,
@@ -44,7 +43,8 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 			MStorageOnHand.COLUMNNAME_Updated,
 			MStorageOnHand.COLUMNNAME_UpdatedBy,
 			MStorageOnHand.COLUMNNAME_M_StorageOnHand_UU,
-			MStorageOnHand.COLUMNNAME_DateMaterialPolicy
+			MStorageOnHand.COLUMNNAME_DateMaterialPolicy,
+			MStorageOnHand.COLUMNNAME_QtyOnHand
 	);
 	private final String unmodifiedTableAlias = "usoh";
 	private final String modifiedTableAlias = "msoh";

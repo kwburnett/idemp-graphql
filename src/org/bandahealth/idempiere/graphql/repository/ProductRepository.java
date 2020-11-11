@@ -63,8 +63,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 		int storageOnHandBaseIndexOfWhere = storageOnHandBaseSql.indexOf("WHERE");
 		return new HashMap<>() {{
 			put(MStorageOnHand.Table_Name, "LEFT JOIN (" + "SELECT " + MStorageOnHand.Table_Name + "." +
-					MStorageOnHand.COLUMNNAME_M_Product_ID + "," + StorageOnHandRepository
-					.MODIFIED_COLUMNS.get(MStorageOnHand.COLUMNNAME_QtyOnHand) + " AS " +
+					MStorageOnHand.COLUMNNAME_M_Product_ID + "," + StorageOnHandRepository.COLUMNSELECT_QtyOnHand + " AS " +
 					MStorageOnHand.COLUMNNAME_QtyOnHand + " " + storageOnHandBaseSql
 					.substring(storageOnHandBaseIndexOfFrom, storageOnHandBaseIndexOfWhere) + " GROUP BY " +
 					MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID + ") AS " +
