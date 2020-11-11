@@ -14,16 +14,13 @@ import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MDocType;
 import org.compiere.model.MOrder;
 import org.compiere.model.Query;
-import org.compiere.util.CLogger;
-import org.compiere.util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
-
-	private final CLogger logger = CLogger.getCLogger(OrderRepository.class);
 
 	private final OrderLineRepository orderLineRepository;
 	private final BusinessPartnerRepository businessPartnerRepository;
@@ -42,9 +39,10 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	}
 
 	@Override
-	public void updateCacheAfterSave(MOrder_BH entity) {
-		super.updateCacheAfterSave(entity);
-		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID()));
+	public void updateCacheAfterSave(MOrder_BH entity, Properties idempiereContext) {
+		super.updateCacheAfterSave(entity, idempiereContext);
+		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID(),
+				idempiereContext), idempiereContext);
 	}
 
 	public Connection<MOrder_BH> getPurchaseOrders(String filter, String sort, PagingInfo pagingInfo,
@@ -66,16 +64,16 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	}
 
 	@Override
-	protected MOrder_BH createModelInstance() {
-		return new MOrder_BH(Env.getCtx(), 0, null);
+	protected MOrder_BH createModelInstance(Properties idempiereContext) {
+		return new MOrder_BH(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MOrder_BH mapInputModelToModel(OrderInput entity) {
+	public MOrder_BH mapInputModelToModel(OrderInput entity, Properties idempiereContext) {
 		try {
-			MOrder_BH order = getByUuid(entity.getC_Order_UU());
+			MOrder_BH order = getByUuid(entity.getC_Order_UU(), idempiereContext);
 			if (order == null) {
-				order = createModelInstance();
+				order = createModelInstance(idempiereContext);
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getDateOrdered(), order::setDateOrdered);
@@ -90,7 +88,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 			// set patient
 			if (entity.getBusinessPartner() != null && entity.getBusinessPartner().getC_BPartner_UU() != null) {
 				businessPartner = businessPartnerRepository
-						.getByUuid(entity.getBusinessPartner().getC_BPartner_UU());
+						.getByUuid(entity.getBusinessPartner().getC_BPartner_UU(), idempiereContext);
 				if (businessPartner != null) {
 					order.setC_BPartner_ID(businessPartner.get_ID());
 				}
@@ -122,7 +120,7 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 
 			// set target document type
 			if (!order.isSOTrx()) {
-				order.setC_DocTypeTarget_ID(getPurchaseOrderDocumentTypeId());
+				order.setC_DocTypeTarget_ID(getPurchaseOrderDocumentTypeId(idempiereContext));
 			}
 
 			return order;
@@ -135,19 +133,19 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	}
 
 	@Override
-	public MOrder_BH afterSave(OrderInput inputEntity, MOrder_BH entity) {
+	public MOrder_BH afterSave(OrderInput inputEntity, MOrder_BH entity, Properties idempiereContext) {
 		List<String> orderLineUuidsToKeep = new ArrayList<>();
 		// persist product/service/charge order lines
 		List<OrderLineInput> orderLines = inputEntity.getOrderLines();
 		if (orderLines != null && !orderLines.isEmpty()) {
 			for (OrderLineInput orderLine : orderLines) {
 				orderLine.setC_Order_ID(entity.get_ID());
-				orderLineUuidsToKeep.add(orderLineRepository.save(orderLine).getC_OrderLine_UU());
+				orderLineUuidsToKeep.add(orderLineRepository.save(orderLine, idempiereContext).getC_OrderLine_UU());
 			}
 		}
 
 		// delete order lines not in request
-		orderLineRepository.deleteByOrder(entity.get_ID(), orderLineUuidsToKeep);
+		orderLineRepository.deleteByOrder(entity.get_ID(), orderLineUuidsToKeep, idempiereContext);
 
 		// Handle payments for sales orders
 		if (entity.isSOTrx()) {
@@ -160,25 +158,25 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 					if (entity.getC_BPartner_ID() > 0) {
 						payment.setC_BPartner_ID(entity.getC_BPartner_ID());
 					}
-					paymentUuidsToKeep.add(paymentRepository.save(payment).getC_Payment_UU());
+					paymentUuidsToKeep.add(paymentRepository.save(payment, idempiereContext).getC_Payment_UU());
 				}
 			}
 
 			// delete payment lines not in request
-			paymentRepository.deleteByOrder(entity.get_ID(), paymentUuidsToKeep);
+			paymentRepository.deleteByOrder(entity.get_ID(), paymentUuidsToKeep, idempiereContext);
 		}
 
 		return entity;
 	}
 
-	public MOrder_BH saveSalesOrder(OrderInput entity) {
+	public MOrder_BH saveSalesOrder(OrderInput entity, Properties idempiereContext) {
 		entity.setIsSOTrx(true);
-		return save(entity);
+		return save(entity, idempiereContext);
 	}
 
-	public MOrder_BH savePurchaseOrder(OrderInput entity) {
+	public MOrder_BH savePurchaseOrder(OrderInput entity, Properties idempiereContext) {
 		entity.setIsSOTrx(false);
-		return save(entity);
+		return save(entity, idempiereContext);
 	}
 
 	/**
@@ -187,19 +185,19 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	 * @param uuid
 	 * @return
 	 */
-	public CompletableFuture<MOrder_BH> process(String uuid) {
-		MOrder_BH order = getByUuid(uuid);
+	public CompletableFuture<MOrder_BH> process(String uuid, Properties idempiereContext) {
+		MOrder_BH order = getByUuid(uuid, idempiereContext);
 		if (order == null) {
 			logger.severe("No order with uuid = " + uuid);
 			return null;
 		}
 
-		processRepository.runOrderProcess(order.get_ID());
+		processRepository.runOrderProcess(order.get_ID(), idempiereContext);
 		cache.delete(order.get_ID());
 		cache.delete(uuid);
 		businessPartnerRepository.cache.delete(order.getC_BPartner_ID());
 
-		return CompletableFuture.supplyAsync(() -> getByUuid(order.getC_Order_UU()));
+		return CompletableFuture.supplyAsync(() -> getByUuid(order.getC_Order_UU(), idempiereContext));
 	}
 
 	/**
@@ -207,9 +205,9 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 	 *
 	 * @return
 	 */
-	protected int getPurchaseOrderDocumentTypeId() {
+	protected int getPurchaseOrderDocumentTypeId(Properties idempiereContext) {
 		// set target document type
-		MDocType docType = new Query(Env.getCtx(), MDocType.Table_Name,
+		MDocType docType = new Query(idempiereContext, MDocType.Table_Name,
 				MDocType.COLUMNNAME_Name + "=? AND " + MDocType.COLUMNNAME_DocBaseType + "=?", null)
 				.setParameters(PURCHASE_ORDER, MDocType.DOCBASETYPE_PurchaseOrder).setClient_ID().first();
 		if (docType != null) {
@@ -219,9 +217,9 @@ public class OrderRepository extends BaseRepository<MOrder_BH, OrderInput> {
 		return 0;
 	}
 
-	public CompletableFuture<Boolean> delete(String id) {
+	public CompletableFuture<Boolean> delete(String id, Properties idempiereContext) {
 		try {
-			MOrder order = getByUuid(id);
+			MOrder order = getByUuid(id, idempiereContext);
 			if (order.isComplete()) {
 				throw new AdempiereException("Order is already completed");
 			} else {

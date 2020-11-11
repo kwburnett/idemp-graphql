@@ -80,12 +80,12 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	 * @param request
 	 * @return
 	 */
-	public static ProcessInfo runProcess(ProcessInfo request) {
+	public static ProcessInfo runProcess(ProcessInfo request, Properties idempiereContext) {
 		if (request == null) {
 			return null;
 		}
 
-		MProcess mprocess = new Query(Env.getCtx(), MProcess.Table_Name, MProcess.COLUMNNAME_AD_Process_UU
+		MProcess mprocess = new Query(idempiereContext, MProcess.Table_Name, MProcess.COLUMNNAME_AD_Process_UU
 				+ "=?", null)
 				.setOnlyActiveRecords(true).setParameters(request.getAD_Process_UU()).first();
 
@@ -93,7 +93,7 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 
 		ProcessInfo processInfo = new ProcessInfo(mprocess.getName(), mprocess.getAD_Process_ID());
 		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
-		processInfo.setAD_Client_ID(Env.getAD_Client_ID(Env.getCtx()));
+		processInfo.setAD_Client_ID(Env.getAD_Client_ID(idempiereContext));
 		processInfo.setAD_PInstance_ID(mpInstance.getAD_PInstance_ID());
 		processInfo.setAD_Process_UU(mprocess.getAD_Process_UU());
 
@@ -106,8 +106,8 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 		return processInfo;
 	}
 
-	public String generateReport(ProcessInfoInput processInfoInput) {
-		MProcess process = getByUuid(processInfoInput.getProcess().getAD_Process_UU());
+	public String generateReport(ProcessInfoInput processInfoInput, Properties idempiereContext) {
+		MProcess process = getByUuid(processInfoInput.getProcess().getAD_Process_UU(), idempiereContext);
 
 		if (process == null) {
 			throw new AdempiereException("Could not find report");
@@ -133,11 +133,11 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 				.getGroupsByIds(MProcessPara::getAD_Process_ID,
 						MProcessPara.COLUMNNAME_AD_Process_ID, new HashSet<>(new ArrayList<>() {{
 							add(process.get_ID());
-						}})).get(process.get_ID()).stream().collect(
+						}}), idempiereContext).get(process.get_ID()).stream().collect(
 						Collectors.toMap(MProcessPara::getAD_Process_Para_UU, processParameter -> processParameter));
 		Map<Integer, MReference> referencesByIdMap = referenceRepository
 				.getByIds(processParametersByUuidMap.values().stream().map(MProcessPara::getAD_Reference_ID)
-						.collect(Collectors.toSet()));
+						.collect(Collectors.toSet()), idempiereContext);
 		List<ProcessInfoParameter> processedInfoParameters = new ArrayList<>();
 		// Now, cycle through and process each parameter passed in
 		processInfoInput.getParameters().forEach(processInfoParameter -> {
@@ -153,12 +153,12 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 			// Until we update reports to use UUIDs, we have to do this bad stuff
 			if (processParameter.getName().toLowerCase().endsWith("id")) {
 				if (process.getName().equalsIgnoreCase(THERMAL_RECEIPT_REPORT)) {
-					MOrder_BH order = new Query(Env.getCtx(), MOrder_BH.Table_Name,
+					MOrder_BH order = new Query(idempiereContext, MOrder_BH.Table_Name,
 							MOrder_BH.COLUMNNAME_C_Order_UU + "=?", null)
 							.setParameters(parameter.toString()).first();
 					parameter = BigDecimal.valueOf(order.get_ID());
 				} else if (process.getName().equalsIgnoreCase(DEBT_PAYMENT_RECEIPT)) {
-					MPayment_BH payment = new Query(Env.getCtx(), MPayment_BH.Table_Name,
+					MPayment_BH payment = new Query(idempiereContext, MPayment_BH.Table_Name,
 							MPayment_BH.COLUMNNAME_C_Payment_UU + "=?", null)
 							.setParameters(parameter.toString()).first();
 					parameter = BigDecimal.valueOf(payment.get_ID());
@@ -258,8 +258,8 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	 *
 	 * @param orderId
 	 */
-	public String runOrderProcess(int orderId) {
-		MProcess mprocess = new Query(Env.getCtx(), MProcess.Table_Name, MProcess.COLUMNNAME_Classname + "=?",
+	public String runOrderProcess(int orderId, Properties idempiereContext) {
+		MProcess mprocess = new Query(idempiereContext, MProcess.Table_Name, MProcess.COLUMNNAME_Classname + "=?",
 				null)
 				.setOnlyActiveRecords(true).setParameters(SALES_PROCESS_CLASS_NAME).first();
 
@@ -282,9 +282,9 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	 *
 	 * @param invoiceId
 	 */
-	public String runExpenseProcess(int invoiceId, boolean delete) {
+	public String runExpenseProcess(int invoiceId, boolean delete, Properties idempiereContext) {
 		MProcess mprocess = new Query(
-				Env.getCtx(),
+				idempiereContext,
 				MProcess.Table_Name,
 				MProcess.COLUMNNAME_Classname + "=?",
 				null
@@ -320,8 +320,9 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	 * @param attributeSetInstanceId
 	 * @param quantity
 	 */
-	public String runStockTakeProcess(int productID, int attributeSetInstanceId, BigDecimal quantity) {
-		MProcess mprocess = getBaseQuery(MProcess.COLUMNNAME_Classname + "=?",
+	public String runStockTakeProcess(int productID, int attributeSetInstanceId, BigDecimal quantity,
+			Properties idempiereContext) {
+		MProcess mprocess = getBaseQuery(idempiereContext, MProcess.COLUMNNAME_Classname + "=?",
 				STOCKTAKE_PROCESS_CLASS_NAME).setOnlyActiveRecords(true).first();
 
 		MPInstance mpInstance = new MPInstance(mprocess, 0);
@@ -343,12 +344,12 @@ public class ProcessRepository extends BaseRepository<MProcess, ProcessInput> {
 	}
 
 	@Override
-	protected MProcess createModelInstance() {
-		return new ProcessInput();
+	protected MProcess createModelInstance(Properties idempiereContext) {
+		return new MProcess(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MProcess mapInputModelToModel(ProcessInput entity) {
+	public MProcess mapInputModelToModel(ProcessInput entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

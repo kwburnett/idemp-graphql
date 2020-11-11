@@ -6,9 +6,10 @@ import org.bandahealth.idempiere.graphql.model.input.InvoiceInput;
 import org.bandahealth.idempiere.graphql.repository.InvoiceRepository;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput, InvoiceRepository>
 		implements DataLoaderRegisterer {
@@ -22,10 +23,11 @@ public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput,
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(VENDOR_INVOICE_BY_BUSINESS_PARTNER_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getVendorInvoiceByBusinessPartnerBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getVendorInvoiceByBusinessPartnerBatchLoader(),
+						getOptionsWithCache(idempiereContext)));
 	}
 
 	@Override
@@ -43,8 +45,9 @@ public class InvoiceDataLoader extends BaseDataLoader<MInvoice_BH, InvoiceInput,
 		return invoiceRepository;
 	}
 
-	private MappedBatchLoader<String, List<MInvoice_BH>> getVendorInvoiceByBusinessPartnerBatchLoader() {
-		return keys -> invoiceRepository.getGroupsByIdsCompletableFuture(MInvoice_BH::getC_BPartner_ID,
-				MInvoice_BH.COLUMNNAME_C_BPartner_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MInvoice_BH>> getVendorInvoiceByBusinessPartnerBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> invoiceRepository
+				.getGroupsByIdsCompletableFuture(MInvoice_BH::getC_BPartner_ID, MInvoice_BH.COLUMNNAME_C_BPartner_ID, keys,
+						batchLoaderEnvironment.getContext());
 	}
 }

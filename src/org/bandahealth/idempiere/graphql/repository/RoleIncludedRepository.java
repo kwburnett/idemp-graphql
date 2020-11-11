@@ -1,16 +1,17 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.compiere.model.MRoleIncluded;
-import org.compiere.util.Env;
+
+import java.util.Properties;
 
 public class RoleIncludedRepository extends BaseRepository<MRoleIncluded, MRoleIncluded> {
 	@Override
-	protected MRoleIncluded createModelInstance() {
-		return new MRoleIncluded(Env.getCtx(), 0, null);
+	protected MRoleIncluded createModelInstance(Properties idempiereContext) {
+		return new MRoleIncluded(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MRoleIncluded mapInputModelToModel(MRoleIncluded entity) {
+	public MRoleIncluded mapInputModelToModel(MRoleIncluded entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

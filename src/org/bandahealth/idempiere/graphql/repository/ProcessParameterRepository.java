@@ -1,16 +1,17 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.compiere.model.MProcessPara;
-import org.compiere.util.Env;
+
+import java.util.Properties;
 
 public class ProcessParameterRepository extends BaseRepository<MProcessPara, MProcessPara> {
 	@Override
-	protected MProcessPara createModelInstance() {
-		return new MProcessPara(Env.getCtx(), 0, null);
+	protected MProcessPara createModelInstance(Properties idempiereContext) {
+		return new MProcessPara(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MProcessPara mapInputModelToModel(MProcessPara entity) {
+	public MProcessPara mapInputModelToModel(MProcessPara entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

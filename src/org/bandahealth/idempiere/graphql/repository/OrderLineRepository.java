@@ -9,6 +9,7 @@ import org.compiere.model.Query;
 import org.compiere.util.Env;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLineInput> {
@@ -22,11 +23,11 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 	}
 
 	@Override
-	protected MOrderLine_BH createModelInstance() {
-		return new MOrderLine_BH(Env.getCtx(), 0, null);
+	protected MOrderLine_BH createModelInstance(Properties idempiereContext) {
+		return new MOrderLine_BH(idempiereContext, 0, null);
 	}
 
-	public void deleteByOrder(int orderId, List<String> orderLineUuidsToKeep) {
+	public void deleteByOrder(int orderId, List<String> orderLineUuidsToKeep, Properties idempiereContext) {
 		String whereClause = MOrderLine_BH.COLUMNNAME_C_Order_ID + "=?";
 		if (orderLineUuidsToKeep != null && !orderLineUuidsToKeep.isEmpty()) {
 			whereClause += " AND " + MOrderLine_BH.COLUMNNAME_C_OrderLine_UU + " NOT IN(" +
@@ -34,7 +35,7 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 							.collect(Collectors.joining(",")) + ")";
 		}
 
-		List<MOrderLine_BH> orderLines = new Query(Env.getCtx(), MOrderLine_BH.Table_Name, whereClause, null)
+		List<MOrderLine_BH> orderLines = new Query(idempiereContext, MOrderLine_BH.Table_Name, whereClause, null)
 				.setParameters(orderId).setClient_ID().list();
 		orderLines.forEach(orderLine -> {
 			orderLine.deleteEx(false);
@@ -42,17 +43,17 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 	}
 
 	@Override
-	public MOrderLine_BH mapInputModelToModel(OrderLineInput entity) {
-		MOrderLine_BH orderLine = getByUuid(entity.getC_OrderLine_UU());
+	public MOrderLine_BH mapInputModelToModel(OrderLineInput entity, Properties idempiereContext) {
+		MOrderLine_BH orderLine = getByUuid(entity.getC_OrderLine_UU(), idempiereContext);
 		if (orderLine == null) {
-			orderLine = new MOrderLine_BH(Env.getCtx(), 0, null);
-			orderLine.setAD_Org_ID(Env.getAD_Org_ID(Env.getCtx()));
+			orderLine = new MOrderLine_BH(idempiereContext, 0, null);
+			orderLine.setAD_Org_ID(Env.getAD_Org_ID(idempiereContext));
 		}
 
 		ModelUtil.setPropertyIfPresent(entity.getC_Order_ID(), orderLine::setC_Order_ID);
 
 		if (entity.getCharge() != null) {
-			MCharge_BH charge = chargeRepository.getByUuid(entity.getCharge().getC_Charge_UU());
+			MCharge_BH charge = chargeRepository.getByUuid(entity.getCharge().getC_Charge_UU(), idempiereContext);
 
 			if (charge != null) {
 				orderLine.setC_Charge_ID(charge.get_ID());
@@ -60,7 +61,7 @@ public class OrderLineRepository extends BaseRepository<MOrderLine_BH, OrderLine
 		}
 
 		if (entity.getProduct() != null) {
-			MProduct_BH product = productRepository.getByUuid(entity.getProduct().getM_Product_UU());
+			MProduct_BH product = productRepository.getByUuid(entity.getProduct().getM_Product_UU(), idempiereContext);
 
 			if (product != null) {
 				orderLine.setM_Product_ID(product.get_ID());

@@ -3,11 +3,13 @@ package org.bandahealth.idempiere.graphql.query;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MHomeScreenButton;
+import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
 import org.bandahealth.idempiere.graphql.repository.RoleRepository;
 import org.compiere.util.Env;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 public class HomeScreenButtonQuery implements GraphQLQueryResolver {
@@ -20,7 +22,8 @@ public class HomeScreenButtonQuery implements GraphQLQueryResolver {
 	}
 
 	public CompletableFuture<List<MHomeScreenButton>> homeScreenButtons(DataFetchingEnvironment environment) {
-		return roleRepository.isAdmin(Env.getAD_Role_ID(Env.getCtx()), environment)
-				.thenApply(homeScreenButtonRepository::get);
+		Properties idempiereContext = BandaGraphQLContext.getCtx(environment);
+		return roleRepository.isAdmin(Env.getAD_Role_ID(idempiereContext), environment)
+				.thenApply((isAdmin) -> homeScreenButtonRepository.get(isAdmin, idempiereContext));
 	}
 }

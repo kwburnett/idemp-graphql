@@ -6,11 +6,11 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MRole;
 import org.compiere.model.MRoleIncluded;
-import org.compiere.util.Env;
 import org.dataloader.DataLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -18,12 +18,12 @@ public class RoleRepository extends BaseRepository<MRole, MRole> {
 	private static final String ALL_SUBROLES_INCLUDED = "BandaGo Admin";
 
 	@Override
-	protected MRole createModelInstance() {
-		return new MRole(Env.getCtx(), 0, null);
+	protected MRole createModelInstance(Properties idempiereContext) {
+		return new MRole(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MRole mapInputModelToModel(MRole entity) {
+	public MRole mapInputModelToModel(MRole entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

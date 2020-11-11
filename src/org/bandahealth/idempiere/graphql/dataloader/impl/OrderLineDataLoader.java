@@ -6,9 +6,10 @@ import org.bandahealth.idempiere.graphql.model.input.OrderLineInput;
 import org.bandahealth.idempiere.graphql.repository.OrderLineRepository;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLineInput, OrderLineRepository>
 		implements DataLoaderRegisterer {
@@ -37,14 +38,14 @@ public class OrderLineDataLoader extends BaseDataLoader<MOrderLine_BH, OrderLine
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(ORDER_LINE_BY_ORDER_DATA_LOADER, DataLoader.newMappedDataLoader(getBatchLoader(),
-				getOptionsWithCache()));
+				getOptionsWithCache(idempiereContext)));
 	}
 
-	private MappedBatchLoader<String, List<MOrderLine_BH>> getBatchLoader() {
-		return keys -> orderLineRepository.getGroupsByIdsCompletableFuture(MOrderLine_BH::getC_Order_ID,
-				MOrderLine_BH.COLUMNNAME_C_Order_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MOrderLine_BH>> getBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> orderLineRepository.getGroupsByIdsCompletableFuture(
+				MOrderLine_BH::getC_Order_ID, MOrderLine_BH.COLUMNNAME_C_Order_ID, keys, batchLoaderEnvironment.getContext());
 	}
 }

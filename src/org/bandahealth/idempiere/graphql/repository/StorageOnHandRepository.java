@@ -106,25 +106,27 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	}
 
 	@Override
-	protected MStorageOnHand createModelInstance() {
-		return new StorageOnHandInput();
+	protected MStorageOnHand createModelInstance(Properties idempiereContext) {
+		return new MStorageOnHand(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MStorageOnHand mapInputModelToModel(StorageOnHandInput entity) {
-		MStorageOnHand storageOnHand = getByUuid(entity.getM_StorageOnHand_UU());
+	public MStorageOnHand mapInputModelToModel(StorageOnHandInput entity, Properties idempiereContext) {
+		MStorageOnHand storageOnHand = getByUuid(entity.getM_StorageOnHand_UU(), idempiereContext);
 		if (storageOnHand == null) {
 			throw new AdempiereException("Storage entity not specified");
 		}
 		processRepository.runStockTakeProcess(storageOnHand.getM_Product_ID(),
-				storageOnHand.getM_AttributeSetInstance_ID(), entity.getQuantityOnHand());
-		return getBaseQuery(MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID +
-						"=? AND " + MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=?",
-				storageOnHand.getM_Product_ID(), storageOnHand.getM_AttributeSetInstance_ID()).first();
+				storageOnHand.getM_AttributeSetInstance_ID(), entity.getQuantityOnHand(), idempiereContext);
+		return getBaseQuery(idempiereContext, MStorageOnHand.Table_Name + "." +
+						MStorageOnHand.COLUMNNAME_M_Product_ID + "=? AND " + MStorageOnHand.Table_Name + "." +
+						MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=?", storageOnHand.getM_Product_ID(),
+				storageOnHand.getM_AttributeSetInstance_ID()).first();
 	}
 
 	@Override
-	public BandaQuery<MStorageOnHand> getBaseQuery(String additionalWhereClause, Object... parameters) {
+	public BandaQuery<MStorageOnHand> getBaseQuery(Properties idempiereContext, String additionalWhereClause,
+			Object... parameters) {
 		StringBuilder sqlSelect = new StringBuilder().append("SELECT ").append(UNMODIFIED_COLUMNS.stream()
 				.map(unmodifiedColumn -> MStorageOnHand.Table_Name + "." + unmodifiedColumn)
 				.collect(Collectors.joining(","))).append(",").append(MODIFIED_COLUMNS.keySet().stream()
@@ -154,24 +156,24 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 			sqlFromAndJoin.append(" WHERE ").append(modifiedTableAlias)
 					.append(guaranteeDateWhereClause.substring(indexOfAliasSeparator));
 		}
-		sqlFromAndJoin.append(") AS ").append(MStorageOnHand.Table_Name).append(getDefaultJoinClause());
+		sqlFromAndJoin.append(") AS ").append(MStorageOnHand.Table_Name).append(getDefaultJoinClause(idempiereContext));
 
 		// Since the JOIN clause was added, add any parameters
 		final List<Object> parametersToUse = new ArrayList<>();
-		if (getDefaultJoinClauseParameters() != null) {
-			parametersToUse.addAll(getDefaultJoinClauseParameters());
+		if (getDefaultJoinClauseParameters(idempiereContext) != null) {
+			parametersToUse.addAll(getDefaultJoinClauseParameters(idempiereContext));
 		}
 
 		StringBuilder sqlWhere = new StringBuilder().append(" WHERE ").append(MStorageOnHand.Table_Name).append(".")
 				.append(MStorageOnHand.COLUMNNAME_AD_Client_ID).append("=?").append(" AND ").append(MStorageOnHand.Table_Name)
 				.append(".").append(MStorageOnHand.COLUMNNAME_AD_Org_ID).append("=?");
-		parametersToUse.add(Env.getAD_Client_ID(Env.getCtx()));
-		parametersToUse.add(Env.getAD_Org_ID(Env.getCtx()));
+		parametersToUse.add(Env.getAD_Client_ID(idempiereContext));
+		parametersToUse.add(Env.getAD_Org_ID(idempiereContext));
 
 		// Add the defaults
-		sqlWhere.append(getDefaultWhereClause());
-		if (getDefaultWhereClauseParameters() != null) {
-			parametersToUse.addAll(getDefaultWhereClauseParameters());
+		sqlWhere.append(getDefaultWhereClause(idempiereContext));
+		if (getDefaultWhereClauseParameters(idempiereContext) != null) {
+			parametersToUse.addAll(getDefaultWhereClauseParameters(idempiereContext));
 		}
 
 		if (!StringUtil.isNullOrEmpty(additionalWhereClause)) {
@@ -216,7 +218,7 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 					logger.warning(statement.toString());
 					resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						results.add(new MStorageOnHand(Env.getCtx(), resultSet, null));
+						results.add(new MStorageOnHand(idempiereContext, resultSet, null));
 					}
 				} catch (SQLException e) {
 					logger.log(Level.SEVERE, getSQL(), e);
@@ -236,7 +238,7 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 
 					resultSet = statement.executeQuery();
 					if (resultSet.next()) {
-						return new MStorageOnHand(Env.getCtx(), resultSet, null);
+						return new MStorageOnHand(idempiereContext, resultSet, null);
 					}
 					return null;
 				} catch (SQLException e) {
@@ -338,17 +340,17 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	}
 
 	@Override
-	public List<Object> getDefaultJoinClauseParameters() {
-		return attributeSetInstanceRepository.getDefaultJoinClauseParameters();
+	public List<Object> getDefaultJoinClauseParameters(Properties idempiereContext) {
+		return attributeSetInstanceRepository.getDefaultJoinClauseParameters(idempiereContext);
 	}
 
 	@Override
-	public String getDefaultJoinClause() {
+	public String getDefaultJoinClause(Properties idempiereContext) {
 		return " JOIN " + MAttributeSetInstance.Table_Name + " ON " + MAttributeSetInstance.Table_Name + "." +
 				MAttributeSetInstance.COLUMNNAME_M_AttributeSetInstance_ID + "=" + MStorageOnHand.Table_Name + "." +
 				MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + " " +
-				attributeSetInstanceRepository.getDefaultJoinClause() + " JOIN " + MProduct_BH.Table_Name + " ON " +
-				MProduct_BH.Table_Name + "." + MProduct_BH.COLUMNNAME_M_Product_ID + "=" + MStorageOnHand.Table_Name + "." +
-				MStorageOnHand.COLUMNNAME_M_Product_ID;
+				attributeSetInstanceRepository.getDefaultJoinClause(idempiereContext) + " JOIN " + MProduct_BH.Table_Name +
+				" ON " + MProduct_BH.Table_Name + "." + MProduct_BH.COLUMNNAME_M_Product_ID + "=" + MStorageOnHand.Table_Name +
+				"." + MStorageOnHand.COLUMNNAME_M_Product_ID;
 	}
 }

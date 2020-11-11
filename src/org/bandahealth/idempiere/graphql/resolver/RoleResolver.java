@@ -2,6 +2,7 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
 import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
@@ -33,7 +34,8 @@ public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver
 
 	public CompletableFuture<Boolean> hasAccessToReports(MRole entity, DataFetchingEnvironment environment) {
 		return roleRepository.isAdmin(entity.getAD_Role_ID(), environment)
-				.thenApply(homeScreenButtonRepository::hasAccessToReports);
+				.thenApply((userIsAdmin) -> homeScreenButtonRepository.hasAccessToReports(userIsAdmin,
+						BandaGraphQLContext.getCtx(environment)));
 	}
 
 	private CompletableFuture<List<MRoleIncluded>> rolesIncluded(MRole entity, DataFetchingEnvironment environment) {

@@ -1,6 +1,7 @@
 package org.bandahealth.idempiere.graphql.context;
 
 import graphql.kickstart.servlet.context.GraphQLServletContext;
+import graphql.schema.DataFetchingEnvironment;
 import org.dataloader.DataLoaderRegistry;
 
 import javax.security.auth.Subject;
@@ -10,6 +11,7 @@ import javax.servlet.http.Part;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * This is the specific context where we can add our own properties. This will be available to every resolver via
@@ -18,7 +20,7 @@ import java.util.Optional;
  */
 public class BandaGraphQLContext implements GraphQLServletContext {
 
-	private final int userId;
+	private final Properties idempiereContext;
 	private final GraphQLServletContext context;
 
 	/**
@@ -29,17 +31,27 @@ public class BandaGraphQLContext implements GraphQLServletContext {
 	 *                registry, etc.
 	 * @param userId  The user ID of the user making the request.
 	 */
-	public BandaGraphQLContext(GraphQLServletContext context, int userId) {
+	public BandaGraphQLContext(GraphQLServletContext context, Properties idempiereContext) {
 		this.context = context;
-		this.userId = userId;
+		this.idempiereContext = idempiereContext;
+	}
+
+	/**
+	 * A shortcut method to get the needed context. This is needed because Env.getCtx() isn't thread-safe.
+	 *
+	 * @param environment The data fetching environment object passed to all GraphQL queries
+	 * @return The iDempiere context
+	 */
+	public static Properties getCtx(DataFetchingEnvironment environment) {
+		return ((BandaGraphQLContext) environment.getContext()).getIdempiereContext();
 	}
 
 	public GraphQLServletContext getContext() {
 		return context;
 	}
 
-	public int getUserId() {
-		return userId;
+	public Properties getIdempiereContext() {
+		return idempiereContext;
 	}
 
 	@Override

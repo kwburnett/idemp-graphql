@@ -7,19 +7,14 @@ import org.bandahealth.idempiere.base.model.MProduct_BH;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.ProductInput;
-import org.bandahealth.idempiere.graphql.utils.BandaQuery;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MProductCategory;
 import org.compiere.model.MStorageOnHand;
 import org.compiere.model.MTaxCategory;
 import org.compiere.model.MUOM;
 import org.compiere.model.Query;
-import org.compiere.util.Env;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput> {
 
@@ -38,8 +33,8 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	}
 
 	@Override
-	protected MProduct_BH createModelInstance() {
-		return new MProduct_BH(Env.getCtx(), 0, null);
+	protected MProduct_BH createModelInstance(Properties idempiereContext) {
+		return new MProduct_BH(idempiereContext, 0, null);
 	}
 
 	public Connection<MProduct_BH> getItems(String filterJson, String sort, PagingInfo pagingInfo,
@@ -61,8 +56,9 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	}
 
 	@Override
-	public Map<String, String> getDynamicJoins() {
-		String storageOnHandBaseSql = storageOnHandRepository.getBaseQuery(null).getSQL();
+	public Map<String, String> getDynamicJoins(Properties idempiereContext) {
+		String storageOnHandBaseSql = storageOnHandRepository.getBaseQuery(idempiereContext, null)
+				.getSQL();
 		int storageOnHandBaseIndexOfFrom = storageOnHandBaseSql.indexOf("FROM");
 		int storageOnHandBaseIndexOfWhere = storageOnHandBaseSql.indexOf("WHERE");
 		return new HashMap<>() {{
@@ -79,28 +75,29 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 	}
 
 	@Override
-	public MProduct_BH mapInputModelToModel(ProductInput entity) {
+	public MProduct_BH mapInputModelToModel(ProductInput entity, Properties idempiereContext) {
 		try {
-			MProduct_BH product = getByUuid(entity.getM_Product_UU());
+			MProduct_BH product = getByUuid(entity.getM_Product_UU(), idempiereContext);
 			if (product == null) {
-				product = createModelInstance();
+				product = createModelInstance(idempiereContext);
 				product.setProductType(MProduct_BH.PRODUCTTYPE_Item);
 
 				// set default uom (unit of measure).
-				MUOM uom = uomRepository.getBaseQuery(MUOM.COLUMNNAME_Name + "=?", "Each").first();
+				MUOM uom = uomRepository.getBaseQuery(idempiereContext, MUOM.COLUMNNAME_Name + "=?",
+						"Each").first();
 				if (uom != null) {
 					product.setC_UOM_ID(uom.get_ID());
 				}
 
 				// set product category.
-				MProductCategory productCategory = productCategoryRepository
-						.getBaseQuery(MProductCategory.COLUMNNAME_Name + "=?", "Pharmacy").first();
+				MProductCategory productCategory = productCategoryRepository.getBaseQuery(idempiereContext,
+						MProductCategory.COLUMNNAME_Name + "=?", "Pharmacy").first();
 				if (productCategory != null) {
 					product.setM_Product_Category_ID(productCategory.get_ID());
 				}
 
 				// set tax category
-				MTaxCategory taxCategory = new Query(Env.getCtx(), MTaxCategory.Table_Name,
+				MTaxCategory taxCategory = new Query(idempiereContext, MTaxCategory.Table_Name,
 						MTaxCategory.COLUMNNAME_Name + "=?", null)
 						.setParameters("Standard").setClient_ID().first();
 				if (taxCategory != null) {
@@ -118,7 +115,7 @@ public class ProductRepository extends BaseRepository<MProduct_BH, ProductInput>
 
 			if (entity.getProductCategory() != null) {
 				MProductCategory_BH productCategory = productCategoryRepository
-						.getByUuid(entity.getProductCategory().getM_Product_Category_UU());
+						.getByUuid(entity.getProductCategory().getM_Product_Category_UU(), idempiereContext);
 				if (productCategory != null) {
 					product.setM_Product_Category_ID(productCategory.getM_Product_Category_ID());
 				}

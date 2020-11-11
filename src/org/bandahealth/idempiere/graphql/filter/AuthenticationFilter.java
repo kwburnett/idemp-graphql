@@ -1,10 +1,7 @@
 package org.bandahealth.idempiere.graphql.filter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -91,9 +88,10 @@ public class AuthenticationFilter implements Filter {
 		// consume JWT i.e. execute signature validation
 		if (authHeaderVal != null && authHeaderVal.startsWith("Bearer")) {
 			try {
-				AuthenticationUtil.validate(authHeaderVal.split(" ")[1]);
-				if (Util.isEmpty(Env.getContext(Env.getCtx(), Env.AD_USER_ID))
-						|| Util.isEmpty(Env.getContext(Env.getCtx(), Env.AD_ROLE_ID))) {
+				Properties idempiereContext = Env.getCtx();
+				AuthenticationUtil.validate(authHeaderVal.split(" ")[1], idempiereContext);
+				if (Util.isEmpty(Env.getContext(idempiereContext, Env.AD_USER_ID))
+						|| Util.isEmpty(Env.getContext(idempiereContext, Env.AD_ROLE_ID))) {
 					abortRequest(requestQuery, response, ERROR_UNAUTHORIZED);
 					return;
 				}

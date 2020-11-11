@@ -4,12 +4,10 @@ import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
 import org.bandahealth.idempiere.graphql.repository.BaseRepository;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.PO;
-import org.dataloader.DataLoader;
-import org.dataloader.DataLoaderOptions;
-import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.*;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Properties;
 
 /**
  * The base data loader that holds logic common to all data loaders.
@@ -43,28 +41,40 @@ public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRe
 	/**
 	 * The base method to register a data loader by iDempiere model ID and UUID.
 	 *
-	 * @param registry The data loader registry for this GraphQL query
+	 * @param registry         The data loader registry for this GraphQL query
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 */
-	public void register(DataLoaderRegistry registry) {
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
 		if (!StringUtil.isNullOrEmpty(getByIdDataLoaderName())) {
 			registry.register(getByIdDataLoaderName(), DataLoader.newMappedDataLoader(getByIdBatchLoader(),
-					getOptionsWithCache()));
+					getOptionsWithCache(idempiereContext)));
 		}
 		if (!StringUtil.isNullOrEmpty(getByUuidDataLoaderName())) {
 			registry.register(getByUuidDataLoaderName(), DataLoader.newMappedDataLoader(getByUuidBatchLoader(),
-					getOptionsWithCache()));
+					getOptionsWithCache(idempiereContext)));
 		}
 	}
 
 	/**
 	 * This creates a cache specific to the entity by leveraging the subclass's type.
 	 *
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A DataLoaderOptions containing a cache specific to the iDempiere entity T
 	 */
-	protected DataLoaderOptions getOptionsWithCache() {
+	protected DataLoaderOptions getOptionsWithCache(Properties idempiereContext) {
 		return DataLoaderOptions.newOptions().setCacheMap(GraphQLEndpoint.getCache(
 				((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])
-		));
+		)).setBatchLoaderContextProvider(() -> idempiereContext);
+	}
+
+	/**
+	 * This creates a cache specific to the entity by leveraging the subclass's type.
+	 *
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
+	 * @return A DataLoaderOptions containing a cache specific to the iDempiere entity T
+	 */
+	protected DataLoaderOptions getOptionsWithoutCache(Properties idempiereContext) {
+		return DataLoaderOptions.newOptions().setBatchLoaderContextProvider(() -> idempiereContext);
 	}
 
 	/**
@@ -72,8 +82,9 @@ public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRe
 	 *
 	 * @return A batch loader for loading entities by their DB IDs
 	 */
-	private MappedBatchLoader<Integer, T> getByIdBatchLoader() {
-		return getRepositoryInstance()::getByIdsCompletableFuture;
+	private MappedBatchLoaderWithContext<Integer, T> getByIdBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> getRepositoryInstance()
+				.getByIdsCompletableFuture(keys, batchLoaderEnvironment.getContext());
 	}
 
 	/**
@@ -81,7 +92,8 @@ public abstract class BaseDataLoader<T extends PO, S extends T, R extends BaseRe
 	 *
 	 * @return A batch loader for loading entities by UUIDs
 	 */
-	private MappedBatchLoader<String, T> getByUuidBatchLoader() {
-		return getRepositoryInstance()::getByUuidsCompletableFuture;
+	private MappedBatchLoaderWithContext<String, T> getByUuidBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> getRepositoryInstance()
+				.getByUuidsCompletableFuture(keys, batchLoaderEnvironment.getContext());
 	}
 }

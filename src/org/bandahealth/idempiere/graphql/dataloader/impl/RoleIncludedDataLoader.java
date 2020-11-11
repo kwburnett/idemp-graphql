@@ -5,9 +5,10 @@ import org.bandahealth.idempiere.graphql.repository.RoleIncludedRepository;
 import org.compiere.model.MRoleIncluded;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class RoleIncludedDataLoader extends BaseDataLoader<MRoleIncluded, MRoleIncluded, RoleIncludedRepository>
 		implements DataLoaderRegisterer {
@@ -36,14 +37,14 @@ public class RoleIncludedDataLoader extends BaseDataLoader<MRoleIncluded, MRoleI
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(ROLE_INCLUDED_BY_ROLE_DATA_LOADER, DataLoader.newMappedDataLoader(getByRoleBatchLoader(),
-				getOptionsWithCache()));
+				getOptionsWithCache(idempiereContext)));
 	}
 
-	private MappedBatchLoader<String, List<MRoleIncluded>> getByRoleBatchLoader() {
-		return keys -> roleIncludedRepository.getGroupsByIdsCompletableFuture(MRoleIncluded::getAD_Role_ID,
-				MRoleIncluded.COLUMNNAME_AD_Role_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MRoleIncluded>> getByRoleBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> roleIncludedRepository.getGroupsByIdsCompletableFuture(
+				MRoleIncluded::getAD_Role_ID, MRoleIncluded.COLUMNNAME_AD_Role_ID, keys, batchLoaderEnvironment.getContext());
 	}
 }

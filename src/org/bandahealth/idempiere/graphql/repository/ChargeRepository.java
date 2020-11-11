@@ -9,11 +9,10 @@ import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.model.input.ChargeInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MElementValue;
-import org.compiere.model.Query;
-import org.compiere.util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 
@@ -26,23 +25,24 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 	}
 
 	@Override
-	protected MCharge_BH createModelInstance() {
-		return new MCharge_BH(Env.getCtx(), 0, null);
+	protected MCharge_BH createModelInstance(Properties idempiereContext) {
+		return new MCharge_BH(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MCharge_BH mapInputModelToModel(ChargeInput entity) {
+	public MCharge_BH mapInputModelToModel(ChargeInput entity, Properties idempiereContext) {
 		try {
-			MCharge_BH charge = getByUuid(entity.getC_Charge_UU());
+			MCharge_BH charge = getByUuid(entity.getC_Charge_UU(), idempiereContext);
 			if (charge == null) {
-				charge = createModelInstance();
+				charge = createModelInstance(idempiereContext);
 			}
 
 			ModelUtil.setPropertyIfPresent(entity.getName(), charge::setName);
 			ModelUtil.setPropertyIfPresent(entity.getDescription(), charge::setDescription);
 
 			if (entity.getAccount() != null) {
-				MElementValue account = accountRepository.getByUuid(entity.getAccount().getC_ElementValue_UU());
+				MElementValue account = accountRepository.getByUuid(entity.getAccount().getC_ElementValue_UU(),
+						idempiereContext);
 				if (account != null) {
 					charge.setC_ElementValue_ID(account.getC_ElementValue_ID());
 				}
@@ -59,19 +59,19 @@ public class ChargeRepository extends BaseRepository<MCharge_BH, ChargeInput> {
 		}
 	}
 
-	public MCharge_BH saveExpenseCategory(ChargeInput charge) {
-		MChargeType_BH expenseCategoryChargeType = chargeTypeRepository.getBaseQuery(
+	public MCharge_BH saveExpenseCategory(ChargeInput charge, Properties idempiereContext) {
+		MChargeType_BH expenseCategoryChargeType = chargeTypeRepository.getBaseQuery(idempiereContext,
 				MChargeType_BH.Table_Name + "." + MChargeType_BH.COLUMNNAME_Name + "=?",
 				MChargeType_BH.CHARGETYPENAME_DEFAULT_CATEGORY).first();
 		if (expenseCategoryChargeType == null) {
 			throw new AdempiereException("Expense Category Charge Type not defined for client");
 		}
 		charge.setC_ChargeType_ID(expenseCategoryChargeType.getC_ChargeType_ID());
-		return save(charge);
+		return save(charge, idempiereContext);
 	}
 
 	@Override
-	public String getDefaultJoinClause() {
+	public String getDefaultJoinClause(Properties idempiereContext) {
 		return " JOIN " + MChargeType_BH.Table_Name + " ON " + MChargeType_BH.Table_Name + "." +
 				MChargeType_BH.COLUMNNAME_C_ChargeType_ID + "=" + MCharge_BH.Table_Name + "." +
 				MCharge_BH.COLUMNNAME_C_ChargeType_ID;

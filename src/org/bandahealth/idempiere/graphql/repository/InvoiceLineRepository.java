@@ -8,6 +8,7 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.util.Env;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceLineInput> {
@@ -21,11 +22,11 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 	}
 
 	@Override
-	protected MInvoiceLine createModelInstance() {
-		return new InvoiceLineInput();
+	protected MInvoiceLine createModelInstance(Properties idempiereContext) {
+		return new MInvoiceLine(idempiereContext, 0, null);
 	}
 
-	public void deleteByInvoice(int invoiceId, List<String> invoiceLineUuidsToKeep) {
+	public void deleteByInvoice(int invoiceId, List<String> invoiceLineUuidsToKeep, Properties idempiereContext) {
 		String whereClause = MInvoiceLine.COLUMNNAME_C_Invoice_ID + "=?";
 		if (invoiceLineUuidsToKeep != null && !invoiceLineUuidsToKeep.isEmpty()) {
 			whereClause += " AND " + MInvoiceLine.COLUMNNAME_C_InvoiceLine_UU + " NOT IN(" +
@@ -33,24 +34,24 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 							.collect(Collectors.joining(",")) + ")";
 		}
 
-		List<MInvoiceLine> invoiceLines = getBaseQuery(whereClause, invoiceId).list();
+		List<MInvoiceLine> invoiceLines = getBaseQuery(idempiereContext, whereClause, invoiceId).list();
 		invoiceLines.forEach(invoiceLine -> {
 			invoiceLine.deleteEx(false);
 		});
 	}
 
 	@Override
-	public MInvoiceLine mapInputModelToModel(InvoiceLineInput entity) {
-		MInvoiceLine invoiceLine = getByUuid(entity.getC_InvoiceLine_UU());
+	public MInvoiceLine mapInputModelToModel(InvoiceLineInput entity, Properties idempiereContext) {
+		MInvoiceLine invoiceLine = getByUuid(entity.getC_InvoiceLine_UU(), idempiereContext);
 		if (invoiceLine == null) {
 			invoiceLine = new InvoiceLineInput();
-			invoiceLine.setAD_Org_ID(Env.getAD_Org_ID(Env.getCtx()));
+			invoiceLine.setAD_Org_ID(Env.getAD_Org_ID(idempiereContext));
 		}
 
 		ModelUtil.setPropertyIfPresent(entity.getC_Invoice_ID(), invoiceLine::setC_Invoice_ID);
 
 		if (entity.getCharge() != null) {
-			MCharge_BH charge = chargeRepository.getByUuid(entity.getCharge().getC_Charge_UU());
+			MCharge_BH charge = chargeRepository.getByUuid(entity.getCharge().getC_Charge_UU(), idempiereContext);
 
 			if (charge != null) {
 				invoiceLine.setC_Charge_ID(charge.get_ID());
@@ -58,7 +59,7 @@ public class InvoiceLineRepository extends BaseRepository<MInvoiceLine, InvoiceL
 		}
 
 		if (entity.getProduct() != null) {
-			MProduct_BH product = productRepository.getByUuid(entity.getProduct().getM_Product_UU());
+			MProduct_BH product = productRepository.getByUuid(entity.getProduct().getM_Product_UU(), idempiereContext);
 
 			if (product != null) {
 				invoiceLine.setM_Product_ID(product.get_ID());

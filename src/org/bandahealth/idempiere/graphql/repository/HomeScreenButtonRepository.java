@@ -9,6 +9,7 @@ import org.compiere.util.Env;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton, MHomeScreenButton> {
 
@@ -19,12 +20,12 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 	}
 
 	@Override
-	protected MHomeScreenButton createModelInstance() {
-		return new MHomeScreenButton(Env.getCtx(), 0, null);
+	protected MHomeScreenButton createModelInstance(Properties idempiereContext) {
+		return new MHomeScreenButton(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MHomeScreenButton mapInputModelToModel(MHomeScreenButton entity) {
+	public MHomeScreenButton mapInputModelToModel(MHomeScreenButton entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -33,13 +34,13 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 		return false;
 	}
 
-	public List<MHomeScreenButton> get(boolean isAdmin) {
-		return getMenuGroupLineItems(isAdmin);
+	public List<MHomeScreenButton> get(boolean isAdmin, Properties idempiereContext) {
+		return getMenuGroupLineItems(isAdmin, idempiereContext);
 	}
 
-	public boolean hasAccessToReports(boolean isAdmin) {
+	public boolean hasAccessToReports(boolean isAdmin, Properties idempiereContext) {
 		// Retrieve Reports Menu
-		MHomeScreenButtonGroup menu = new Query(Env.getCtx(), MHomeScreenButtonGroup.Table_Name,
+		MHomeScreenButtonGroup menu = new Query(idempiereContext, MHomeScreenButtonGroup.Table_Name,
 				MHomeScreenButtonGroup.COLUMNNAME_Name + "=?", null)
 				.setOrderBy(MHomeScreenButtonGroup.COLUMNNAME_LineNo).setOnlyActiveRecords(true)
 				.setParameters("Reports").first();
@@ -52,8 +53,8 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 		return reports != null && !reports.isEmpty();
 	}
 
-	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin) {
-		return getMenuGroupLineItems(isAdmin, 0);
+	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin, Properties idempiereContext) {
+		return getMenuGroupLineItems(isAdmin, 0, idempiereContext);
 	}
 
 	/**
@@ -62,11 +63,13 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 	 * @param menuGroupItemId
 	 * @return
 	 */
-	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin, int menuGroupItemId) {
-		return getMenuGroupLineItems(isAdmin, menuGroupItemId, "'Metrics', 'Reports'");
+	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin, int menuGroupItemId,
+			Properties idempiereContext) {
+		return getMenuGroupLineItems(isAdmin, menuGroupItemId, "'Metrics', 'Reports'", idempiereContext);
 	}
 
-	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin, int menuGroupItemId, String exclude) {
+	private List<MHomeScreenButton> getMenuGroupLineItems(boolean isAdmin, int menuGroupItemId, String exclude,
+			Properties idempiereContext) {
 		try {
 			List<Object> parameters = new ArrayList<>();
 
@@ -90,10 +93,10 @@ public class HomeScreenButtonRepository extends BaseRepository<MHomeScreenButton
 				whereClause.append(" AND ");
 
 				whereClause.append(MRoleIncluded.Table_Name + "." + MRoleIncluded.COLUMNNAME_AD_Role_ID + "=?");
-				parameters.add(Env.getAD_Role_ID(Env.getCtx()));
+				parameters.add(Env.getAD_Role_ID(idempiereContext));
 			}
 
-			BandaQuery<MHomeScreenButton> query = getBaseQuery(whereClause.toString(), parameters)
+			BandaQuery<MHomeScreenButton> query = getBaseQuery(idempiereContext, whereClause.toString(), parameters)
 					.setOnlyActiveRecords(true)
 					.setOrderBy(MHomeScreenButton.Table_Name + "." + MHomeScreenButton.COLUMNNAME_LineNo);
 

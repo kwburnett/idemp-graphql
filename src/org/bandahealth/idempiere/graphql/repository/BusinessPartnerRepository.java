@@ -10,12 +10,8 @@ import org.bandahealth.idempiere.graphql.model.input.BusinessPartnerInput;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MLocation;
-import org.compiere.util.Env;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, BusinessPartnerInput> {
 
@@ -34,21 +30,21 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 	}
 
 	@Override
-	public Map<String, String> getDynamicJoins() {
+	public Map<String, String> getDynamicJoins(Properties idempiereContext) {
 		return dynamicJoins;
 	}
 
 	@Override
-	protected MBPartner_BH createModelInstance() {
-		return new MBPartner_BH(Env.getCtx(), 0, null);
+	protected MBPartner_BH createModelInstance(Properties idempiereContext) {
+		return new MBPartner_BH(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MBPartner_BH mapInputModelToModel(BusinessPartnerInput entity) {
+	public MBPartner_BH mapInputModelToModel(BusinessPartnerInput entity, Properties idempiereContext) {
 		try {
-			MBPartner_BH businessPartner = getByUuid(entity.getC_BPartner_UU());
+			MBPartner_BH businessPartner = getByUuid(entity.getC_BPartner_UU(), idempiereContext);
 			if (businessPartner == null) {
-				businessPartner = createModelInstance();
+				businessPartner = createModelInstance(idempiereContext);
 			}
 
 			businessPartner.setBH_IsPatient(entity.isBH_IsPatient());
@@ -62,7 +58,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 			ModelUtil.setPropertyIfPresent(entity.getBH_Phone(), businessPartner::setBH_Phone);
 
 			if (entity.getLocation() != null && !StringUtil.isNullOrEmpty(entity.getLocation().getAddress1())) {
-				MLocation location = locationRepository.save(entity.getLocation());
+				MLocation location = locationRepository.save(entity.getLocation(), idempiereContext);
 				businessPartner.setBH_C_Location_ID(location.get_ID());
 			}
 
@@ -85,18 +81,18 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 		}
 	}
 
-	public MBPartner_BH saveCustomer(BusinessPartnerInput businessPartner) {
+	public MBPartner_BH saveCustomer(BusinessPartnerInput businessPartner, Properties idempiereContext) {
 		businessPartner.setBH_IsPatient(true);
 		businessPartner.setIsCustomer(true);
 		businessPartner.setIsVendor(false);
-		return save(businessPartner);
+		return save(businessPartner, idempiereContext);
 	}
 
-	public MBPartner_BH saveVendor(BusinessPartnerInput businessPartner) {
+	public MBPartner_BH saveVendor(BusinessPartnerInput businessPartner, Properties idempiereContext) {
 		businessPartner.setBH_IsPatient(false);
 		businessPartner.setIsCustomer(false);
 		businessPartner.setIsVendor(true);
-		return save(businessPartner);
+		return save(businessPartner, idempiereContext);
 	}
 
 	public Connection<MBPartner_BH> getCustomers(String filter, String sort, PagingInfo pagingInfo,

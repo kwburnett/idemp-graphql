@@ -5,9 +5,10 @@ import org.bandahealth.idempiere.graphql.repository.WarehouseRepository;
 import org.compiere.model.MWarehouse;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, WarehouseRepository>
 		implements DataLoaderRegisterer {
@@ -36,14 +37,14 @@ public class WarehouseDataLoader extends BaseDataLoader<MWarehouse, MWarehouse, 
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(WAREHOUSE_BY_ORGANIZATION_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getByOrganizationBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getByOrganizationBatchLoader(), getOptionsWithCache(idempiereContext)));
 	}
 
-	private MappedBatchLoader<String, List<MWarehouse>> getByOrganizationBatchLoader() {
-		return keys -> warehouseRepository.getGroupsByIdsCompletableFuture(MWarehouse::getAD_Org_ID,
-				MWarehouse.COLUMNNAME_AD_Org_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MWarehouse>> getByOrganizationBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> warehouseRepository.getGroupsByIdsCompletableFuture(
+				MWarehouse::getAD_Org_ID, MWarehouse.COLUMNNAME_AD_Org_ID, keys, batchLoaderEnvironment.getContext());
 	}
 }

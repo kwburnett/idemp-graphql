@@ -1,16 +1,17 @@
 package org.bandahealth.idempiere.graphql.repository;
 
 import org.compiere.model.MWarehouse;
-import org.compiere.util.Env;
+
+import java.util.Properties;
 
 public class WarehouseRepository extends BaseRepository<MWarehouse, MWarehouse> {
 	@Override
-	protected MWarehouse createModelInstance() {
-		return new MWarehouse(Env.getCtx(), 0, null);
+	protected MWarehouse createModelInstance(Properties idempiereContext) {
+		return new MWarehouse(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MWarehouse mapInputModelToModel(MWarehouse entity) {
+	public MWarehouse mapInputModelToModel(MWarehouse entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 

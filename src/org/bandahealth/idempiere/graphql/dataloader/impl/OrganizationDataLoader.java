@@ -5,9 +5,10 @@ import org.bandahealth.idempiere.graphql.repository.OrganizationRepository;
 import org.compiere.model.MOrg;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, OrganizationRepository>
 		implements DataLoaderRegisterer {
@@ -36,14 +37,14 @@ public class OrganizationDataLoader extends BaseDataLoader<MOrg, MOrg, Organizat
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(ORGANIZATION_BY_CLIENT_DATA_LOADER,
-				DataLoader.newMappedDataLoader(getOrganizationByClientBatchLoader(), getOptionsWithCache()));
+				DataLoader.newMappedDataLoader(getOrganizationByClientBatchLoader(), getOptionsWithCache(idempiereContext)));
 	}
 
-	private MappedBatchLoader<String, List<MOrg>> getOrganizationByClientBatchLoader() {
-		return keys -> organizationRepository.getGroupsByIdsCompletableFuture(MOrg::getAD_Client_ID,
-				MOrg.COLUMNNAME_AD_Client_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MOrg>> getOrganizationByClientBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> organizationRepository.getGroupsByIdsCompletableFuture(
+				MOrg::getAD_Client_ID, MOrg.COLUMNNAME_AD_Client_ID, keys, batchLoaderEnvironment.getContext());
 	}
 }

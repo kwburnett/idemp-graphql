@@ -3,11 +3,9 @@ package org.bandahealth.idempiere.graphql.repository;
 import org.bandahealth.idempiere.graphql.model.input.AttributeSetInstanceInput;
 import org.compiere.model.MAttributeSet;
 import org.compiere.model.MAttributeSetInstance;
-import org.compiere.util.Env;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 public class AttributeSetInstanceRepository extends BaseRepository<MAttributeSetInstance, AttributeSetInstanceInput> {
 	private final AttributeSetRepository attributeSetRepository;
@@ -17,24 +15,25 @@ public class AttributeSetInstanceRepository extends BaseRepository<MAttributeSet
 	}
 
 	@Override
-	protected MAttributeSetInstance createModelInstance() {
-		return new MAttributeSetInstance(Env.getCtx(), 0, null);
+	protected MAttributeSetInstance createModelInstance(Properties idempiereContext) {
+		return new MAttributeSetInstance(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MAttributeSetInstance mapInputModelToModel(AttributeSetInstanceInput entity) {
+	public MAttributeSetInstance mapInputModelToModel(AttributeSetInstanceInput entity, Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	@Override
-	public List<Object> getDefaultJoinClauseParameters() {
-		return attributeSetRepository.getDefaultWhereClauseParameters();
+	public List<Object> getDefaultJoinClauseParameters(Properties idempiereContext) {
+		return attributeSetRepository.getDefaultWhereClauseParameters(idempiereContext);
 	}
 
 	@Override
-	public String getDefaultJoinClause() {
+	public String getDefaultJoinClause(Properties idempiereContext) {
 		return "JOIN " + MAttributeSet.Table_Name + " ON " + MAttributeSet.Table_Name + "." +
 				MAttributeSet.COLUMNNAME_M_AttributeSet_ID + "=" + MAttributeSetInstance.Table_Name + "." +
-				MAttributeSetInstance.COLUMNNAME_M_AttributeSet_ID + " AND " + attributeSetRepository.getDefaultWhereClause();
+				MAttributeSetInstance.COLUMNNAME_M_AttributeSet_ID + " AND " +
+				attributeSetRepository.getDefaultWhereClause(idempiereContext);
 	}
 }

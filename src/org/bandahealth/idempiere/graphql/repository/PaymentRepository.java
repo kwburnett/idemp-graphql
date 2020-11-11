@@ -17,10 +17,7 @@ import org.compiere.process.DocAction;
 import org.compiere.util.Env;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -33,15 +30,16 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		businessPartnerRepository = new BusinessPartnerRepository();
 	}
 
-	public CompletableFuture<Map<String, List<MPayment_BH>>> getByOrderIds(Set<String> orderIdKeys) {
+	public CompletableFuture<Map<String, List<MPayment_BH>>> getByOrderIds(Set<String> orderIdKeys,
+			Properties idempiereContext) {
 		List<Object> parameters = new ArrayList<>();
 		String modelName = ModelUtil.getModelFromKey(orderIdKeys.iterator().next());
 		Set<Integer> orderIds = orderIdKeys.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet());
 		QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
-		List<MPayment_BH> payments = getBaseQuery(MPayment_BH.COLUMNNAME_C_Order_ID + " IN (" +
-				whereCondition + ") OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")", parameters)
-				.setOnlyActiveRecords(true).list();
+		List<MPayment_BH> payments = getBaseQuery(idempiereContext, MPayment_BH.COLUMNNAME_C_Order_ID +
+				" IN (" + whereCondition + ") OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")",
+				parameters).setOnlyActiveRecords(true).list();
 		return CompletableFuture.supplyAsync(() ->
 				payments.stream().collect(Collectors.groupingBy(payment ->
 						ModelUtil.getModelKey(modelName,
@@ -49,15 +47,15 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	}
 
 	@Override
-	protected MPayment_BH createModelInstance() {
-		return new MPayment_BH(Env.getCtx(), 0, null);
+	protected MPayment_BH createModelInstance(Properties idempiereContext) {
+		return new MPayment_BH(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MPayment_BH mapInputModelToModel(PaymentInput entity) {
-		MPayment_BH payment = getByUuid(entity.getC_Payment_UU());
+	public MPayment_BH mapInputModelToModel(PaymentInput entity, Properties idempiereContext) {
+		MPayment_BH payment = getByUuid(entity.getC_Payment_UU(), idempiereContext);
 		if (payment == null) {
-			payment = createModelInstance();
+			payment = createModelInstance(idempiereContext);
 		}
 
 		if (entity.getC_Order_ID() > 0) {
@@ -67,7 +65,8 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		}
 
 		if (entity.getBusinessPartner() != null) {
-			MBPartner_BH bPartner = businessPartnerRepository.getByUuid(entity.getBusinessPartner().getC_BPartner_UU());
+			MBPartner_BH bPartner = businessPartnerRepository.getByUuid(entity.getBusinessPartner().getC_BPartner_UU(),
+					idempiereContext);
 			if (bPartner != null) {
 				payment.setC_BPartner_ID(bPartner.get_ID());
 			}
@@ -86,13 +85,13 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		}
 
 		// get currency
-		MCurrency currency = getCurrency();
+		MCurrency currency = getCurrency(idempiereContext);
 		if (currency != null) {
 			payment.setC_Currency_ID(currency.get_ID());
 		}
 
 		// get bank account
-		MBankAccount bankAccount = getBankAccount();
+		MBankAccount bankAccount = getBankAccount(idempiereContext);
 		if (bankAccount != null) {
 			payment.setC_BankAccount_ID(bankAccount.get_ID());
 		}
@@ -132,7 +131,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 				join, environment);
 	}
 
-	public void deleteByOrder(int orderId, List<String> paymentUuidsToKeep) {
+	public void deleteByOrder(int orderId, List<String> paymentUuidsToKeep, Properties idempiereContext) {
 		String whereClause = "(" + MPayment_BH.COLUMNNAME_C_Order_ID + "=? OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID +
 				"=?)";
 		if (paymentUuidsToKeep != null && !paymentUuidsToKeep.isEmpty()) {
@@ -141,13 +140,13 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 							.collect(Collectors.joining(",")) + ")";
 		}
 
-		List<MPayment_BH> payments = new Query(Env.getCtx(), MPayment_BH.Table_Name, whereClause, null)
+		List<MPayment_BH> payments = new Query(idempiereContext, MPayment_BH.Table_Name, whereClause, null)
 				.setParameters(orderId, orderId).setClient_ID().list();
 		payments.forEach(payment -> payment.deleteEx(false));
 	}
 
-	public CompletableFuture<MPayment_BH> process(String uuid) {
-		MPayment_BH payment = getByUuid(uuid);
+	public CompletableFuture<MPayment_BH> process(String uuid, Properties idempiereContext) {
+		MPayment_BH payment = getByUuid(uuid, idempiereContext);
 		if (payment == null) {
 			logger.severe("No payment with uuid = " + uuid);
 			return null;
@@ -155,13 +154,14 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 
 		payment.processIt(DocAction.ACTION_Complete);
 
-		return CompletableFuture.supplyAsync(() -> getByUuid(uuid));
+		return CompletableFuture.supplyAsync(() -> getByUuid(uuid, idempiereContext));
 	}
 
 	@Override
-	public void updateCacheAfterSave(MPayment_BH entity) {
-		super.updateCacheAfterSave(entity);
-		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID()));
+	public void updateCacheAfterSave(MPayment_BH entity, Properties idempiereContext) {
+		super.updateCacheAfterSave(entity, idempiereContext);
+		businessPartnerRepository.updateCacheAfterSave(businessPartnerRepository.getById(entity.getC_BPartner_ID(),
+				idempiereContext), idempiereContext);
 	}
 
 	/**
@@ -169,19 +169,20 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	 *
 	 * @return
 	 */
-	private MCurrency getCurrency() {
+	private MCurrency getCurrency(Properties idempiereContext) {
 		// first check the currency from the client's accounting schema.
 		int currencyId = 0;
-		MAcctSchema[] schema = MAcctSchema.getClientAcctSchema(Env.getCtx(), Env.getAD_Client_ID(Env.getCtx()), null);
+		MAcctSchema[] schema = MAcctSchema.getClientAcctSchema(idempiereContext, Env.getAD_Client_ID(idempiereContext),
+				null);
 		if (schema.length > 0) {
 			currencyId = schema[0].getC_Currency_ID();
 		}
 
 		if (currencyId > 0) {
-			return new MCurrency(Env.getCtx(), currencyId, null);
+			return new MCurrency(idempiereContext, currencyId, null);
 		}
 
-		return new Query(Env.getCtx(), MCurrency.Table_Name, MCurrency.COLUMNNAME_ISO_Code + " = ?", null)
+		return new Query(idempiereContext, MCurrency.Table_Name, MCurrency.COLUMNNAME_ISO_Code + " = ?", null)
 				.setParameters(CURRENCY).setOnlyActiveRecords(true).setClient_ID().first();
 	}
 
@@ -190,8 +191,8 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 	 *
 	 * @return
 	 */
-	protected MBankAccount getBankAccount() {
-		MBankAccount bankAccount = new Query(Env.getCtx(), MBankAccount.Table_Name, null, null)
+	protected MBankAccount getBankAccount(Properties idempiereContext) {
+		MBankAccount bankAccount = new Query(idempiereContext, MBankAccount.Table_Name, null, null)
 				.setOnlyActiveRecords(true).setClient_ID().setOrderBy(MBankAccount.COLUMNNAME_IsDefault + " DESC")
 				.first();
 		return bankAccount;

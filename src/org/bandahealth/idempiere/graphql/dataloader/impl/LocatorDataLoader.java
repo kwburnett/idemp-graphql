@@ -5,9 +5,10 @@ import org.bandahealth.idempiere.graphql.repository.LocatorRepository;
 import org.compiere.model.MLocator;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, LocatorRepository>
 		implements DataLoaderRegisterer {
@@ -21,10 +22,10 @@ public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, Locato
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(LOCATOR_BY_WAREHOUSE_DATA_LOADER, DataLoader.newMappedDataLoader(getByWarehouseBatchLoader(),
-				getOptionsWithCache()));
+				getOptionsWithCache(idempiereContext)));
 	}
 
 	@Override
@@ -42,8 +43,9 @@ public class LocatorDataLoader extends BaseDataLoader<MLocator, MLocator, Locato
 		return locatorRepository;
 	}
 
-	private MappedBatchLoader<String, List<MLocator>> getByWarehouseBatchLoader() {
-		return keys -> locatorRepository.getGroupsByIdsCompletableFuture(MLocator::getM_Warehouse_ID,
-				MLocator.COLUMNNAME_M_Warehouse_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MLocator>> getByWarehouseBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> locatorRepository
+				.getGroupsByIdsCompletableFuture(MLocator::getM_Warehouse_ID, MLocator.COLUMNNAME_M_Warehouse_ID, keys,
+						batchLoaderEnvironment.getContext());
 	}
 }

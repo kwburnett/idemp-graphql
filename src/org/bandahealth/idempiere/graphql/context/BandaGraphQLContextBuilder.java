@@ -6,6 +6,7 @@ import graphql.kickstart.servlet.context.GraphQLServletContextBuilder;
 import org.bandahealth.idempiere.graphql.dataloader.*;
 import org.bandahealth.idempiere.graphql.utils.AuthenticationUtil;
 import org.compiere.util.CLogger;
+import org.compiere.util.Env;
 import org.dataloader.DataLoaderRegistry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
 import javax.websocket.server.HandshakeRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 /**
  * Responsible for building the Banda-specific context and initializing any needed data to be made available on the
@@ -44,15 +46,16 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 	public GraphQLContext build(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		// If we wanted to read any data from the auth token, we'd do it here
 		String authHeaderVal = httpServletRequest.getHeader("Authorization");
+		Properties idempiereContext = Env.getCtx();
 		try {
-			AuthenticationUtil.validate(authHeaderVal.split(" ")[1]);
+			AuthenticationUtil.validate(authHeaderVal.split(" ")[1], idempiereContext);
 		} catch (Exception e) {
 			logger.warning(e.getMessage());
 		}
 		int userId = -1;
 		DefaultGraphQLServletContext context = DefaultGraphQLServletContext.createServletContext()
-				.with(httpServletRequest).with(httpServletResponse).with(buildDataLoaderRegistry()).build();
-		return new BandaGraphQLContext(context, userId);
+				.with(httpServletRequest).with(httpServletResponse).with(buildDataLoaderRegistry(idempiereContext)).build();
+		return new BandaGraphQLContext(context, idempiereContext);
 	}
 
 	/**
@@ -83,12 +86,13 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 	 * This is where all data loaders are added to the registry for this query. They are added per query, though
 	 * the cache can be used to persist data/storage between queries.
 	 *
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return The DataLoaderRegistry for this request.
 	 */
-	private DataLoaderRegistry buildDataLoaderRegistry() {
+	private DataLoaderRegistry buildDataLoaderRegistry(Properties idempiereContext) {
 		logger.warning("building data registry");
 		DataLoaderRegistry registry = new DataLoaderRegistry();
-		bandaDataLoaderComposer.addDataLoaders(registry);
+		bandaDataLoaderComposer.addDataLoaders(registry, idempiereContext);
 		return registry;
 	}
 }

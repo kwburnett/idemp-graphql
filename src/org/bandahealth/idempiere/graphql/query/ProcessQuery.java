@@ -2,6 +2,7 @@ package org.bandahealth.idempiere.graphql.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
+import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ProcessDataLoader;
 import org.bandahealth.idempiere.graphql.model.Connection;
 import org.bandahealth.idempiere.graphql.model.PagingInfo;
@@ -31,7 +32,7 @@ public class ProcessQuery implements GraphQLQueryResolver {
 		return processRepository.get(filter, sort, new PagingInfo(page, pageSize), environment);
 	}
 
-	public String generateReport(ProcessInfoInput processInfo) {
-		return processRepository.generateReport(processInfo);
+	public String generateReport(ProcessInfoInput processInfo, DataFetchingEnvironment environment) {
+		return processRepository.generateReport(processInfo, BandaGraphQLContext.getCtx(environment));
 	}
 }

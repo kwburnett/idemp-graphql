@@ -6,9 +6,10 @@ import org.bandahealth.idempiere.graphql.repository.StorageOnHandRepository;
 import org.compiere.model.MStorageOnHand;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderRegistry;
-import org.dataloader.MappedBatchLoader;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.util.List;
+import java.util.Properties;
 
 public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, StorageOnHandInput, StorageOnHandRepository>
 		implements DataLoaderRegisterer {
@@ -22,10 +23,10 @@ public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, Stor
 	}
 
 	@Override
-	public void register(DataLoaderRegistry registry) {
-		super.register(registry);
+	public void register(DataLoaderRegistry registry, Properties idempiereContext) {
+		super.register(registry, idempiereContext);
 		registry.register(STORAGE_ON_HAND_BY_PRODUCT_DATA_LOADER, DataLoader.newMappedDataLoader(getByProductBatchLoader(),
-				getOptionsWithCache()));
+				getOptionsWithCache(idempiereContext)));
 	}
 
 	@Override
@@ -43,8 +44,9 @@ public class StorageOnHandDataLoader extends BaseDataLoader<MStorageOnHand, Stor
 		return storageOnHandRepository;
 	}
 
-	private MappedBatchLoader<String, List<MStorageOnHand>> getByProductBatchLoader() {
-		return keys -> storageOnHandRepository.getGroupsByIdsCompletableFuture(MStorageOnHand::getM_Product_ID,
-				MStorageOnHand.COLUMNNAME_M_Product_ID, keys);
+	private MappedBatchLoaderWithContext<String, List<MStorageOnHand>> getByProductBatchLoader() {
+		return (keys, batchLoaderEnvironment) -> storageOnHandRepository.getGroupsByIdsCompletableFuture(
+				MStorageOnHand::getM_Product_ID, MStorageOnHand.COLUMNNAME_M_Product_ID, keys,
+				batchLoaderEnvironment.getContext());
 	}
 }
