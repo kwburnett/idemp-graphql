@@ -6,14 +6,12 @@ import graphql.kickstart.servlet.context.GraphQLServletContextBuilder;
 import org.bandahealth.idempiere.graphql.dataloader.*;
 import org.bandahealth.idempiere.graphql.utils.AuthenticationUtil;
 import org.compiere.util.CLogger;
-import org.compiere.util.Env;
 import org.dataloader.DataLoaderRegistry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.Session;
 import javax.websocket.server.HandshakeRequest;
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -46,7 +44,7 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 	public GraphQLContext build(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		// If we wanted to read any data from the auth token, we'd do it here
 		String authHeaderVal = httpServletRequest.getHeader("Authorization");
-		Properties idempiereContext = Env.getCtx();
+		Properties idempiereContext = new Properties();
 		try {
 			AuthenticationUtil.validate(authHeaderVal.split(" ")[1], idempiereContext);
 		} catch (Exception e) {
