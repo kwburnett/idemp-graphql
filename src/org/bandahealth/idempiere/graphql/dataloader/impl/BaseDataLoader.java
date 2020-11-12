@@ -4,7 +4,10 @@ import org.bandahealth.idempiere.graphql.GraphQLEndpoint;
 import org.bandahealth.idempiere.graphql.repository.BaseRepository;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.PO;
-import org.dataloader.*;
+import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderOptions;
+import org.dataloader.DataLoaderRegistry;
+import org.dataloader.MappedBatchLoaderWithContext;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Properties;

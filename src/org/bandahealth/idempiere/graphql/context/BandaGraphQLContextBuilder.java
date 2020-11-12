@@ -3,7 +3,7 @@ package org.bandahealth.idempiere.graphql.context;
 import graphql.kickstart.execution.context.GraphQLContext;
 import graphql.kickstart.servlet.context.DefaultGraphQLServletContext;
 import graphql.kickstart.servlet.context.GraphQLServletContextBuilder;
-import org.bandahealth.idempiere.graphql.dataloader.*;
+import org.bandahealth.idempiere.graphql.dataloader.BandaDataLoaderComposer;
 import org.bandahealth.idempiere.graphql.utils.AuthenticationUtil;
 import org.compiere.util.CLogger;
 import org.dataloader.DataLoaderRegistry;

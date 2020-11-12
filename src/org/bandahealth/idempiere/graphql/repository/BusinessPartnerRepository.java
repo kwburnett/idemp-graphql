@@ -11,7 +11,12 @@ import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MLocation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 
 public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, BusinessPartnerInput> {
 

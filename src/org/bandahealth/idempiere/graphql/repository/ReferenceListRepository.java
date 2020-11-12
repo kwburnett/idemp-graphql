@@ -6,7 +6,11 @@ import org.compiere.model.MReference;
 import org.compiere.model.MValRule;
 import org.compiere.model.Query;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 

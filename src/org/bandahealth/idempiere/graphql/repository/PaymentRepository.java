@@ -17,7 +17,11 @@ import org.compiere.process.DocAction;
 import org.compiere.util.Env;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -38,7 +42,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 		QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		List<MPayment_BH> payments = getBaseQuery(idempiereContext, MPayment_BH.COLUMNNAME_C_Order_ID +
-				" IN (" + whereCondition + ") OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")",
+						" IN (" + whereCondition + ") OR " + MPayment_BH.COLUMNNAME_BH_C_Order_ID + " IN (" + whereCondition + ")",
 				parameters).setOnlyActiveRecords(true).list();
 		return CompletableFuture.supplyAsync(() ->
 				payments.stream().collect(Collectors.groupingBy(payment ->

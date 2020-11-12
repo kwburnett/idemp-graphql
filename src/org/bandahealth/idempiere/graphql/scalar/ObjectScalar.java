@@ -1,6 +1,10 @@
 package org.bandahealth.idempiere.graphql.scalar;
 
-import graphql.schema.*;
+import graphql.schema.Coercing;
+import graphql.schema.CoercingParseLiteralException;
+import graphql.schema.CoercingParseValueException;
+import graphql.schema.CoercingSerializeException;
+import graphql.schema.GraphQLScalarType;
 
 /**
  * A custom scalar to allow passing of general Object classes into the GraphQL API

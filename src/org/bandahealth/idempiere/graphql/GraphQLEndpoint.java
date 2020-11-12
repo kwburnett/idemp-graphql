@@ -10,7 +10,8 @@ import graphql.execution.preparsed.PreparsedDocumentProvider;
 import graphql.kickstart.execution.GraphQLObjectMapper;
 import graphql.kickstart.execution.GraphQLQueryInvoker;
 import graphql.kickstart.servlet.input.GraphQLInvocationInputFactory;
-import graphql.kickstart.tools.*;
+import graphql.kickstart.tools.SchemaParser;
+import graphql.kickstart.tools.SchemaParserBuilder;
 import org.bandahealth.idempiere.graphql.cache.BandaCache;
 import org.bandahealth.idempiere.graphql.cache.CacheFactory;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
@@ -19,7 +20,7 @@ import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.instrumentation.LoggingInstrumentation;
 import org.bandahealth.idempiere.graphql.mutation.BandaMutationComposer;
 import org.bandahealth.idempiere.graphql.query.BandaQueryComposer;
-import org.bandahealth.idempiere.graphql.resolver.*;
+import org.bandahealth.idempiere.graphql.resolver.BandaResolverComposer;
 import org.bandahealth.idempiere.graphql.scalar.BandaScalarComposer;
 import org.compiere.util.CLogger;
 

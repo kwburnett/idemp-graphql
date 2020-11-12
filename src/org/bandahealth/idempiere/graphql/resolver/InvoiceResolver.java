@@ -2,8 +2,11 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
-import org.bandahealth.idempiere.base.model.*;
-import org.bandahealth.idempiere.graphql.dataloader.impl.*;
+import org.bandahealth.idempiere.base.model.MBPartner_BH;
+import org.bandahealth.idempiere.base.model.MInvoice_BH;
+import org.bandahealth.idempiere.graphql.dataloader.impl.BusinessPartnerDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.InvoiceLineDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.ReferenceListDataLoader;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.bandahealth.idempiere.graphql.utils.StringUtil;
 import org.compiere.model.MInvoiceLine;
