@@ -124,7 +124,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * Override this in child classes if the client ID in the context should not be added by default
+	 * Whether the client ID for the context should be automatically used in any DB queries
 	 *
 	 * @return
 	 */
@@ -133,7 +133,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * This should be overridden in inheriting classes.
+	 * Get any JOINs that should only be used if a sort/filter is passed in using them
 	 * Structure: Map<TableName, JOIN clause>
 	 *
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
@@ -144,7 +144,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * This should be overridden in inheriting classes.
+	 * Get any default WHERE clauses that should be applied to every query.
 	 *
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A WHERE clause to apply in all queries
@@ -154,7 +154,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * This should be overridden in inheriting classes.
+	 * Any parameters that are needed by the default WHERE clauses
 	 *
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A parameters to use in all queries
@@ -164,7 +164,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * This should be overridden in inheriting classes.
+	 * Any parameters that are needed by the default JOIN clauses
 	 *
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A parameters to use in all queries
@@ -174,7 +174,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * This should be overridden in inheriting classes.
+	 * Get any default JOIN clauses that should be applied to every query.
 	 *
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A JOIN clause to apply in all queries
@@ -239,7 +239,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		if (!parametersToUse.isEmpty()) {
 			query.setParameters(parametersToUse);
 		}
-		return new BandaQuery<T>() {
+		return new BandaQuery<>() {
 			@Override
 			public List<T> list() throws DBException {
 				return query.list();
@@ -342,7 +342,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * Get an entity by it's ID
+	 * Get an entity by its ID
 	 *
 	 * @param id               The ID to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
@@ -370,11 +370,11 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * Get a list of entities by their IDs
+	 * Get a list of entities by their IDs, but as a completable future
 	 *
 	 * @param ids              The IDs to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return A completable future of a map of entities by their IDs
 	 */
 	public CompletableFuture<Map<Integer, T>> getByIdsCompletableFuture(Set<Integer> ids, Properties idempiereContext) {
 		return CompletableFuture.supplyAsync(() -> getByIds(ids, idempiereContext));
@@ -385,7 +385,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 *
 	 * @param uuid             The UUID to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return An entity
 	 */
 	public T getByUuid(String uuid, Properties idempiereContext) {
 		return getBaseQuery(idempiereContext, getModelInstance(idempiereContext).getUUIDColumnName() +
@@ -397,7 +397,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 *
 	 * @param uuids            The UUIDs to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return A list of entities
 	 */
 	public List<T> getByUuids(List<String> uuids, Properties idempiereContext) {
 		String whereClause = uuids.stream().filter(uuid -> !StringUtil.isNullOrEmpty(uuid)).map(uuid -> "'" + uuid + "'")
@@ -407,11 +407,11 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	}
 
 	/**
-	 * Get an of entity by it's UUID
+	 * Get an of entity by its UUID, but as a completable future
 	 *
 	 * @param uuids            The UUIDs to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return A completable future of a map of entities by their UUIDs
 	 */
 	public CompletableFuture<Map<String, T>> getByUuidsCompletableFuture(Set<String> uuids, Properties idempiereContext) {
 		return CompletableFuture.supplyAsync(() -> getByUuids(new ArrayList<>(uuids), idempiereContext).stream().collect(
@@ -419,10 +419,31 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 		);
 	}
 
+	/**
+	 * Get a list of entities from the DB
+	 *
+	 * @param filterJson  A filter to apply to the query
+	 * @param sort        How the data should be sorted
+	 * @param pagingInfo  What page of data is needed
+	 * @param environment The environment associated with all calls, containing context, which is used for data
+	 *                    look-aheads to allow the DB queries to be smart and only be run if they're needed
+	 * @return A list of entities
+	 */
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, DataFetchingEnvironment environment) {
 		return this.get(filterJson, sort, pagingInfo, null, null, null, environment);
 	}
 
+	/**
+	 * Get a list of entities from the DB
+	 *
+	 * @param filterJson  A filter to apply to the query
+	 * @param sort        How the data should be sorted
+	 * @param pagingInfo  What page of data is needed
+	 * @param whereClause A WHERE clause that should be added to the query
+	 * @param environment The environment associated with all calls, containing context, which is used for data
+	 *                    look-aheads to allow the DB queries to be smart and only be run if they're needed
+	 * @return A list of entities
+	 */
 	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, String whereClause,
 			List<Object> parameters, DataFetchingEnvironment environment) {
 		return this.get(filterJson, sort, pagingInfo, whereClause, parameters, null, environment);
@@ -431,11 +452,11 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	/**
 	 * Get all with the inclusion of a join clause for joined cases of sorting
 	 *
-	 * @param filterJson
-	 * @param sortJson
-	 * @param pagingInfo
-	 * @param whereClause
-	 * @param parameters
+	 * @param filterJson  A filter to apply to the query
+	 * @param sortJson    How the data should be sorted
+	 * @param pagingInfo  What page of data is needed
+	 * @param whereClause A WHERE clause that should be added to the query
+	 * @param parameters  Any parameters to use in the query
 	 * @param joinClause  Use to specify a linked table so joining can occur
 	 * @return
 	 */
@@ -506,12 +527,15 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 				query = query.setOrderBy(orderBy);
 			}
 
+			// If the paging info wasn't requested in the payload, don't do an extra DB call to get it
 			if (QueryUtil.isTotalCountRequested(environment)) {
 				// get total count without pagination parameters
 				pagingInfo.setTotalCount(query.count());
 			}
 
 			List<T> results = new ArrayList<>();
+			// If the results weren't requested in the payload (say a consumer just wants to know the count of entities
+			// matching a specified filter), don't do an extra DB call to get them
 			if (QueryUtil.areResultsRequested(environment)) {
 				// set pagination params
 				query = query.setPage(pagingInfo.getPageSize(), pagingInfo.getPage());

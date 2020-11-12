@@ -9,7 +9,7 @@ public class BandaMutationComposer {
 	/**
 	 * Add the all mutations to the builder.
 	 *
-	 * @param builder The builder for the GraphQL Schema Parser
+	 * @param builder The builder for the GraphQL SchemaParserBuilder
 	 */
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(

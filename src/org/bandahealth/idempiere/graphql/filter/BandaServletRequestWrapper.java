@@ -14,12 +14,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 /**
- * This class is meant to allow multiple reads from the servlet request body
+ * This class is meant to allow multiple reads from the servlet request body, which is done by the Authentication
+ * filter, followed by the GraphQL servlet reader
  * Borrowed from: https://blog.csdn.net/zmj199536/article/details/102940047
  */
 public class BandaServletRequestWrapper extends HttpServletRequestWrapper {
 
 	private final byte[] body;
+
 	/**
 	 * Constructs a request object wrapping the given request.
 	 *
@@ -67,9 +69,9 @@ public class BandaServletRequestWrapper extends HttpServletRequestWrapper {
 		return new BufferedReader(new InputStreamReader(getInputStream()));
 	}
 
-	private byte[] readBytes(BufferedReader br, String encoding) throws IOException{
+	private byte[] readBytes(BufferedReader br, String encoding) throws IOException {
 		String str = null;
-		StringBuilder retStr= new StringBuilder();
+		StringBuilder retStr = new StringBuilder();
 		while ((str = br.readLine()) != null) {
 			retStr.append(str);
 		}

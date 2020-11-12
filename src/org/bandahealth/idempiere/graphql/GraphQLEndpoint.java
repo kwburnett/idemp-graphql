@@ -30,15 +30,32 @@ import graphql.schema.GraphQLSchema;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The endpoint that contains all the GraphQL setup and configuration. All GraphQL calls are routed through this class
+ */
 public class GraphQLEndpoint extends GraphQLHttpServlet {
+	/**
+	 * This is the singleton instance for the cache factory so any classes that need the cache can access a single,
+	 * shared instance
+	 */
 	private static final CacheFactory cacheFactory = new CacheFactory();
+	private final CLogger logger = CLogger.getCLogger(GraphQLEndpoint.class);
 
+	/**
+	 * Get a cache specific to the class requested
+	 *
+	 * @param clazz The class to fetch a cache for
+	 * @return The cache specific to the class
+	 */
 	public static BandaCache<Object, Object> getCache(Class<?> clazz) {
 		return cacheFactory.getCache(clazz);
 	}
 
-	private final CLogger logger = CLogger.getCLogger(GraphQLEndpoint.class);
-
+	/**
+	 * The method called when the GraphQL endpoint is initialized
+	 *
+	 * @return The configuration for GraphQL
+	 */
 	@Override
 	protected GraphQLConfiguration getConfiguration() {
 		logger.fine("Getting GraphQL endpoint config");
@@ -71,6 +88,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 		List<Instrumentation> instrumentationList = new ArrayList<>();
 		instrumentationList.add(new MaxQueryDepthInstrumentation(6));
 		instrumentationList.add(new LoggingInstrumentation());
+		// TODO: Uncomment for localized instrumentation figures
 //		instrumentationList.add(new TracingInstrumentation());
 //		instrumentationList.add(dispatcherInstrumentation);
 
@@ -81,7 +99,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 	}
 
 	/**
-	 * Generates the schema from the appropriate SDL files, then adds the appropriate resolvers
+	 * Generates the schema from the appropriate SDL files, then adds the appropriate resolvers, scalars, and directives
 	 *
 	 * @return The schema to use in this GraphQL plugin
 	 */
@@ -108,6 +126,7 @@ public class GraphQLEndpoint extends GraphQLHttpServlet {
 						"WEB-INF/resources/order-line.graphqls",
 						"WEB-INF/resources/order-status.graphqls",
 						"WEB-INF/resources/organization.graphqls",
+						"WEB-INF/resources/paging-info.graphqls",
 						"WEB-INF/resources/payment.graphqls",
 						"WEB-INF/resources/process.graphqls",
 						"WEB-INF/resources/process-info.graphqls",

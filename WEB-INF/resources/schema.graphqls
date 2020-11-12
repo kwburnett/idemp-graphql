@@ -1,14 +1,8 @@
+# All directives and scalars, custom or not, should be declared here
 directive @dateFormat on FIELD_DEFINITION
 scalar Object
 
-type PagingInfo {
-  totalPages: Int!
-  totalCount: Int!
-  hasNextPage: Boolean!
-  page: Int!
-  pageSize: Int!
-}
-
+# Per the GraphQL standard, Query types cannot be split amongst files, so all are defined here
 type Query {
   # Accounts
   account(id: String!): Account!
@@ -58,6 +52,7 @@ type Query {
   acceptTermsOfUse: User!
 }
 
+# Per the GraphQL standard, Mutation types cannot be split amongst files, so all are defined here
 type Mutation {
   # Authentication
   changePassword(credentials: AuthenticationData!): AuthenticationResponse
@@ -89,6 +84,7 @@ type Mutation {
   acceptTermsOfService(accept: Boolean!): Boolean!
 }
 
+# This is the root definition for GraphQL
 schema {
   query: Query
   mutation: Mutation
