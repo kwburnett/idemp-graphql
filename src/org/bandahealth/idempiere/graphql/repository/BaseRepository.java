@@ -312,7 +312,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 			String columnToSearch, Set<String> ids, Properties idempiereContext) {
 		String modelName = ModelUtil.getModelFromKey(ids.iterator().next());
 		return CompletableFuture.supplyAsync(() -> getGroupsByIds(groupingFunction, columnToSearch,
-				ids.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet()), idempiereContext).entrySet()
+				ids.stream().map(ModelUtil::getIdFromKey).collect(Collectors.toSet()), idempiereContext).entrySet()
 				.stream().collect(
 						Collectors.toMap(entrySet -> ModelUtil.getModelKey(modelName, entrySet.getKey()), Map.Entry::getValue)
 				)

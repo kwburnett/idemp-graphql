@@ -8,6 +8,9 @@ import org.bandahealth.idempiere.graphql.utils.DateUtil;
 
 import java.sql.Timestamp;
 
+/**
+ * A directive that formats timestamps to be strings for the API consumer
+ */
 public class DateFormatDirective implements SchemaDirectiveWiring {
 
 	// This should match what's defined in the schema.graphqls SDL

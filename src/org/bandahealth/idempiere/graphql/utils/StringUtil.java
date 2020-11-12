@@ -1,11 +1,14 @@
 package org.bandahealth.idempiere.graphql.utils;
 
+/**
+ * A class containing string utility functions
+ */
 public class StringUtil {
 	/**
 	 * Check if string is null or empty
 	 *
-	 * @param s
-	 * @return
+	 * @param s The string to check
+	 * @return Whether the string is null or empty
 	 */
 	public static boolean isNullOrEmpty(String s) {
 		return s == null || s.isEmpty();

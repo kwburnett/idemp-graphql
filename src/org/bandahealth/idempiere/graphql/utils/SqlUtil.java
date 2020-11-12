@@ -14,46 +14,9 @@ import org.compiere.util.DB;
 
 /**
  * Abstract common sql functionality
- *
- * @author andrew
  */
 public class SqlUtil {
-
 	private static CLogger log = CLogger.getCLogger(SqlUtil.class);
-
-	public static Map<Integer, Timestamp> getGroupedMaxDates(String tableName, String whereClause,
-			List<Object> parameters, String groupingIdColumn,
-			Set<Integer> idsToGroupBy, String dateColumn) {
-		StringBuilder sql = new StringBuilder("SELECT " + groupingIdColumn + ", MAX(" + dateColumn + ") FROM ")
-				.append(tableName)
-				.append(" ")
-				.append(whereClause)
-				.append(" GROUP BY ")
-				.append(groupingIdColumn);
-
-		Map<Integer, Timestamp> maxDates = idsToGroupBy.stream().collect(Collectors.toMap(id -> id, id -> null));
-
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = DB.prepareStatement(sql.toString(), null);
-			DB.setParameters(statement, parameters);
-
-			resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				int idColumn = resultSet.getInt(1);
-				maxDates.put(idColumn, resultSet.getTimestamp(2));
-			}
-
-		} catch (SQLException e) {
-			log.log(Level.SEVERE, sql.toString(), e);
-			throw new DBException(e, sql.toString());
-		} finally {
-			DB.close(resultSet, statement);
-		}
-
-		return maxDates;
-	}
 
 	public static Map<Integer, Integer> getGroupedCount(String tableName, String whereClause, List<Object> parameters,
 			String groupingIdColumn, Set<Integer> idsToGroupBy) {
@@ -120,15 +83,11 @@ public class SqlUtil {
 		return count;
 	}
 
-	public static Integer getCount(String tableName, String whereClause, List<Object> parameters) {
-		return getCount("FROM " + tableName + " " + whereClause, parameters);
-	}
-
 	/**
 	 * The will only work for PostgresQL JDBC, but gets the wrapped SQL string to handle parameters dealings.
 	 *
-	 * @param preparedStatement
-	 * @return
+	 * @param preparedStatement The DB prepared statement
+	 * @return A string containing the DB statement with parameters filled in
 	 */
 	public static String getSql(PreparedStatement preparedStatement) {
 		String statement = preparedStatement.toString();

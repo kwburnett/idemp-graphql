@@ -16,12 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.compiere.model.PO;
 import org.compiere.util.CLogger;
 
+/**
+ * The utility to parse and read filter JSON coming from the server and work with it
+ */
 public class FilterUtil {
 	public static final String DEFAULT_WHERE_CLAUSE = "(1=1)";
 
 	private static final List<String> LOGICAL_QUERY_SELECTORS = Arrays.asList("$and", "$not", "$or", "$nor");
-	protected static CLogger logger = CLogger.getCLogger(FilterUtil.class);
 	private static final String MALFORMED_FILTER_STRING_ERROR = "Filter criteria doesn't meet the standard form.";
+	protected static CLogger logger = CLogger.getCLogger(FilterUtil.class);
 
 	/**
 	 * This takes in a filter JSON model generated and converts it into an appropriate WHERE clause to pass to the DB.
@@ -88,8 +91,8 @@ public class FilterUtil {
 	 *
 	 * @param filterJson The JSON string received for filtering
 	 * @return The filter expressions
-	 * @throws JsonProcessingException 
-	 * @throws JsonMappingException 
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
 	 */
 	private static Map<String, Object> parseJsonString(String filterJson) throws JsonMappingException,
 			JsonProcessingException {

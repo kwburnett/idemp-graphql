@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The utility to parse and read sort JSON coming from the server and work with it
+ */
 public class SortUtil {
-
 	private static final String MALFORMED_SORT_STRING_ERROR = "Sort criteria doesn't meet the standard form.";
-	protected static CLogger logger = CLogger.getCLogger(FilterUtil.class);
+	protected static CLogger logger = CLogger.getCLogger(SortUtil.class);
 
 	/**
 	 * This takes in a sort JSON model generated and converts it into an appropriate ORDER BY clause to pass to the DB.

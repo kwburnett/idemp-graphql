@@ -2,6 +2,9 @@ package org.bandahealth.idempiere.graphql.scalar;
 
 import graphql.schema.*;
 
+/**
+ * A custom scalar to allow passing of general Object classes into the GraphQL API
+ */
 public class ObjectScalar {
 	public static final GraphQLScalarType Object = GraphQLScalarType.newScalar().name("Object")
 			.coercing(new Coercing() {

@@ -2,8 +2,15 @@ package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.SchemaParserBuilder;
 
+/**
+ * This class is responsible for adding all non-query & non-mutation resolvers to the GraphQL SchemaParserBuilder.
+ */
 public class BandaResolverComposer {
-
+	/**
+	 * Add all resolvers to the GraphQL SchemaParserBuilder
+	 *
+	 * @param builder The builder for the GraphQL Schema Parser
+	 */
 	public static void addAll(SchemaParserBuilder builder) {
 		builder.resolvers(
 				new AccountResolver(),

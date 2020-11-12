@@ -34,7 +34,7 @@ public class PaymentRepository extends BaseRepository<MPayment_BH, PaymentInput>
 			Properties idempiereContext) {
 		List<Object> parameters = new ArrayList<>();
 		String modelName = ModelUtil.getModelFromKey(orderIdKeys.iterator().next());
-		Set<Integer> orderIds = orderIdKeys.stream().map(ModelUtil::getPropertyFromKey).collect(Collectors.toSet());
+		Set<Integer> orderIds = orderIdKeys.stream().map(ModelUtil::getIdFromKey).collect(Collectors.toSet());
 		QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		String whereCondition = QueryUtil.getWhereClauseAndSetParametersForSet(orderIds, parameters);
 		List<MPayment_BH> payments = getBaseQuery(idempiereContext, MPayment_BH.COLUMNNAME_C_Order_ID +

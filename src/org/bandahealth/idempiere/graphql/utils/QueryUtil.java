@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A utility for functions associated with DB queries
+ */
 public class QueryUtil {
-
 	private static final List<String> DISALLOWED_COLUMN_CHARACTERS = Arrays.asList("/", "\\", "-", ";", "'", "\"",
 			"?", "=", "!", "*", "(", ")", "^", "&", "$", "#", "@", "+", "`", "~");
 
