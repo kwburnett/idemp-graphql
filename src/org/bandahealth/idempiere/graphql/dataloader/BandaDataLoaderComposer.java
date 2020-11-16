@@ -46,6 +46,10 @@ public class BandaDataLoaderComposer {
 	 */
 	private final List<DataLoaderRegisterer> dataLoaders;
 
+	/**
+	 * The dataloaders are initialized in the constructor so that they are injected anew each request, which helps
+	 * in hot-swapping in development without having to restart iDempiere
+	 */
 	public BandaDataLoaderComposer() {
 		dataLoaders = new ArrayList<>() {{
 			add(new AccountDataLoader());
