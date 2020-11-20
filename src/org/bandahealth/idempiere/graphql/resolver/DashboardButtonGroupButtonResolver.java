@@ -1,16 +1,16 @@
 package org.bandahealth.idempiere.graphql.resolver;
 
 import graphql.kickstart.tools.GraphQLResolver;
-import org.bandahealth.idempiere.base.model.MHomeScreenButton;
+import org.bandahealth.idempiere.base.model.MDashboardButtonGroupButton;
 
 /**
- * The Home Screen Button resolver containing specific methods to fetch non-standard iDempiere properties for the
- * consumer
+ * The Dashboard Button Group Button resolver containing specific methods to fetch non-standard iDempiere properties
+ * for the consumer
  */
-public class HomeScreenButtonResolver extends BaseResolver<MHomeScreenButton>
-		implements GraphQLResolver<MHomeScreenButton> {
+public class DashboardButtonGroupButtonResolver extends BaseResolver<MDashboardButtonGroupButton>
+		implements GraphQLResolver<MDashboardButtonGroupButton> {
 
-	public int lineNumber(MHomeScreenButton entity) {
+	public int lineNumber(MDashboardButtonGroupButton entity) {
 		return entity.getLineNo();
 	}
 }

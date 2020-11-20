@@ -11,21 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class HomeScreenButtonRepository extends BaseRepository<MDashboardButtonGroupButton, MDashboardButtonGroupButton> {
-
-	private final RoleRepository roleRepository;
-
-	public HomeScreenButtonRepository() {
-		roleRepository = new RoleRepository();
-	}
-
+public class DashboardButtonGroupButtonRepository extends BaseRepository<MDashboardButtonGroupButton,
+		MDashboardButtonGroupButton> {
 	@Override
 	protected MDashboardButtonGroupButton createModelInstance(Properties idempiereContext) {
 		return new MDashboardButtonGroupButton(idempiereContext, 0, null);
 	}
 
 	@Override
-	public MDashboardButtonGroupButton mapInputModelToModel(MDashboardButtonGroupButton entity, Properties idempiereContext) {
+	public MDashboardButtonGroupButton mapInputModelToModel(MDashboardButtonGroupButton entity,
+			Properties idempiereContext) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
@@ -96,7 +91,8 @@ public class HomeScreenButtonRepository extends BaseRepository<MDashboardButtonG
 				parameters.add(Env.getAD_Role_ID(idempiereContext));
 			}
 
-			BandaQuery<MDashboardButtonGroupButton> query = getBaseQuery(idempiereContext, whereClause.toString(), parameters)
+			BandaQuery<MDashboardButtonGroupButton> query = getBaseQuery(idempiereContext, whereClause.toString(),
+					parameters)
 					.setOnlyActiveRecords(true)
 					.setOrderBy(MDashboardButtonGroupButton.Table_Name + "." + MDashboardButtonGroupButton.COLUMNNAME_LineNo);
 
@@ -108,9 +104,10 @@ public class HomeScreenButtonRepository extends BaseRepository<MDashboardButtonG
 
 			if (!isAdmin) {
 				// join Role Table
-				query = query.addJoinClause(" JOIN " + MRoleIncluded.Table_Name + " ON " + MDashboardButtonGroupButton.Table_Name
-						+ "." + MDashboardButtonGroupButton.COLUMNNAME_Included_Role_ID + "=" + MRoleIncluded.Table_Name + "."
-						+ MRoleIncluded.COLUMNNAME_Included_Role_ID);
+				query =
+						query.addJoinClause(" JOIN " + MRoleIncluded.Table_Name + " ON " + MDashboardButtonGroupButton.Table_Name
+								+ "." + MDashboardButtonGroupButton.COLUMNNAME_Included_Role_ID + "=" + MRoleIncluded.Table_Name + "."
+								+ MRoleIncluded.COLUMNNAME_Included_Role_ID);
 			}
 
 			return query.list();

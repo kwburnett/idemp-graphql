@@ -3,9 +3,8 @@ package org.bandahealth.idempiere.graphql.resolver;
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
-import org.bandahealth.idempiere.graphql.dataloader.impl.RoleDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
-import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
+import org.bandahealth.idempiere.graphql.repository.DashboardButtonGroupButtonRepository;
 import org.bandahealth.idempiere.graphql.repository.RoleRepository;
 import org.bandahealth.idempiere.graphql.utils.ModelUtil;
 import org.compiere.model.MRole;
@@ -20,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver<MRole> {
 	private final RoleRepository roleRepository;
-	private final HomeScreenButtonRepository homeScreenButtonRepository;
+	private final DashboardButtonGroupButtonRepository dashboardButtonGroupButtonRepository;
 
 	/**
 	 * This resolver leverages the repositories instead of data loaders due to the unique nature of fetching data for
@@ -28,7 +27,7 @@ public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver
 	 */
 	public RoleResolver() {
 		roleRepository = new RoleRepository();
-		homeScreenButtonRepository = new HomeScreenButtonRepository();
+		dashboardButtonGroupButtonRepository = new DashboardButtonGroupButtonRepository();
 	}
 
 	public CompletableFuture<List<MRole>> includedRoles(MRole entity, DataFetchingEnvironment environment) {
@@ -41,7 +40,7 @@ public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver
 
 	public CompletableFuture<Boolean> hasAccessToReports(MRole entity, DataFetchingEnvironment environment) {
 		return roleRepository.isAdmin(entity.getAD_Role_ID(), environment)
-				.thenApply((userIsAdmin) -> homeScreenButtonRepository.hasAccessToReports(userIsAdmin,
+				.thenApply((userIsAdmin) -> dashboardButtonGroupButtonRepository.hasAccessToReports(userIsAdmin,
 						BandaGraphQLContext.getCtx(environment)));
 	}
 

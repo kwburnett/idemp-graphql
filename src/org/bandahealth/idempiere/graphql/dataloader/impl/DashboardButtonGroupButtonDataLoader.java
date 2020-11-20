@@ -1,32 +1,35 @@
 package org.bandahealth.idempiere.graphql.dataloader.impl;
 
-import org.bandahealth.idempiere.base.model.MHomeScreenButton;
+import org.bandahealth.idempiere.base.model.MDashboardButtonGroupButton;
 import org.bandahealth.idempiere.graphql.dataloader.DataLoaderRegisterer;
-import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
+import org.bandahealth.idempiere.graphql.repository.DashboardButtonGroupButtonRepository;
 
-public class HomeScreenButtonDataLoader
-		extends BaseDataLoader<MHomeScreenButton, MHomeScreenButton, HomeScreenButtonRepository>
+public class DashboardButtonGroupButtonDataLoader
+		extends BaseDataLoader<MDashboardButtonGroupButton, MDashboardButtonGroupButton,
+		DashboardButtonGroupButtonRepository>
 		implements DataLoaderRegisterer {
-	public static final String HOME_SCREEN_BUTTON_BY_ID_DATA_LOADER = "homeScreenButtonByIdDataLoader";
-	public static final String HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER = "homeScreenButtonByUuidDataLoader";
-	private final HomeScreenButtonRepository homeScreenButtonRepository;
+	public static final String DASHBOARD_BUTTON_GROUP_BUTTON_BY_ID_DATA_LOADER =
+			"dashboardButtonGroupButtonByIdDataLoader";
+	public static final String DASHBOARD_BUTTON_GROUP_BUTTON_BY_UUID_DATA_LOADER =
+			"dashboardButtonGroupButtonByUuidDataLoader";
+	private final DashboardButtonGroupButtonRepository dashboardButtonGroupButtonRepository;
 
-	public HomeScreenButtonDataLoader() {
-		homeScreenButtonRepository = new HomeScreenButtonRepository();
+	public DashboardButtonGroupButtonDataLoader() {
+		dashboardButtonGroupButtonRepository = new DashboardButtonGroupButtonRepository();
 	}
 
 	@Override
 	protected String getByIdDataLoaderName() {
-		return HOME_SCREEN_BUTTON_BY_ID_DATA_LOADER;
+		return DASHBOARD_BUTTON_GROUP_BUTTON_BY_ID_DATA_LOADER;
 	}
 
 	@Override
 	protected String getByUuidDataLoaderName() {
-		return HOME_SCREEN_BUTTON_BY_UUID_DATA_LOADER;
+		return DASHBOARD_BUTTON_GROUP_BUTTON_BY_UUID_DATA_LOADER;
 	}
 
 	@Override
-	protected HomeScreenButtonRepository getRepositoryInstance() {
-		return homeScreenButtonRepository;
+	protected DashboardButtonGroupButtonRepository getRepositoryInstance() {
+		return dashboardButtonGroupButtonRepository;
 	}
 }
