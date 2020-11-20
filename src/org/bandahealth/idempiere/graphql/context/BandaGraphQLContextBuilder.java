@@ -50,7 +50,6 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 		} catch (Exception e) {
 			logger.warning(e.getMessage());
 		}
-		int userId = -1;
 		DefaultGraphQLServletContext context = DefaultGraphQLServletContext.createServletContext()
 				.with(httpServletRequest).with(httpServletResponse).with(buildDataLoaderRegistry(idempiereContext)).build();
 		return new BandaGraphQLContext(context, idempiereContext);
