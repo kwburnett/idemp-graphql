@@ -27,9 +27,9 @@ public class BandaGraphQLContext implements GraphQLServletContext {
 	 * Add any properties that should be available on the context. We may not need any if we leverage Env.getCtx()
 	 * everywhere.
 	 *
-	 * @param context The GraphQLServletContext created each request, containing the response/request/session, data loader
-	 *                registry, etc.
-	 * @param userId  The user ID of the user making the request.
+	 * @param context          The GraphQLServletContext created each request, containing the response/request/session,
+	 *                         data loader registry, etc.
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 */
 	public BandaGraphQLContext(GraphQLServletContext context, Properties idempiereContext) {
 		this.context = context;

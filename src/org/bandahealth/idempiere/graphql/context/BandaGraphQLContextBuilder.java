@@ -71,7 +71,8 @@ public class BandaGraphQLContextBuilder implements GraphQLServletContextBuilder 
 
 	/**
 	 * Not leveraged because, if any app-specific properties are needed on the context, they cannot be read from the
-	 * request. However, if we're leveraging iDempiere's Env.ctx, we could pull from there without data from the request.
+	 * request. However, if we're leveraging iDempiere's Env.ctx (which we're not now due to it not being thread-safe),
+	 * we could pull from there without data from the request.
 	 *
 	 * @return IllegalStateException - not implemented now
 	 */
