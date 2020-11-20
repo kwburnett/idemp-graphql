@@ -44,7 +44,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	private T modelInstance;
 
 	public BaseRepository() {
-		Class<?> childClass = ((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+		Class<?> childClass =
+				((Class) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
 		cache = GraphQLEndpoint.getCache(childClass);
 		logger = CLogger.getCLogger(childClass);
 	}
@@ -137,7 +138,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	/**
 	 * Whether the client ID for the context should be automatically used in any DB queries
 	 *
-	 * @return
+	 * @return Whether the client ID from the iDempiere context will be used
 	 */
 	protected boolean shouldUseContextClientId() {
 		return true;
@@ -317,7 +318,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param columnToSearch   The search column to check in
 	 * @param ids              The IDs to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return A completable future of entities grouped by an Entity Key
 	 */
 	public CompletableFuture<Map<String, List<T>>> getGroupsByIdsCompletableFuture(Function<T, Integer> groupingFunction,
 			String columnToSearch, Set<String> ids, Properties idempiereContext) {
@@ -337,7 +338,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param columnToSearch   The search column to check in
 	 * @param ids              The IDs to search by
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
-	 * @return
+	 * @return Entities grouped by their ID
 	 */
 	public Map<Integer, List<T>> getGroupsByIds(Function<T, Integer> groupingFunction, String columnToSearch,
 			Set<Integer> ids, Properties idempiereContext) {
@@ -424,7 +425,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
 	 * @return A completable future of a map of entities by their UUIDs
 	 */
-	public CompletableFuture<Map<String, T>> getByUuidsCompletableFuture(Set<String> uuids, Properties idempiereContext) {
+	public CompletableFuture<Map<String, T>> getByUuidsCompletableFuture(Set<String> uuids,
+			Properties idempiereContext) {
 		return CompletableFuture.supplyAsync(() -> getByUuids(new ArrayList<>(uuids), idempiereContext).stream().collect(
 				Collectors.toMap(entity -> entity.get_Value(entity.getUUIDColumnName()).toString(), entity -> entity))
 		);
@@ -440,7 +442,8 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 *                    look-aheads to allow the DB queries to be smart and only be run if they're needed
 	 * @return A list of entities
 	 */
-	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo, DataFetchingEnvironment environment) {
+	public Connection<T> get(String filterJson, String sort, PagingInfo pagingInfo,
+			DataFetchingEnvironment environment) {
 		return this.get(filterJson, sort, pagingInfo, null, null, null, environment);
 	}
 
@@ -469,7 +472,7 @@ public abstract class BaseRepository<T extends PO, S extends T> {
 	 * @param whereClause A WHERE clause that should be added to the query
 	 * @param parameters  Any parameters to use in the query
 	 * @param joinClause  Use to specify a linked table so joining can occur
-	 * @return
+	 * @return A list of entities
 	 */
 	public Connection<T> get(String filterJson, String sortJson, PagingInfo pagingInfo, String whereClause,
 			List<Object> parameters, String joinClause, DataFetchingEnvironment environment) {

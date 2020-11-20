@@ -24,20 +24,41 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+/**
+ * Storage on hand is a complex thing. The queries in this repo are meant to replace a view and to be finely-tuned.
+ * Any entity that wishes to link to storage on hand (specifically products) should construct it's queries from this
+ * repository, due to the constraints of attribute set type and attribute set instance guarantee dates.
+ */
 public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, StorageOnHandInput> {
-
+	/**
+	 * This contains the list of columns that need to be joined when performing the attribute set instance sub-query
+	 * to get the quantities and guarantee dates for products
+	 */
 	public static final List<String> GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS = Arrays.asList(
 			MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Product_ID,
 			MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_Locator_ID,
 			MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_GuaranteeDate
 	);
+	/**
+	 * In some instances, quantity on hand needs to be summed for a product, which is what this field contains
+	 */
 	public static final String COLUMNSELECT_QtyOnHand = "SUM(" + MStorageOnHand.Table_Name + "." +
 			MStorageOnHand.COLUMNNAME_QtyOnHand + ")";
+	/**
+	 * The selector needed to get the attribute set instance ID applicable to this storage on hand (since guarantee dates
+	 * may be duplicated)
+	 */
 	private static final String COLUMNSELECT_M_AttributeSetInstance_ID = "MAX(" + MStorageOnHand.Table_Name + "." +
 			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + ")";
+	/**
+	 * The list of columns that are "modified" from the storage on hand table
+	 */
 	public static final Map<String, String> MODIFIED_COLUMNS = new HashMap<>() {{
 		put(MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID, COLUMNSELECT_M_AttributeSetInstance_ID);
 	}};
+	/**
+	 * This list of columns that can be pulled directly rom the storage on hand table
+	 */
 	private static final List<String> UNMODIFIED_COLUMNS = Arrays.asList(
 			MStorageOnHand.COLUMNNAME_AD_Client_ID,
 			MStorageOnHand.COLUMNNAME_AD_Org_ID,
@@ -89,19 +110,21 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 	 * AND groupsoh.m_attributesetinstance_id = soh.m_attributesetinstance_id
 	 */
 	private final String tableQuery = "SELECT " + UNMODIFIED_COLUMNS.stream().map(unmodifiedColumn ->
-			"usoh." + unmodifiedColumn).collect(Collectors.joining(",")) + "," + MODIFIED_COLUMNS.keySet().stream()
-			.map(modifiedColumnName -> "msoh." + modifiedColumnName).collect(Collectors.joining(",")) + " FROM " +
-			MStorageOnHand.Table_Name + " usoh INNER JOIN (SELECT " +
-			String.join(",", GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS) + "," +
-			MODIFIED_COLUMNS.entrySet().stream().map(modifiedColumn -> modifiedColumn.getValue() + " AS " +
-					modifiedColumn.getKey()).collect(Collectors.joining(",")) + " FROM " +
-			MStorageOnHand.Table_Name + " LEFT JOIN " + MAttributeSetInstance.Table_Name + " ON " +
+			unmodifiedTableAlias + "." + unmodifiedColumn).collect(Collectors.joining(",")) + "," +
+			MODIFIED_COLUMNS.keySet().stream().map(modifiedColumnName -> modifiedTableAlias + "." + modifiedColumnName)
+					.collect(Collectors.joining(",")) + " " + "FROM " + MStorageOnHand.Table_Name + " " +
+			unmodifiedTableAlias + " INNER JOIN (SELECT " + String.join(",",
+			GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS) + "," + MODIFIED_COLUMNS.entrySet().stream().map(modifiedColumn ->
+			modifiedColumn.getValue() + " AS " + modifiedColumn.getKey()).collect(Collectors.joining(",")) +
+			" FROM " + MStorageOnHand.Table_Name + " LEFT JOIN " + MAttributeSetInstance.Table_Name + " ON " +
 			MStorageOnHand.Table_Name + "." + MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=" +
 			MAttributeSetInstance.Table_Name + "." + MAttributeSetInstance.COLUMNNAME_M_AttributeSetInstance_ID +
-			" GROUP BY " + String.join(",", GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS) + ") AS msoh ON msoh." +
-			MStorageOnHand.COLUMNNAME_M_Product_ID + "=usoh." + MStorageOnHand.COLUMNNAME_M_Product_ID + " AND msoh." +
-			MStorageOnHand.COLUMNNAME_M_Locator_ID + "=usoh." + MStorageOnHand.COLUMNNAME_M_Locator_ID + " AND msoh." +
-			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=usoh." +
+			" GROUP BY " + String.join(",", GROUPING_COLUMNS_FOR_COLUMN_MODIFICATIONS) + ") AS " +
+			modifiedTableAlias + " " + "ON" + " " + modifiedTableAlias + "." + MStorageOnHand.COLUMNNAME_M_Product_ID + "=" +
+			unmodifiedTableAlias + "." + MStorageOnHand.COLUMNNAME_M_Product_ID + " AND " + modifiedTableAlias + "." +
+			MStorageOnHand.COLUMNNAME_M_Locator_ID + "=" + unmodifiedTableAlias + "." +
+			MStorageOnHand.COLUMNNAME_M_Locator_ID + " AND " + modifiedTableAlias + "." +
+			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID + "=" + unmodifiedTableAlias + "." +
 			MStorageOnHand.COLUMNNAME_M_AttributeSetInstance_ID;
 
 	private final AttributeSetInstanceRepository attributeSetInstanceRepository;
@@ -131,6 +154,15 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 				storageOnHand.getM_AttributeSetInstance_ID()).first();
 	}
 
+	/**
+	 * Override the method that gets the default query for this repo since we can't query the table directly (see above
+	 * for the quantity on hand and the correct attribute set instance)
+	 *
+	 * @param idempiereContext      The context since Env.getCtx() isn't thread-safe
+	 * @param additionalWhereClause An additional WHERE clause above the default
+	 * @param parameters            Any parameters needed for the additional WHERE clause
+	 * @return The query object for this repository
+	 */
 	@Override
 	public BandaQuery<MStorageOnHand> getBaseQuery(Properties idempiereContext, String additionalWhereClause,
 			Object... parameters) {
@@ -351,6 +383,12 @@ public class StorageOnHandRepository extends BaseRepository<MStorageOnHand, Stor
 		return attributeSetInstanceRepository.getDefaultJoinClauseParameters(idempiereContext);
 	}
 
+	/**
+	 * This table needs a JOIN clause in every query, so get it
+	 *
+	 * @param idempiereContext The context since Env.getCtx() isn't thread-safe
+	 * @return The JOIN clause to use with this query
+	 */
 	@Override
 	public String getDefaultJoinClause(Properties idempiereContext) {
 		return " JOIN " + MAttributeSetInstance.Table_Name + " ON " + MAttributeSetInstance.Table_Name + "." +

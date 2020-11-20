@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 public class ErrorHandler extends DefaultGraphQLErrorHandler {
 	@Override
 	protected List<GraphQLError> filterGraphQLErrors(List<GraphQLError> errors) {
+		// If we get a GraphQL Java error (ExceptionWhileDataFetching) or one of our own (AdempiereException), let's
+		// sanitize it so it can be returned to the front-end
 		return errors.stream()
 				.filter(e -> e instanceof ExceptionWhileDataFetching || super.isClientError(e) || e instanceof AdempiereException)
 				.map(e ->
