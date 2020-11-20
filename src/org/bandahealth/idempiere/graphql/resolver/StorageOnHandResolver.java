@@ -14,6 +14,9 @@ import org.dataloader.DataLoader;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Storage On Hand resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class StorageOnHandResolver extends BaseResolver<MStorageOnHand> implements GraphQLResolver<MStorageOnHand> {
 
 	public CompletableFuture<MLocator> locator(MStorageOnHand entity, DataFetchingEnvironment environment) {

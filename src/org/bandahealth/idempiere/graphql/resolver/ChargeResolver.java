@@ -11,6 +11,9 @@ import org.dataloader.DataLoader;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Charge resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class ChargeResolver extends BaseResolver<MCharge_BH> implements GraphQLResolver<MCharge_BH> {
 
 	public boolean isLocked(MCharge_BH entity) {

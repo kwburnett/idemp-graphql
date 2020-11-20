@@ -15,10 +15,17 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Role resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class RoleResolver extends BaseResolver<MRole> implements GraphQLResolver<MRole> {
 	private final RoleRepository roleRepository;
 	private final HomeScreenButtonRepository homeScreenButtonRepository;
 
+	/**
+	 * This resolver leverages the repositories instead of data loaders due to the unique nature of fetching data for
+	 * roles
+	 */
 	public RoleResolver() {
 		roleRepository = new RoleRepository();
 		homeScreenButtonRepository = new HomeScreenButtonRepository();

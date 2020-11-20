@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Organization resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class OrganizationResolver extends BaseResolver<MOrg> implements GraphQLResolver<MOrg> {
 
 	public CompletableFuture<List<MWarehouse>> warehouses(MOrg entity, DataFetchingEnvironment environment) {

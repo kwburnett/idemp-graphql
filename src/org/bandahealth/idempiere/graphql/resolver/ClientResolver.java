@@ -11,6 +11,9 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Client resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class ClientResolver extends BaseResolver<MClient> implements GraphQLResolver<MClient> {
 
 	public CompletableFuture<List<MOrg>> organizations(MClient entity, DataFetchingEnvironment environment) {

@@ -9,6 +9,9 @@ import org.dataloader.DataLoader;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Product Category resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class ProductCategoryResolver extends BaseResolver<MProductCategory_BH>
 		implements GraphQLResolver<MProductCategory_BH> {
 

@@ -9,6 +9,9 @@ import org.dataloader.DataLoader;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Locator resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class LocatorResolver extends BaseResolver<MLocator> implements GraphQLResolver<MLocator> {
 
 	public CompletableFuture<MWarehouse> warehouse(MLocator entity, DataFetchingEnvironment environment) {

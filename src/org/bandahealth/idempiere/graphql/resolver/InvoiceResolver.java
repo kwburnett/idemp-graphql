@@ -16,6 +16,9 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Invoice resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class InvoiceResolver extends BaseResolver<MInvoice_BH> implements GraphQLResolver<MInvoice_BH> {
 	public CompletableFuture<MBPartner_BH> businessPartner(MInvoice_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> dataLoader = environment.getDataLoaderRegistry()

@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Order Line resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements GraphQLResolver<MOrderLine_BH> {
 
 	public CompletableFuture<MCharge_BH> charge(MOrderLine_BH entity, DataFetchingEnvironment environment) {
@@ -60,7 +63,7 @@ public class OrderLineResolver extends BaseResolver<MOrderLine_BH> implements Gr
 	public CompletableFuture<MAttributeSetInstance> attributeSetInstance(MOrderLine_BH entity,
 			DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MAttributeSetInstance> dataLoader = environment.getDataLoaderRegistry()
-						.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
+				.getDataLoader(AttributeSetInstanceDataLoader.ATTRIBUTE_SET_INSTANCE_BY_ID_DATA_LOADER);
 		return dataLoader.load(entity.getM_AttributeSetInstance_ID());
 	}
 }

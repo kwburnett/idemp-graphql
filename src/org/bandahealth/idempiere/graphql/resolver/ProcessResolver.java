@@ -17,6 +17,9 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Process resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class ProcessResolver extends BaseResolver<MProcess> implements GraphQLResolver<MProcess> {
 
 	public CompletableFuture<MForm> form(MProcess entity, DataFetchingEnvironment environment) {

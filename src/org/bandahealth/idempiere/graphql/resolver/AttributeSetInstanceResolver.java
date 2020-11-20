@@ -9,6 +9,10 @@ import org.dataloader.DataLoader;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Attribute Set Instance resolver containing specific methods to fetch non-standard iDempiere properties for the
+ * consumer
+ */
 public class AttributeSetInstanceResolver extends BaseResolver<MAttributeSetInstance>
 		implements GraphQLResolver<MAttributeSetInstance> {
 

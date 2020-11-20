@@ -11,6 +11,9 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Warehouse resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class WarehouseResolver extends BaseResolver<MWarehouse> implements GraphQLResolver<MWarehouse> {
 
 	public CompletableFuture<List<MLocator>> locators(MWarehouse entity, DataFetchingEnvironment environment) {

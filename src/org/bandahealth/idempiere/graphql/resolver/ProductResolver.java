@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Product resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class ProductResolver extends BaseResolver<MProduct_BH> implements GraphQLResolver<MProduct_BH> {
 
 	public int reorderLevel(MProduct_BH entity) {

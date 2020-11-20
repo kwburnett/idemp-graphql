@@ -19,6 +19,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Business Partner resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implements GraphQLResolver<MBPartner_BH> {
 	public String patientNumber(MBPartner_BH entity) {
 		return entity.getBH_PatientID();

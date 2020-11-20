@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Process Parameter resolver containing specific methods to fetch non-standard iDempiere properties for the
+ * consumer
+ */
 public class ProcessParameterResolver extends BaseResolver<MProcessPara> implements GraphQLResolver<MProcessPara> {
 
 	public CompletableFuture<MReference> reference(MProcessPara entity, DataFetchingEnvironment environment) {

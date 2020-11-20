@@ -16,6 +16,9 @@ import org.dataloader.DataLoader;
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Invoice Line resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class InvoiceLineResolver extends BaseResolver<MInvoiceLine> implements GraphQLResolver<MInvoiceLine> {
 
 	public CompletableFuture<MCharge_BH> charge(MInvoiceLine entity, DataFetchingEnvironment environment) {

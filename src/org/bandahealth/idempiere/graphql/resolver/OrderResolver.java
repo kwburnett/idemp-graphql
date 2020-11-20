@@ -19,6 +19,9 @@ import org.dataloader.DataLoader;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Order resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class OrderResolver extends BaseResolver<MOrder_BH> implements GraphQLResolver<MOrder_BH> {
 	public CompletableFuture<MBPartner_BH> businessPartner(MOrder_BH entity, DataFetchingEnvironment environment) {
 		final DataLoader<Integer, MBPartner_BH> businessPartnerDataLoader =

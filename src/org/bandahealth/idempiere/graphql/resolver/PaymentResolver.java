@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The Payment resolver containing specific methods to fetch non-standard iDempiere properties for the consumer
+ */
 public class PaymentResolver extends BaseResolver<MPayment_BH> implements GraphQLResolver<MPayment_BH> {
 
 	private final ReferenceListRepository referenceListRepository;
