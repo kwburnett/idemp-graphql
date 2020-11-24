@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.resolver;
+package org.bandahealth.idempiere.graphql.resolver.model;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;

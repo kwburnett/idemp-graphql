@@ -18,9 +18,9 @@ import org.bandahealth.idempiere.graphql.context.BandaGraphQLContextBuilder;
 import org.bandahealth.idempiere.graphql.directive.BandaDirectiveComposer;
 import org.bandahealth.idempiere.graphql.error.ErrorHandler;
 import org.bandahealth.idempiere.graphql.instrumentation.LoggingInstrumentation;
-import org.bandahealth.idempiere.graphql.mutation.BandaMutationComposer;
-import org.bandahealth.idempiere.graphql.query.BandaQueryComposer;
-import org.bandahealth.idempiere.graphql.resolver.BandaResolverComposer;
+import org.bandahealth.idempiere.graphql.resolver.mutation.BandaMutationComposer;
+import org.bandahealth.idempiere.graphql.resolver.query.BandaQueryComposer;
+import org.bandahealth.idempiere.graphql.resolver.model.BandaResolverComposer;
 import org.bandahealth.idempiere.graphql.scalar.BandaScalarComposer;
 import org.compiere.util.CLogger;
 
