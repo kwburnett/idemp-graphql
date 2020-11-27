@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.query;
+package org.bandahealth.idempiere.graphql.resolver.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.kickstart.tools.SchemaParserBuilder;

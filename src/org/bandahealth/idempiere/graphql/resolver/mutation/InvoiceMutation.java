@@ -1,12 +1,10 @@
-package org.bandahealth.idempiere.graphql.mutation;
+package org.bandahealth.idempiere.graphql.resolver.mutation;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MInvoice_BH;
-import org.bandahealth.idempiere.base.model.MOrder_BH;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
 import org.bandahealth.idempiere.graphql.model.input.InvoiceInput;
-import org.bandahealth.idempiere.graphql.model.input.OrderInput;
 import org.bandahealth.idempiere.graphql.repository.InvoiceRepository;
 
 import java.util.Properties;

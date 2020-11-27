@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.resolver;
+package org.bandahealth.idempiere.graphql.resolver.model;
 
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.base.model.MUser_BH;

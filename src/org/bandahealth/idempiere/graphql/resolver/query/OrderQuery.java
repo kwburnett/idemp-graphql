@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.query;
+package org.bandahealth.idempiere.graphql.resolver.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import graphql.schema.DataFetchingEnvironment;
@@ -9,7 +9,6 @@ import org.bandahealth.idempiere.graphql.model.PagingInfo;
 import org.bandahealth.idempiere.graphql.repository.OrderRepository;
 import org.dataloader.DataLoader;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderQuery implements GraphQLQueryResolver {

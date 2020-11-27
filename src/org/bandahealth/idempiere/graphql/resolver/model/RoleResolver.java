@@ -1,9 +1,8 @@
-package org.bandahealth.idempiere.graphql.resolver;
+package org.bandahealth.idempiere.graphql.resolver.model;
 
 import graphql.kickstart.tools.GraphQLResolver;
 import graphql.schema.DataFetchingEnvironment;
 import org.bandahealth.idempiere.graphql.context.BandaGraphQLContext;
-import org.bandahealth.idempiere.graphql.dataloader.impl.RoleDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.RoleIncludedDataLoader;
 import org.bandahealth.idempiere.graphql.repository.HomeScreenButtonRepository;
 import org.bandahealth.idempiere.graphql.repository.RoleRepository;

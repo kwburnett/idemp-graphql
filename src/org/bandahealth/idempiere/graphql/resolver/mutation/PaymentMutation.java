@@ -1,4 +1,4 @@
-package org.bandahealth.idempiere.graphql.mutation;
+package org.bandahealth.idempiere.graphql.resolver.mutation;
 
 import graphql.kickstart.tools.GraphQLMutationResolver;
 import graphql.schema.DataFetchingEnvironment;
