@@ -76,7 +76,7 @@ public class BusinessPartnerResolver extends BaseResolver<MBPartner_BH> implemen
 	}
 
 	public String nationalId(MBPartner_BH entity) {
-		return entity.getNational_ID();
+		return entity.getNationalID();
 	}
 
 	public String occupation(MBPartner_BH entity) {

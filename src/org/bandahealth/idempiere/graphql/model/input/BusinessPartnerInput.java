@@ -96,7 +96,7 @@ public class BusinessPartnerInput extends MBPartner_BH {
 	}
 
 	public void setNationalId(String nationalId) {
-		this.setNational_ID(nationalId);
+		this.setNationalID(nationalId);
 	}
 
 	public void setOccupation(String occupation) {
