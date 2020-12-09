@@ -73,7 +73,7 @@ public class BusinessPartnerRepository extends BaseRepository<MBPartner_BH, Busi
 			ModelUtil.setPropertyIfPresent(entity.getbh_nhif_member_name(), businessPartner::setbh_nhif_member_name);
 			ModelUtil.setPropertyIfPresent(entity.getNHIF_Number(), businessPartner::setNHIF_Number);
 			ModelUtil.setPropertyIfPresent(entity.getBH_NHIF_Type(), businessPartner::setBH_NHIF_Type);
-			ModelUtil.setPropertyIfPresent(entity.getNational_ID(), businessPartner::setNational_ID);
+			ModelUtil.setPropertyIfPresent(entity.getNationalID(), businessPartner::setNationalID);
 			ModelUtil.setPropertyIfPresent(entity.getbh_occupation(), businessPartner::setbh_occupation);
 			ModelUtil.setPropertyIfPresent(entity.getNextOfKin_Name(), businessPartner::setNextOfKin_Name);
 			ModelUtil.setPropertyIfPresent(entity.getNextOfKin_Contact(), businessPartner::setNextOfKin_Contact);

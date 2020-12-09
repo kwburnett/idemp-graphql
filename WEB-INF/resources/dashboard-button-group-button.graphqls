@@ -1,4 +1,4 @@
-type HomeScreenButton {
+type DashboardButtonGroupButton {
   id: ID!
   client: Client!
   organization: Organization!

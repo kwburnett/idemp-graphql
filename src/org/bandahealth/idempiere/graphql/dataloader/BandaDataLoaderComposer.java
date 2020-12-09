@@ -8,7 +8,7 @@ import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ChargeTypeDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.ClientDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.FormDataLoader;
-import org.bandahealth.idempiere.graphql.dataloader.impl.HomeScreenButtonDataLoader;
+import org.bandahealth.idempiere.graphql.dataloader.impl.DashboardButtonGroupButtonDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.InvoiceDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.InvoiceLineDataLoader;
 import org.bandahealth.idempiere.graphql.dataloader.impl.LocationDataLoader;
@@ -59,8 +59,8 @@ public class BandaDataLoaderComposer {
 			add(new ChargeDataLoader());
 			add(new ChargeTypeDataLoader());
 			add(new ClientDataLoader());
+			add(new DashboardButtonGroupButtonDataLoader());
 			add(new FormDataLoader());
-			add(new HomeScreenButtonDataLoader());
 			add(new InvoiceDataLoader());
 			add(new InvoiceLineDataLoader());
 			add(new LocationDataLoader());

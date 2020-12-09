@@ -17,7 +17,7 @@ public class BandaQueryComposer implements GraphQLQueryResolver {
 				new AccountQuery(),
 				new BusinessPartnerQuery(),
 				new ChargeQuery(),
-				new HomeScreenButtonQuery(),
+				new DashboardButtonGroupButtonQuery(),
 				new InvoiceQuery(),
 				new OrderQuery(),
 				new PaymentQuery(),

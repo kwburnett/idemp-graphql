@@ -14,8 +14,8 @@ type Query {
   # Charges
   charge(id: String!): Charge
   expenseCategories(filter: String, sort: String, page: Int, pageSize: Int): ChargeConnection!
-  # Home Screen Buttons
-  homeScreenButtons: [HomeScreenButton!]
+  # Dashboard Button Group Buttons
+  dashboardButtonGroupButtons: [DashboardButtonGroupButton!]
   # Invoices
   customerInvoices(filter: String, sort: String, page: Int, pageSize: Int): InvoiceConnection!
   invoice(id: String!): Invoice
